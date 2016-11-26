@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stuart Blackler&#39;s Tech Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2016/11/blog-building---part-3---theming/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="Setting up a theme and creating our first article using hugo and bones">
+    
+    
+    <link rel="stylesheet" href="/css/site-0f4726d7.css" />
+<link href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono|Exo:900|Raleway" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Tech Blog" /></head>
+<body>
+<section class="pageContainer">
+    <header id="pageHeader">
+    <section id="pageHeader-wrapper">
+        <section id="pageHeader-logo">
+            <a href="/" title="Homepage">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4405.28 4775.65" id="logo" class="pageHeader-imagery"><g id="logo-layer"><path class="logo-path" d="M3579.85,1950.46C3761.31,1770.51,3872,1521.91,3872,1246.73c0-550.29-571.68-1008.37-995.83-995.83H1729.81a174.58,174.58,0,0,0-33.93-3H678.66a187,187,0,0,0-135,56.84,191.23,191.23,0,0,0-56,135.72c0,100.35,76,184.41,172.6,194a122.28,122.28,0,0,0,16.24.72h32.45l2079.44-9.58c351.86,0,665.36,321.64,665.36,673.47,0,321.64-239,588-549.57,630a663,663,0,0,1-86.3,5.91H1213.45c-47.94,0-89.25,20.67-120.23,53.09-31.73,32.49-50.17,78.23-50.17,128.37,0,100.35,76.72,181.46,170.4,181.46H3351.17c350.38,0,635.87,315,635.87,677.21,0,360.69-315,638.75-665.37,638.75L961.18,3591.73c.72.72.72.72.72,1.51l-396.09-4.47c-126.89,14-302.45,64.18-411.62,173.39C45.74,3870.59,0,3984.19,0,4150.88c0,332.67,240.49,617.42,573.16,617.42l1820.54,7.35c332.66,0,879.28-120.23,1014.27-673.47H2983.82c-39.84,135-218.34,306.16-417.52,320.92l-1964.36-7.42a230.72,230.72,0,0,1-230.88-230.88,231.7,231.7,0,0,1,230.88-230.16l1890.6-9.58c22.15,0,182.94-5.91,202.85,0h714.06c548.81,0,995.83-458.8,995.83-1023.85C4405.28,2427.7,3972.27,2035.32,3579.85,1950.46ZM715.54,481.06v-.72a122.19,122.19,0,0,0,16.24.72Z"/><path class="logo-path" d="M1147.14,0a122.26,122.26,0,0,0,16.24.72h-16.24Z"/><path class="logo-path" d="M1163.39.72h-16.24V0A122.26,122.26,0,0,0,1163.39.72Z"/><path class="logo-path" d="M3421.33,3499.38h-422s-50.89-379.13-552.48-382.08H1271.8c-568,0-1028.28-461-1028.28-1028.25,0-284,115.08-541.5,301-727.35,186.61-185.92,443.31-301,727.32-301H2500.74a176.66,176.66,0,0,1,28-2.23H2848.1a184.82,184.82,0,0,1,185.17,185.21c0,102.51-82.63,185.85-185.17,185.85H1322.7c-182.94,0-348.15,72.32-467.66,190.32C735.53,1737.16,661.76,1898.74,661.76,2078c0,358.52,295.82,655.75,660.93,655.75l1124.2,12.53S3292.25,2747.76,3421.33,3499.38Z"/></g></svg>
+            </a>
+        </section>
+        <nav id="pageHeader-nav">
+            <ul id="pageHeader-nav-ul">
+                
+                <li><a class="pageHeader-nav-ul-li-link" target="_blank" href="https://github.com/im5tu">Github</a></li>
+                <li><a class="pageHeader-nav-ul-li-link" target="_blank" href="https://twitter.com/im5tu">Twitter</a></li>
+                <li><a class="pageHeader-nav-ul-li-link" href="/article/index.xml">Rss</a></li>
+            </ul>
+        </nav>
+    </section>
+</header>
+    <section class="pageContainer-content">
+        <article class="article">
+    <header class="article-header">
+        <h1><a href="https://im5tu.io/article/2016/11/blog-building---part-3---theming/">Blog Building - Part 3 - Theming</a></h1>
+        <p>Published: <time class="article-header-time" pubdate="pubdate" datetime="2016-11-18 19:01:38 &#43;0000 UTC">2016-11-18 19:01:38 &#43;0000 UTC</time><p>
+    </header>
+    <section class="article-content"><p>In this article, I will show you how the theme has been constructed and show you how the overrides work. So far we have created a site, setup most of our workflow and posted our first article.
+</p>
+
+<p>When we installed the theme in the previous post, a series of conventions took over and began the process of rending our pages for us. Because hugo is convention based, we can override the defaults by placing files in the correct place, but first we need to understand the layout. Below you can see the parts of the website that we care about the most:</p>
+
+<pre><code class="language-powershell">/root
+    /archetypes
+    /content
+    /layouts
+    /static
+    /themes
+        /themeA
+            /archetypes
+            /layouts
+                /_default
+                /indexes
+                /partials
+                /taxonomy
+            index.html
+        /themeB
+            &lt;as above&gt;
+</code></pre>
+
+<h2 id="defaults">Defaults</h2>
+
+<p>When hugo begins to render a site, the configuration is checked to see if there is a theme configured. If a theme is configured, it looks for that theme under the <code>themes</code> directory by checking for a <code>theme.toml</code> file under each sub-directory. If one of the <code>theme.toml</code> files contains the correct theme name, that theme is loaded and the used as the default for the rest of the rending.</p>
+
+<p>From the directory listing above, you will notice that there are two <code>layouts</code> folders. One under the site root and one under themeA. As far as I am aware, the layout of each <code>layouts</code> folder is identical. This means that if your theme defines something under <code>/root/themes/themeA/layouts/_default/list.html</code> we can override it by placing a file in <code>/root/layouts/_default/list.html</code>.</p>
+
+<p>Now that we know this, we can customise the theme how we see fit.</p>
+
+<h2 id="rendering">Rendering</h2>
+
+<p>Before continuing, I strongly recommend that you read the <a href="http://gohugo.io/templates/go-templates/">Go Template Primer</a> created by the hugo team. Don&rsquo;t worry, i&rsquo;ll wait.</p>
+
+<h3 id="baseof">baseOf</h3>
+
+<p>A theme creator may decide, like I have for bones, to create a <code>baseOf</code> file under the <code>/root/themes/&lt;theme name&gt;/_default/</code> folder. This special file allows you to create a master layout, keeping your theme nice and clean. Inside of file, you can define blocks which another page can also define and implement. What happens here is that the <code>baseOf</code> file says &ldquo;You can configure this section called ABC&rdquo;. Then inside of another file, eg: article/full.html, we can say &ldquo;I want to configure section called ABC and here is what it should contain&rdquo;. In hugo speak, this is called <a href="http://gohugo.io/templates/blocks/">Block Templates</a> and is how the whole of the bones theme is configured.</p>
+
+<p>You can see an example of this <a href="https://github.com/Im5tu/hugo-bones/blob/master/layouts/_default/baseof.html">here</a>.</p>
+
+<h3 id="render">.Render</h3>
+
+<p>The <a href="http://gohugo.io/templates/functions/#render">.Render</a> function is a special kind of function that you can call when rendering a list. It&rsquo;s like rendering a partial view but for the current item in an enumeration.</p>
+
+<pre><code class="language-go">{{ range .Data.Pages }}
+    {{ .Render &quot;summary&quot;}}
+{{ end }}
+</code></pre>
+
+<p>The above sample will inspect the page data and enumerate all the available pages associated with the current page before calling render on each item. C#/Java would look something like:</p>
+
+<pre><code class="language-c#">foreach(var page in this.Data.Pages)
+    Render(&quot;summary&quot;, currentItem);
+</code></pre>
+
+<p>You can see an example of this <a href="https://github.com/Im5tu/hugo-bones/blob/master/layouts/article/list.html#L4">here</a>.</p>
+
+<h3 id="partial">partial</h3>
+
+<p><a href="http://gohugo.io/templates/partials/">Partial templates</a> are often used to separate out sections of a site into reusable components. The main difference between <code>partial</code> and <code>.Render</code> is that partial can be used to render whole sections of a site with a specific context where is <code>.Render</code> is limited to the current item in an enumeration.</p>
+
+<pre><code class="language-go">&lt;body&gt;
+{{ block &quot;content&quot; . -}} {{- end }}
+{{- partial &quot;header/scripts&quot; . -}}
+&lt;/body&gt;
+</code></pre>
+
+<p>The above <a href="https://github.com/Im5tu/hugo-bones/blob/master/layouts/_default/baseof.html">example from the baseOf file from bones</a> does the following:</p>
+
+<ul>
+<li>Says to the theming engine that it wants to declare an overridable section content, passing in the current page context</li>
+<li>Render the partial called <code>scripts</code>, located under the <code>header</code> folder, inside of the <code>partials</code> folder, supplying the current page context</li>
+</ul>
+
+<p>All partials are located under <code>&lt;root/theme&gt;/layouts/partials/&lt;path&gt;</code>. Where <code>&lt;path&gt;</code> is the folder structure to the file.</p>
+
+<p>You can see an example of this <a href="https://github.com/Im5tu/hugo-bones/blob/master/layouts/_default/baseof.html">here</a>.</p>
+
+<h2 id="archetypes">Archetypes</h2>
+
+<p>Archetypes are really just a fancy way of saying content types. A theme can define them for you, or you can define your own like I have for the bones theme.</p>
+
+<p>You can see an example of that <a href="https://github.com/Im5tu/hugo-bones/blob/master/archetypes/article.md">here</a></p>
+
+<h2 id="the-static">The Static</h2>
+
+<p>Anything under the static folder, will get copied across to the main site when it gets rendered. This behaved slightly differently than I expected when I first tried this out. I had a file located under <code>/root/static/img/img1.jpg</code>. When I attempted to render an image tag on the page with the src set to <code>/static/img/img1.jpg</code> it didn&rsquo;t work. When I rendered the files to disk by calling <code>hugo</code> and checking the public folder, I could see that it rendered the image under <code>/img/img1.jpg</code>. Slightly different that what I was expecting, but it still worked nevertheless.</p>
+
+<p>Hopefully you will now have a basic understanding of how a theme is constructed so that you can roll your own and override portions of the theme you have selecting. Next up, I will setup my frontend pipeline of choice so that I can start applying styling to my site.</p></section>
+    <footer class="article-footer">
+        <hr />Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/hugo/">hugo</a></li><li><a class="article-tag" href="/tags/blogging/">blogging</a></li>
+</ul></footer>
+</article>
+    </section>
+    <footer id="pageFooter">
+    <section id="pageFooter-copyright" class="pageFooter-section">
+        &copy; 2016 Stuart Blackler
+    </section>
+    <section id="pageFooter-details" class="pageFooter-section">
+        <a href="https://github.com/im5tu/im5tu-hugo" target="_blank">Edit me on Github</a>
+    </section>
+    <section id="pageFooter-scroll" class="pageFooter-section">
+        <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>
+    </section>
+</footer>
+</section>
+<script src="/js/site-c29acdb6.js" defer></script>3
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5838c774d027e891" defer></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-88036425-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+</html>

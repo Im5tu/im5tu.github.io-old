@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Node on Stuart Blackler&#39;s Tech Blog</title>
+    <link>https://im5tu.io/tags/node/index.xml</link>
+    <description>Recent content in Node on Stuart Blackler&#39;s Tech Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://im5tu.io/tags/node/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Blog Building - Part 4 - Frontend</title>
+      <link>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</link>
+      <pubDate>Sat, 19 Nov 2016 08:01:38 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</guid>
+      <description>&lt;p&gt;So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;yarn&#34;&gt;Yarn&lt;/h2&gt;
+
+&lt;p&gt;Yarn is a frontend package manager. It replaces the traditional workflow of npm whilst remaining compatible with the npm registry. This means that we can get all of the speed and security improvements whilst having all the packages that are currently available on the npm registry.&lt;/p&gt;
+
+&lt;h3 id=&#34;installing-node-js&#34;&gt;Installing node.js&lt;/h3&gt;
+
+&lt;p&gt;Unfortunately, it still runs on node, so we need to get that setup first. Head to [the node website]() and install the correct version for your environment. You can verify node is setup correctly post-installation by running the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;C:\&amp;gt;node --version
+v7.1.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;installing-yarn&#34;&gt;Installing yarn&lt;/h3&gt;
+
+&lt;p&gt;Once node is setup, we can install yarn:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;C:\&amp;gt;npm install yarn -g
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will install yarn so that it is available for all projects, not just our new blog. Once the installation is complete, we can verify yarn is installed by running the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;C:\&amp;gt;yarn --version
+0.17.6
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;yarn-ing-our-project&#34;&gt;Yarn&amp;rsquo;ing our project&lt;/h2&gt;
+
+&lt;p&gt;Before we begin installing packages inside of our project, I am going to add a &lt;code&gt;.gitignore&lt;/code&gt; file as we will generate a lot of files that we don&amp;rsquo;t want inside of our git respository. Here is what I added to start off with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;node_modules/
+data/**/hash.*
+static/css/*.css
+static/js/*.js
+public/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can setup our project to use yarn:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;E:\im5tu-hugo&amp;gt;yarn init
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will ask you a series of questions such as:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;E:\im5tu-hugo&amp;gt;yarn init
+yarn init v0.17.6
+question name (im5tu-hugo): im5tu
+question version (1.0.0): 0.0.1
+question description: Stuart Blackler&#39;s Tech Blog
+question entry point (index.js):
+question git repository (https://github.com/Im5tu/im5tu-hugo.git):
+question author (Stuart Blackler (@im5tu) &amp;lt;im5tu@users.noreply.github.com&amp;gt;):
+question license (MIT):
+success Saved package.json
+Done in 42.93s.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once this is completed, we will have a &lt;code&gt;package.json&lt;/code&gt; file in our root and we can start adding the dependencies that we need. If you don&amp;rsquo;t specify an answer, the default will be taken for you (the default is shown in brackets).&lt;/p&gt;
+
+&lt;h2 id=&#34;gulp&#34;&gt;gulp&lt;/h2&gt;
+
+&lt;p&gt;At this point, I assume that you are fairly familiar with &lt;code&gt;gulp&lt;/code&gt; or at least know what it is. We are going to setup gulp and our initial set of dependencies to do things like minification of files etc. We will add these files as development dependencies:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;yarn add gulp -D
+yarn add gulp-sass -D
+yarn add gulp-autoprefixer -D
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we need to tell gulp what to do by adding a &lt;code&gt;gulpfile.js&lt;/code&gt;. Create this in the website root:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;E:\im5tu-hugo&amp;gt;echo &amp;quot;&amp;quot; &amp;gt; gulpfile.js
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you may remember from my previous post, anything that gets placed inside of static folder will get copied across to the main website. As I have chosen to use a css preprocessor (scss), we only want the output from the preprocessor to be in the static folder. Inside of the &lt;code&gt;.gitignore&lt;/code&gt; file, I have already put the main css/js files as these should be generated and not a part of main source code.&lt;/p&gt;
+
+&lt;p&gt;Now we can configure &lt;code&gt;gulp&lt;/code&gt; to watch our source directory, process the files and copy the output into the static folder. At the very top of the file we need to require our dependencies, followed by a few configuration variables:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var gulp         = require(&amp;quot;gulp&amp;quot;),
+    sass         = require(&amp;quot;gulp-sass&amp;quot;),
+    autoprefixer = require(&amp;quot;gulp-autoprefixer&amp;quot;),
+    srcRootDir   = &amp;quot;src/&amp;quot;,
+    destRootDir  = &amp;quot;static/&amp;quot;,
+    srcCssDir    = srcRootDir + &amp;quot;css/&amp;quot;,
+    srcJsDir     = srcRootDir + &amp;quot;js/&amp;quot;,
+    srcCss       = srcCssDir + &amp;quot;**/*.scss&amp;quot;,
+    srcJs        = srcJsDir + &amp;quot;**/*.js&amp;quot;,
+    destCssDir   = destRootDir + &amp;quot;css&amp;quot;,
+    destJsDir    = destRootDir + &amp;quot;js&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I have choosen to have a folder structure like the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;/root
+    /static
+        /css
+        /js
+    /src
+        /css
+        /js
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next inside of our gulp file, we can configure two tasks. One to process any javascript files that we have and another for any scss files that we have:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;gulp.task(&amp;quot;js&amp;quot;, function() {
+    gulp
+        .src(srcJs)
+        .pipe(gulp.dest(destJsDir))
+});
+
+gulp.task(&amp;quot;css&amp;quot;, function() {
+    gulp
+        .src(srcCss)
+        .pipe(sass({
+            outputStyle: &amp;quot;compressed&amp;quot;
+        }))
+        .pipe(autoprefixer({
+            browsers: [&amp;quot;last 20 versions&amp;quot;]
+        }))
+        .pipe(gulp.dest(destCssDir))
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lastly, we need to setup a watch task so that as files are changed they are copied to the static folder. When we combine this with hugo&amp;rsquo;s watch ability we have a dynamically changing site that reloads with the changes as we hit save. We also want to setup a default task, so that we can just run &lt;code&gt;gulp&lt;/code&gt; from inside of the root directory on the command line. The watch/default tasks look like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;gulp.task(&amp;quot;watch&amp;quot;, [&amp;quot;css&amp;quot;, &amp;quot;js&amp;quot;], function() {
+    gulp.watch([srcCss, srcJs], [&amp;quot;css&amp;quot;, &amp;quot;js&amp;quot;]);
+});
+
+gulp.task(&amp;quot;default&amp;quot;, [&amp;quot;watch&amp;quot;]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In terms of our gulpfile we are all setup and ready to go. At the time of writing there are problems running gulp directly from the command line. In order to work around this, I needed to add the following to the package.json file in our root directory:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;&amp;quot;scripts&amp;quot;: {
+    &amp;quot;gulp&amp;quot;: &amp;quot;gulp&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And then I can run gulp as follows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-cmd&#34;&gt;yarn gulp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;setting-up-our-site-for-css-js&#34;&gt;Setting up our site for css/js&lt;/h2&gt;
+
+&lt;p&gt;Now that we have our frontend pipeline setup and both the watch commands running, we can begin to change our site to include the files that we want. If you are using the bones theme, you need to create the following two files:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;/root
+    /layouts
+        /partials
+            /body
+                scripts.html
+            /header
+                styles.html
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Inside of the scripts file add:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;script src=&amp;quot;/js/site.js&amp;quot; async&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Inside of the styles file add:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;/css/site.css&amp;quot; /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now you should be able to add the file &lt;code&gt;/root/src/css/site.scss&lt;/code&gt; with the following content:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;body { background: #ababab }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All being well you should have both files renderd as part of your output.&lt;/p&gt;
+
+&lt;h2 id=&#34;cache-busting&#34;&gt;Cache busting&lt;/h2&gt;
+
+&lt;h3 id=&#34;creating-the-hash&#34;&gt;Creating the hash&lt;/h3&gt;
+
+&lt;p&gt;For our cache busting mechanism, we are going to append the hash of the file to the file. As a new file will be created everytime that our file changes, we will need to clear out the destination css folder. To start, we need to add two more packages, using yarn:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;yarn add gulp-hash -D
+yarn add del -D
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And then add them to our gulpfile:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var gulp         = require(&amp;quot;gulp&amp;quot;),
+    sass         = require(&amp;quot;gulp-sass&amp;quot;),
+    autoprefixer = require(&amp;quot;gulp-autoprefixer&amp;quot;),
+    hash         = require(&amp;quot;gulp-hash&amp;quot;),
+    del          = require(&amp;quot;del&amp;quot;),
+    ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now lets create a task to clean out some directories that we are using:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;gulp.task(&amp;quot;clean&amp;quot;, function() {
+    del([destCssDir, destJsDir, &amp;quot;data&amp;quot;]);
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can easily clean the directories that we need to at will. This could come in handy at a later date. Next we can change our task definitions to clean up their respective directories:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;gulp.task(&amp;quot;js&amp;quot;, function() {
+    del.sync([destJsDir]);
+...
+gulp.task(&amp;quot;css&amp;quot;, function() {
+    del.sync([destCssDir]);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, we can add the hash of the file prior to writing it to its destination in each task:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;...
+.pipe(hash())
+.pipe(gulp.dest(...)); // change ... to the relevant destination eg: destCssDir
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;using-the-hashed-file&#34;&gt;Using the hashed file&lt;/h3&gt;
+
+&lt;p&gt;In hugo, the &lt;code&gt;/root/data&lt;/code&gt; directory is used to store any data that we might need. Anything placed in here is accessible through the variable &lt;code&gt;.Site.Data&lt;/code&gt;. So using some more gulp magic, we can store the hahes of the files in here and update our template accordingly.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;gulp-hash&lt;/code&gt; has a built in manifest method that will generate a json file containing the hash for us. We can change our gulp tasks to leverage this functionality and place it inside of the &lt;code&gt;/root/data&lt;/code&gt; directory:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// js gulp task
+...
+.pipe(gulp.dest(destJsDir))
+.pipe(hash.manifest(&amp;quot;hash.json&amp;quot;))
+.pipe(gulp.dest(&amp;quot;data/&amp;quot;));
+
+// css gulp task
+...
+.pipe(gulp.dest(destCssDir))
+.pipe(hash.manifest(&amp;quot;hash.json&amp;quot;))
+.pipe(gulp.dest(&amp;quot;data/&amp;quot;));
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Restart our gulp task and now you should see the hash files being generated. If we open up the hash files, you should see something along the lines of:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;{&amp;quot;site.css&amp;quot;:&amp;quot;site-da39a3ee.css&amp;quot;,&amp;quot;site.js&amp;quot;:&amp;quot;site-da39a3ee.js&amp;quot;}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;All that&amp;rsquo;s left to do is to use these hashes inside of our layouts. Luckily, GO has a built in function called &lt;code&gt;index&lt;/code&gt; which accepts a map and an index and returns the value of the map with the given index. So in our templates, we simply need to ask for the right files. Let&amp;rsquo;s first change our stylesheet in &lt;code&gt;/layouts/partials/styles.html&lt;/code&gt; to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;/css/{{ index .Site.Data.hash &amp;quot;site.css&amp;quot; }}&amp;quot; /&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, let&amp;rsquo;s change our script template to do the same (&lt;code&gt;/layouts/partials/body/scripts&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;script src=&amp;quot;/js/{{ index .Site.Data.hash &amp;quot;site.js&amp;quot;}}&amp;quot; async&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we have a fully functional pipeline for frontend work. To start up the pipeline, you need to run two commands from different command line windows:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;yarn gulp
+hugo server -D
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And then you can make changes to your files at will. Happy FED&amp;rsquo;ing.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

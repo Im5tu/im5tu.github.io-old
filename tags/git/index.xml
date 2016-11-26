@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Git on Stuart Blackler&#39;s Tech Blog</title>
+    <link>https://im5tu.io/tags/git/index.xml</link>
+    <description>Recent content in Git on Stuart Blackler&#39;s Tech Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://im5tu.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Blog Building - Part 1 - Hello Hugo</title>
+      <link>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</link>
+      <pubDate>Thu, 17 Nov 2016 20:23:00 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</guid>
+      <description>&lt;p&gt;As promised in this first mini-series, I am going to guide you through the steps that I have taken to get my blog up and running on Github pages and Cloudflare with SSL. As these the steps that I have taken to get this blog up and running, your milage may vary with this as different versions get released. That said, you should be fine.
+&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;NB: I had already pushed a hello world up into my hosted repository with an index file containing hello world before I decided to write this guide.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;prerequisite-installing-git&#34;&gt;Prerequisite: Installing Git&lt;/h2&gt;
+
+&lt;p&gt;The likelyhood is that you&amp;rsquo;ve already installed git, but if you haven&amp;rsquo;t download and install the latest version of git from &lt;a href=&#34;https://git-scm.com/&#34;&gt;the git website&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;installing-hugo&#34;&gt;Installing Hugo&lt;/h2&gt;
+
+&lt;p&gt;Now that we have git installed, we are ready and raring to go. I&amp;rsquo;m going to make the assumption that you are on Windows with the instructions. We are going to install go, then use go to install hugo from source, installing all the updates as we go.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Navigate in your favourite browser to: &lt;a href=&#34;https://golang.org/dl/&#34;&gt;https://golang.org/dl/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Download the installer of choice and follow the instructions in the installer, making a note of installation directory (eg: &lt;code&gt;E:\GoLang\&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Open a new command prompt and enter: &lt;code&gt;echo %GOROOT%&lt;/code&gt;. You should see the installation directory echo&amp;rsquo;d out to the console window. Close the command prompt for the next step&lt;/li&gt;
+&lt;li&gt;Next, we need to ensure that &lt;code&gt;GOPATH&lt;/code&gt; is set on your path
+
+&lt;ul&gt;
+&lt;li&gt;Right click on the start button&lt;/li&gt;
+&lt;li&gt;Click on System&lt;/li&gt;
+&lt;li&gt;Click on Advanced System Settings on the left&lt;/li&gt;
+&lt;li&gt;Click on the Environment Variables� button on the bottom&lt;/li&gt;
+&lt;li&gt;In the User variables section, click the New� button&lt;/li&gt;
+&lt;li&gt;Type the name &lt;code&gt;GOPATH&lt;/code&gt; for the variable name&lt;/li&gt;
+&lt;li&gt;In the value textbox, type in the folder where you wish to extract hugo to. Eg: &lt;code&gt;E:\GoLang\&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;With the Environment Variables window open still, edit the PATH variable under user to include `%GOPATH%\bin&lt;/li&gt;
+&lt;li&gt;Re-open any command prompt windows so that the variables take effect&lt;/li&gt;
+&lt;li&gt;Now we are ready to install hugo by running the following command: &lt;code&gt;go get -u -v github.com/spf13/hugo&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;This will download hugo, update its dependencies and build hugo. Expect this process to take 5 minutes or so.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Verify that hugo has downloaded successfully by running &lt;code&gt;hugo --help&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;configuring-git&#34;&gt;Configuring Git&lt;/h2&gt;
+
+&lt;p&gt;Typically you can host on Github pages for two scenarios: Project pages or User/Organisation pages. When you are hosting the former, you will have a branch named &lt;code&gt;gh-pages&lt;/code&gt; which hosts the site within the project. The latter is what we are going to setup which requires the site to be present on the master branch. For this, we are going to use git submodules. This will mean that we actually have two repositories created, one for the hosted site and one for the structure code. This is actually quiet a nice way around an otherwise awkward branching model.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Create repository &lt;code&gt;&amp;lt;github-handle&amp;gt;.github.io&lt;/code&gt;, eg: &lt;code&gt;im5tu.github.io&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;This repository will contain the finished site&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Create repository &lt;code&gt;&amp;lt;github-handle&amp;gt;-hugo&lt;/code&gt;, eg: &lt;code&gt;im5tu-hugo&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;This repository will contain all of the generation code and templates etc&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Create a location on disk where you will store the generation files and navigate to that directory on the command line
+
+&lt;ul&gt;
+&lt;li&gt;Eg: &lt;code&gt;mkdir E:\im5tu-hugo &amp;amp;&amp;amp; cd E:\im5tu-hugo&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Next run the following command to make a new site in the new directory: &lt;code&gt;hugo new site .&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;It&amp;rsquo;s probably a good time to create the git respository and commit the code we have currently
+
+&lt;ul&gt;
+&lt;li&gt;To initialize the git repository: &lt;code&gt;git init&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Add all the current files: &lt;code&gt;git add -A&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Commit all of the files: &lt;code&gt;git commit -am &amp;quot;Initial Commit&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Add the remote url of your Github repository: &lt;code&gt;git remote add origin https://github.com/Im5tu/im5tu-hugo.git&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Push the code to your new repository: &lt;code&gt;git push -u origin master&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Next we are going to create a sub-module in the public directory. This folder is where the generated output goes.
+
+&lt;ul&gt;
+&lt;li&gt;I used GitKraken to do this, but you could do it from the command line also:&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;git submodule add -b master git@github.com:&amp;lt;github-handle&amp;gt;/&amp;lt;github-handle&amp;gt;.github.io.git public&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Now we have that setup, commit everything again
+
+&lt;ul&gt;
+&lt;li&gt;Commit all of the files: &lt;code&gt;git commit -am &amp;quot;Initialized submodules&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Push the code to Github: &lt;code&gt;git push&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;From now on, when we generate our site with &lt;code&gt;hugo&lt;/code&gt; (the way we will generate our site) the files will be generated inside of the public directory. Then its a case of either committing the files in the main repository or changing to the public folder and committing the changes in that repository to push it to our live site.&lt;/p&gt;
+
+&lt;p&gt;Out of curiosity, I tested to make sure that they have different git histories:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;E:\im5tu-hugo&amp;gt;git log --oneline
+f3c2595 Initialized submodules
+e60426b Initial commit
+
+E:\im5tu-hugo&amp;gt;cd public &amp;amp;&amp;amp; git log --oneline
+ef81fbc Create CNAME
+3043605 Hello World
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This can be verified on both repositories &lt;a href=&#34;https://github.com/Im5tu/im5tu-hugo/commits/master&#34;&gt;here&lt;/a&gt; and &lt;a href=&#34;https://github.com/Im5tu/im5tu.github.io/commits/master&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
+
+&lt;p&gt;So far we have created our git repositories, installed both Go Lang and hugo and setup our workflow ready to begin work on our site. In the next article, I will begin adding a theme so that we can start publishing the posts that we are writing.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stuart Blackler&#39;s Tech Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2016/11/blog-building---part-2---my-first-post/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="Setting up a theme and creating our first article using hugo and bones">
+    
+    
+    <link rel="stylesheet" href="/css/site-0f4726d7.css" />
+<link href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono|Exo:900|Raleway" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Tech Blog" /></head>
+<body>
+<section class="pageContainer">
+    <header id="pageHeader">
+    <section id="pageHeader-wrapper">
+        <section id="pageHeader-logo">
+            <a href="/" title="Homepage">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4405.28 4775.65" id="logo" class="pageHeader-imagery"><g id="logo-layer"><path class="logo-path" d="M3579.85,1950.46C3761.31,1770.51,3872,1521.91,3872,1246.73c0-550.29-571.68-1008.37-995.83-995.83H1729.81a174.58,174.58,0,0,0-33.93-3H678.66a187,187,0,0,0-135,56.84,191.23,191.23,0,0,0-56,135.72c0,100.35,76,184.41,172.6,194a122.28,122.28,0,0,0,16.24.72h32.45l2079.44-9.58c351.86,0,665.36,321.64,665.36,673.47,0,321.64-239,588-549.57,630a663,663,0,0,1-86.3,5.91H1213.45c-47.94,0-89.25,20.67-120.23,53.09-31.73,32.49-50.17,78.23-50.17,128.37,0,100.35,76.72,181.46,170.4,181.46H3351.17c350.38,0,635.87,315,635.87,677.21,0,360.69-315,638.75-665.37,638.75L961.18,3591.73c.72.72.72.72.72,1.51l-396.09-4.47c-126.89,14-302.45,64.18-411.62,173.39C45.74,3870.59,0,3984.19,0,4150.88c0,332.67,240.49,617.42,573.16,617.42l1820.54,7.35c332.66,0,879.28-120.23,1014.27-673.47H2983.82c-39.84,135-218.34,306.16-417.52,320.92l-1964.36-7.42a230.72,230.72,0,0,1-230.88-230.88,231.7,231.7,0,0,1,230.88-230.16l1890.6-9.58c22.15,0,182.94-5.91,202.85,0h714.06c548.81,0,995.83-458.8,995.83-1023.85C4405.28,2427.7,3972.27,2035.32,3579.85,1950.46ZM715.54,481.06v-.72a122.19,122.19,0,0,0,16.24.72Z"/><path class="logo-path" d="M1147.14,0a122.26,122.26,0,0,0,16.24.72h-16.24Z"/><path class="logo-path" d="M1163.39.72h-16.24V0A122.26,122.26,0,0,0,1163.39.72Z"/><path class="logo-path" d="M3421.33,3499.38h-422s-50.89-379.13-552.48-382.08H1271.8c-568,0-1028.28-461-1028.28-1028.25,0-284,115.08-541.5,301-727.35,186.61-185.92,443.31-301,727.32-301H2500.74a176.66,176.66,0,0,1,28-2.23H2848.1a184.82,184.82,0,0,1,185.17,185.21c0,102.51-82.63,185.85-185.17,185.85H1322.7c-182.94,0-348.15,72.32-467.66,190.32C735.53,1737.16,661.76,1898.74,661.76,2078c0,358.52,295.82,655.75,660.93,655.75l1124.2,12.53S3292.25,2747.76,3421.33,3499.38Z"/></g></svg>
+            </a>
+        </section>
+        <nav id="pageHeader-nav">
+            <ul id="pageHeader-nav-ul">
+                
+                <li><a class="pageHeader-nav-ul-li-link" target="_blank" href="https://github.com/im5tu">Github</a></li>
+                <li><a class="pageHeader-nav-ul-li-link" target="_blank" href="https://twitter.com/im5tu">Twitter</a></li>
+                <li><a class="pageHeader-nav-ul-li-link" href="/article/index.xml">Rss</a></li>
+            </ul>
+        </nav>
+    </section>
+</header>
+    <section class="pageContainer-content">
+        <article class="article">
+    <header class="article-header">
+        <h1><a href="https://im5tu.io/article/2016/11/blog-building---part-2---my-first-post/">Blog Building - Part 2 - My First Post</a></h1>
+        <p>Published: <time class="article-header-time" pubdate="pubdate" datetime="2016-11-17 23:01:38 &#43;0000 UTC">2016-11-17 23:01:38 &#43;0000 UTC</time><p>
+    </header>
+    <section class="article-content"><p>In <a href="/article/2016/11/blog-building---part-1---hello-hugo/">the last article</a>, we setup our workflow and all the pieces that you will need to create a new site. Now we need to install a theme and begin publishing. Prior to writing this series, I began evaluating the extensibility of hugo themes and started work on something I call bones - a no thrills template with no styling, just structure. As I improve the template it will become more useful, maybe. It will remain the template behind mysite as I continue to improve it.
+</p>
+
+<h2 id="installing-a-theme">Installing a theme</h2>
+
+<p>To install a theme, you need to know the repositories git url. You can see additional themes at <a href="http://themes.gohugo.io/">http://themes.gohugo.io/</a>. I will be using my <a href="https://github.com/Im5tu/hugo-bones.git">bones theme</a> as the base.</p>
+
+<p>Once you have the themes git url:
+    - Open the command line to repository that has our generation files in it
+    - Change directories to the themes folder
+    - Clone the git repo to this location, eg: <code>git clone https://github.com/Im5tu/hugo-bones.git</code></p>
+
+<p>Once the repository is cloned, we need to tell hugo how to use our new theme. To do this we need to open the <code>config.toml</code> file inside of the root directory and create an entry called theme. When this is done, your config file should look something along the lines of the following:</p>
+
+<pre><code class="language-c#">baseurl = &quot;http://example.org/&quot;
+title = &quot;My New Hugo Site&quot;
+languageCode = &quot;en-us&quot;
+theme = &quot;hugo-bones&quot;
+</code></pre>
+
+<p>Whilst I am here, I am going to change the other properties accordingly:</p>
+
+<pre><code class="language-c#">baseurl = &quot;https://im5tu.io/&quot;
+title = &quot;Stuart Blackler's Tech Blog&quot;
+languageCode = &quot;en-us&quot;
+theme = &quot;hugo-bones&quot;
+</code></pre>
+
+<p>Don&rsquo;t forget to save the file. It&rsquo;s also probably a good idea to commit your progress as you go.</p>
+
+<h2 id="creating-our-first-post">Creating our first post</h2>
+
+<p>Now that we have our theme all setup, we should probably create a hello world post. Assuming that you are using the bones theme like me, we can go back the root of our repository and run this command to generate a new post: <code>hugo new article\hello-world.md</code>. This creates a file under the <code>content\article</code> directory.</p>
+
+<p>We can preview this site by running the command: <code>hugo server -D</code> and navigating to <code>http://localhost:1313/</code>. All being well you should see the following:</p>
+
+<p><img src="/img/blog-building-part-2/first-post.JPG" alt="Alt Text" /></p>
+
+<p>One of the great things about hugo is that it has live reload capabilities built in. This means that we can navigate to the page that we want to edit in the browser and everytime we make a change to the file, it will be synced to the screen. Try it! This magic happens because we called <code>hugo server</code> which, in a way, breaks down to mean:
+    - <code>hugo</code>: build my site please
+    - <code>server</code>: load a simple http server with my content</p>
+
+<p>Additionally, I added the flag <code>-D</code> which means that I want to build draft posts. In the template that I created, I wanted to create everything as a draft so that I could work on it in isolation and be safe in the knowledge that I wouldn&rsquo;t accidently post something that wasn&rsquo;t ready.</p>
+
+<h2 id="additional-configuration">Additional configuration</h2>
+
+<p>Before I finish up this post and write more, I want to change a few of the configuration options. Personally, I like working with json rather than yaml/toml inside of the markdown files, it feels more natural to me. Other changes that I wish to make include: changing permalink styles, output verbosity and enabling the robots.txt file.</p>
+
+<p>In order to make these changes, we need to once more open the <code>config.toml</code> file and add the properties as follows:</p>
+
+<pre><code class="language-c#">baseurl = &quot;https://im5tu.io/&quot;
+title = &quot;Stuart Blackler's Tech Blog&quot;
+languageCode = &quot;en-us&quot;
+theme = &quot;hugo-bones&quot;
+metaDataFormat = &quot;json&quot;
+enableRobotsTXT = true
+[permalinks]
+	article = &quot;article/:year/:month/:title/&quot;
+</code></pre>
+
+<h2 id="next-steps">Next steps</h2>
+
+<p>One of the next things that I will be doing is working with the template to ensure that everything is setup in terms of category/tag pages, rss feeds etc. This, although unstyled, will be enough to begin pushing to the live site.</p>
+
+<p>After that is complete, I will be setting up gulp to build, clean and minify my javascript and css files. From there I can start working on the visual styling of the site. I will blog the entire process, but this may take some time as I figure out exactly what I want.</p>
+
+<p>Finally, it&rsquo;s setting up Github and Cloudflare so that everyone can enjoy an SSL enabled site around the world at blazing speeds.</p></section>
+    <footer class="article-footer">
+        <hr />Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/hugo/">hugo</a></li><li><a class="article-tag" href="/tags/blogging/">blogging</a></li>
+</ul></footer>
+</article>
+    </section>
+    <footer id="pageFooter">
+    <section id="pageFooter-copyright" class="pageFooter-section">
+        &copy; 2016 Stuart Blackler
+    </section>
+    <section id="pageFooter-details" class="pageFooter-section">
+        <a href="https://github.com/im5tu/im5tu-hugo" target="_blank">Edit me on Github</a>
+    </section>
+    <section id="pageFooter-scroll" class="pageFooter-section">
+        <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>
+    </section>
+</footer>
+</section>
+<script src="/js/site-c29acdb6.js" defer></script>3
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5838c774d027e891" defer></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-88036425-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+</html>
