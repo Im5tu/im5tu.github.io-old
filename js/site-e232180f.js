@@ -80,6 +80,9 @@ window.site.init(function () {
 (function (_site) {
     (function (_time) {
         function humanizer(date) {
+            if(!date)
+                return;
+                
             // TODO :: Localise etc
             if (typeof date !== 'object') {
                 date = new Date(date);
