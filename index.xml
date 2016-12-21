@@ -6,8 +6,74 @@
     <description>Recent content on Stuart Blackler&#39;s Tech Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 25 Nov 2016 22:33:48 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 21 Dec 2016 23:25:27 +0000</lastBuildDate>
     <atom:link href="https://im5tu.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Write Good Code, Not Code Hastily</title>
+      <link>https://im5tu.io/article/2016/12/write-good-code-not-code-hastily/</link>
+      <pubDate>Wed, 21 Dec 2016 23:25:27 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2016/12/write-good-code-not-code-hastily/</guid>
+      <description>&lt;p&gt;This article is a rework of a draft that I&amp;rsquo;ve had sitting in my drafts folder for a long while now. Over the last six months or so, I&amp;rsquo;ve been reviewing a lot more code than I had previously thanks in part to a promotion and in part, code reviewing applicants coding entries. Some of the code has been good, with some code, really not so good!
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; &lt;em&gt;Do everything in your power to not take the shortcut when writing code. It will bite you in the future.&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I am much the same as everybody else, there is room for improvement in my code - of that I&amp;rsquo;m sure. We are all limited by knowledge: not knowing what we don&amp;rsquo;t know. That&amp;rsquo;s one of the things I enjoy the most about what I do, learning how to do new things to make my life, and others lives, easier in the long run.&lt;/p&gt;
+
+&lt;p&gt;One of the areas that I think 95% of developers can be better at doing is writing clean code. We&amp;rsquo;ve all heard of &lt;a href=&#34;https://cleancoders.com/&#34;&gt;Uncle Bob&lt;/a&gt;, so I won&amp;rsquo;t re-itterate him here. I&amp;rsquo;ve found that senior developers asking for £45,000 cannot recite the SOLID principals correctly (if at all), let alone use them in practise. I use the SOLID principals as one example, but in reality we are talking about clean and reusable code. Code anyone of any level can pickup and understand.&lt;/p&gt;
+
+&lt;h2 id=&#34;on-haste&#34;&gt;On Haste&lt;/h2&gt;
+
+&lt;p&gt;There comes a time in every project where you&amp;rsquo;re up against the clock for one reason or another. Deadline&amp;rsquo;s are coming up quickly and you still haven&amp;rsquo;t finished that module. What do you do? Do you write those unit tests later? Do you take that &amp;ldquo;quick and easy&amp;rdquo; shortcut.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s very easy to take the shortcut and get the work out on time. When you do this, you are deferring that effort until later. Except:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Later equals never&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;So what happens when you keep deffering that effort until never? You and your team start to use the phrases like: &amp;ldquo;this needs a complete rewrite&amp;rdquo; or &amp;ldquo;we can&amp;rsquo;t do feature x because it wasn&amp;rsquo;t written in an extensible way&amp;rdquo;. These phrases should be massive red flags. They are a sign that too many shortcuts have been taken in the past which have now come to fruition.&lt;/p&gt;
+
+&lt;p&gt;Back to the example, what should you do? There are a number of things that you can do, including:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Ask for more time to do it properly,&lt;/li&gt;
+&lt;li&gt;Attempt to descope some of the work,&lt;/li&gt;
+&lt;li&gt;Stay late and put extra effort it&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Typically, the first two options are likely your best approach before considering a shortcut or working late. I used often work later as a last resort, though it is something that I am not fond of in any shape or form. This typically means bad quoting/estimating/requirements gathering which is a little outside of scope for this article, so I&amp;rsquo;ll cover this topic in a future post.&lt;/p&gt;
+
+&lt;p&gt;Clean coding can help in preventing us from reaching the situation described above. I gave some advice today, on this very subject, to a junior developer which I don&amp;rsquo;t think is repeated enough, in any form. I&amp;rsquo;ve given it before and i&amp;rsquo;ll give it countless times more:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Take the time and learn how to do it correctly. Practise doing it correctly until it&amp;rsquo;s second nature, even on current projects. You will become faster at it with time and be a better developer for it.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Studying by itself is seldom enough. Learning is always best in context. The first few times you try something new, you will inevitably make mistakes. It&amp;rsquo;s natural to make mistakes when learning, we are human afterall. Think of learning like its an agile piece of work. Iterrate and improve (with the help of code reviews).&lt;/p&gt;
+
+&lt;p&gt;Learning the core patterns &amp;amp; principals (eg: SOLID) may slow you down in the early stages of learning as you refer to learning material. However, don&amp;rsquo;t be put off by this. As your knowledege increases, you will be spending less time fighting your way through unreadable code whilst writing code that can be read by all skill levels. Code that is not readable slows everyone down. Yourself included, though you may not realise it at first.&lt;/p&gt;
+
+&lt;h2 id=&#34;on-code-reviews&#34;&gt;On Code Reviews&lt;/h2&gt;
+
+&lt;p&gt;One of the quickest ways to improve the code you&amp;rsquo;re writing is to have it reviewed. Reviews need to be a conscious effort by everyone in a team. How you do the review is up to you. A review can be two people sitting at a desk, or it can be an isolated review. Pick which strategy is best for you. It&amp;rsquo;s just important that it happens.&lt;/p&gt;
+
+&lt;p&gt;Can a junior review a seniors code? Certainly, in my opinion. Juniors should be asking questions about the code and how it works. This forces a greater understanding in what has been written (on both sides) and the core  principals behind the code.&lt;/p&gt;
+
+&lt;p&gt;One of the most common blockers to adopting code reviews is that they take too much time. If you are attempting to review a 3000 file changeset, then of course it will take time. But we must also be asking the question: why has it grown to a 3000 file changeset in the first place? The chances of missing an obvious mistake in a changeset grows exponentially with the size of the changeset. Reviewers get fatigued with large changesets. Where possible, try and keep the changeset small and have it reviewed more frequently by different people. The more eyes on the code, the better, generally.&lt;/p&gt;
+
+&lt;p&gt;Code reviews exist for two primary reasons: to help people learn and catch the obvious mistakes. They should also be &lt;a href=&#34;https://slack.engineering/on-empathy-pull-requests-979e4257d158&#34;&gt;empathetic in nature&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;final-thoughts&#34;&gt;Final Thoughts&lt;/h2&gt;
+
+&lt;p&gt;The scrutineers amongst you will have noticed that the sub-text to this article is all about preventing technical debt. Technical debt is a monster that accrues interest over time. One of the key ways to prevent that debt, is by writing clean code. We should be writing code as clean as we can. The more you write clean code, the quicker you will be at writing it.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Your code is your legacy&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>About</title>
@@ -427,7 +493,7 @@ theme = &amp;quot;hugo-bones&amp;quot;
 
 &lt;p&gt;We can preview this site by running the command: &lt;code&gt;hugo server -D&lt;/code&gt; and navigating to &lt;code&gt;http://localhost:1313/&lt;/code&gt;. All being well you should see the following:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/blog-building-part-2/first-post.JPG&#34; alt=&#34;Alt Text&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/blog-building-part-2/first-post.JPG&#34; alt=&#34;First Post Image&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;One of the great things about hugo is that it has live reload capabilities built in. This means that we can navigate to the page that we want to edit in the browser and everytime we make a change to the file, it will be synced to the screen. Try it! This magic happens because we called &lt;code&gt;hugo server&lt;/code&gt; which, in a way, breaks down to mean:
     - &lt;code&gt;hugo&lt;/code&gt;: build my site please

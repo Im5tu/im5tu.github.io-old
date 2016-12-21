@@ -416,7 +416,7 @@ theme = &amp;quot;hugo-bones&amp;quot;
 
 &lt;p&gt;We can preview this site by running the command: &lt;code&gt;hugo server -D&lt;/code&gt; and navigating to &lt;code&gt;http://localhost:1313/&lt;/code&gt;. All being well you should see the following:&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/blog-building-part-2/first-post.JPG&#34; alt=&#34;Alt Text&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/blog-building-part-2/first-post.JPG&#34; alt=&#34;First Post Image&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;One of the great things about hugo is that it has live reload capabilities built in. This means that we can navigate to the page that we want to edit in the browser and everytime we make a change to the file, it will be synced to the screen. Try it! This magic happens because we called &lt;code&gt;hugo server&lt;/code&gt; which, in a way, breaks down to mean:
     - &lt;code&gt;hugo&lt;/code&gt;: build my site please
