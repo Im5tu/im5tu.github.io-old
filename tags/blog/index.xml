@@ -9,6 +9,69 @@
     <atom:link href="https://im5tu.io/tags/blog/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Hugo Quick Tip: Inlining Css Files</title>
+      <link>https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/</link>
+      <pubDate>Thu, 29 Dec 2016 20:25:58 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/</guid>
+      <description>&lt;p&gt;Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&amp;rsquo;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.
+&lt;/p&gt;
+
+&lt;h2 id=&#34;the-readfile-function&#34;&gt;The &lt;code&gt;readFile&lt;/code&gt; function&lt;/h2&gt;
+
+&lt;p&gt;In Hugo, the &lt;code&gt;readFile&lt;/code&gt; function looks for a file relative to the current project working directory and returns it as a string. If we had a file located at: &lt;code&gt;&amp;lt;root&amp;gt;/static/css/site.css&lt;/code&gt;, then we could render the file out like so:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;style&amp;gt;{ {- renderFile &amp;quot;/static/css/site.css&amp;quot; -} }&amp;lt;/style&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;NB:&lt;/strong&gt; &lt;em&gt;Remember to close the squiggly brackets so that Hugo renders it correctly.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;There is a gotcha with this approach so far. Hugo will try and do its thing with the resultant string and what you will end up with is something along the lines of:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;script&amp;gt;ZgotmplZ&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;as opposed to your intented css contents. Luckily, there is a piped method that we can use to sort this out for us:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;style&amp;gt;{ {- renderFile &amp;quot;css/site.css&amp;quot; | safeCss -} }&amp;lt;/style&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;reading-a-hashed-file&#34;&gt;Reading a hashed file&lt;/h2&gt;
+
+&lt;p&gt;As you may recall in &lt;a href=&#34;http://localhost:1313/article/2016/11/blog-building---part-4---frontend/&#34;&gt;my previous Hugo post&lt;/a&gt;, I setup my css files with cache busting capabilites by appending the hash onto the filename. In order to render this as part of the HTML, we need a few things:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Find the name of the hashed file&lt;/li&gt;
+&lt;li&gt;Build the file path&lt;/li&gt;
+&lt;li&gt;Call readFile&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In order to get the hashed file name, we can inspect the site&amp;rsquo;s data sources, looking for the file name (requires post mentioned above):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{{ $siteCssHash := (index .Site.Data.hash &amp;quot;site.css&amp;quot;)}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next, we need to build up the correct file path. Note, this is the file path prior to rendering:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{{ $siteCssPath := (printf &amp;quot;/static/css/%s&amp;quot; $siteCssHash) }}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Finally, we need to call &lt;code&gt;readFile&lt;/code&gt; and ensure that it is marked as a safe css string:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;style&amp;gt;{{- readFile $siteCssPath | safeCSS -}}&amp;lt;/style&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So putting the three together:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{{ $siteCssHash := (index .Site.Data.hash &amp;quot;site.css&amp;quot;)}}
+{{ $siteCssPath := (printf &amp;quot;/static/css/%s&amp;quot; $siteCssHash) }}
+&amp;lt;style&amp;gt;{{- readFile $siteCssPath | safeCSS -}}&amp;lt;/style&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And that&amp;rsquo;s it. When the page reloads/is rebuilt, your pages should now contain inlined css. You can view this &lt;a href=&#34;https://github.com/Im5tu/im5tu-hugo/blob/84ee887616acbe6cfef7e37b0dc9b4779aad31fd/layouts/partials/header/styles.html&#34;&gt;exact commit here&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>Blog Building - Part 4 - Frontend</title>
       <link>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</link>
       <pubDate>Sat, 19 Nov 2016 08:01:38 +0000</pubDate>

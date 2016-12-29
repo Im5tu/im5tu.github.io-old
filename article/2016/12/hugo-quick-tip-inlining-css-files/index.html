@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stuart Blackler&#39;s Tech Blog</title>
-    <link rel="canonical" href="https://im5tu.io/tags/hugo/">
+    <title>Hugo Quick Tip: Inlining Css Files - Stuart Blackler&#39;s Tech Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="A very quick look at how to inline a css file using Hugo static site generator.">
     
     
-    
-    <meta property="og:title" content="Hugo - Stuart Blackler&#39;s Tech Blog" />
+    <meta property="og:title" content="Hugo Quick Tip: Inlining Css Files - Stuart Blackler&#39;s Tech Blog" />
 <meta property="og:type" content="website" />
 
-<meta property="og:description" content="A little place for all my thoughts on all things cyber.">
+<meta property="og:description" content="A very quick look at how to inline a css file using Hugo static site generator.">
 
-<meta property="og:url" content="https://im5tu.io/tags/hugo/" />
+<meta property="og:url" content="https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/" />
 <meta property="og:image" content="https://im5tu.io/img/site-logo.png" />
 <meta property="og:site_name" content="Stuart Blackler&#39;s Tech Blog" />
 <meta name="twitter:card" content="summary" />
@@ -41,81 +41,71 @@
     </section>
 </header>
     <section class="pageContainer-content">
-        
-
-<article class="tagpage">
-    <header class="tagpage-header">
-        <h1>Pages tagged: Hugo</p>
-    </header>
-    <section class="tagpage-content">
-        
-            <article class="article">
+        <article class="article">
     <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/">Hugo Quick Tip: Inlining Css Files</a></h2>
+        <h1><a href="https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/">Hugo Quick Tip: Inlining Css Files</a></h1>
         <p>Published: <time class="article-header-time" pubdate="pubdate" datetime="2016-12-29T20:25:58">2016-12-29 20:25:58 &#43;0000 UTC</time><p>
     </header>
-    <section class="article-summary"><p>Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&rsquo;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.
-</p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
+    <section class="article-content"><p>Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&rsquo;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.
+</p>
+
+<h2 id="the-readfile-function">The <code>readFile</code> function</h2>
+
+<p>In Hugo, the <code>readFile</code> function looks for a file relative to the current project working directory and returns it as a string. If we had a file located at: <code>&lt;root&gt;/static/css/site.css</code>, then we could render the file out like so:</p>
+
+<pre><code>&lt;style&gt;{ {- renderFile &quot;/static/css/site.css&quot; -} }&lt;/style&gt;
+</code></pre>
+
+<p><strong>NB:</strong> <em>Remember to close the squiggly brackets so that Hugo renders it correctly.</em></p>
+
+<p>There is a gotcha with this approach so far. Hugo will try and do its thing with the resultant string and what you will end up with is something along the lines of:</p>
+
+<pre><code>&lt;script&gt;ZgotmplZ&lt;/script&gt;
+</code></pre>
+
+<p>as opposed to your intented css contents. Luckily, there is a piped method that we can use to sort this out for us:</p>
+
+<pre><code>&lt;style&gt;{ {- renderFile &quot;css/site.css&quot; | safeCss -} }&lt;/style&gt;
+</code></pre>
+
+<h2 id="reading-a-hashed-file">Reading a hashed file</h2>
+
+<p>As you may recall in <a href="http://localhost:1313/article/2016/11/blog-building---part-4---frontend/">my previous Hugo post</a>, I setup my css files with cache busting capabilites by appending the hash onto the filename. In order to render this as part of the HTML, we need a few things:</p>
+
+<ul>
+<li>Find the name of the hashed file</li>
+<li>Build the file path</li>
+<li>Call readFile</li>
+</ul>
+
+<p>In order to get the hashed file name, we can inspect the site&rsquo;s data sources, looking for the file name (requires post mentioned above):</p>
+
+<pre><code>{{ $siteCssHash := (index .Site.Data.hash &quot;site.css&quot;)}}
+</code></pre>
+
+<p>Next, we need to build up the correct file path. Note, this is the file path prior to rendering:</p>
+
+<pre><code>{{ $siteCssPath := (printf &quot;/static/css/%s&quot; $siteCssHash) }}
+</code></pre>
+
+<p>Finally, we need to call <code>readFile</code> and ensure that it is marked as a safe css string:</p>
+
+<pre><code>&lt;style&gt;{{- readFile $siteCssPath | safeCSS -}}&lt;/style&gt;
+</code></pre>
+
+<p>So putting the three together:</p>
+
+<pre><code>{{ $siteCssHash := (index .Site.Data.hash &quot;site.css&quot;)}}
+{{ $siteCssPath := (printf &quot;/static/css/%s&quot; $siteCssHash) }}
+&lt;style&gt;{{- readFile $siteCssPath | safeCSS -}}&lt;/style&gt;
+</code></pre>
+
+<p>And that&rsquo;s it. When the page reloads/is rebuilt, your pages should now contain inlined css. You can view this <a href="https://github.com/Im5tu/im5tu-hugo/blob/84ee887616acbe6cfef7e37b0dc9b4779aad31fd/layouts/partials/header/styles.html">exact commit here</a>.</p></section>
+    <footer class="article-footer">
+        <hr />Tags: <ul class="article-tags">
     <li><a class="article-tag" href="/tags/hugo/">hugo</a></li><li><a class="article-tag" href="/tags/blog/">blog</a></li>
 </ul></footer>
 </article>
-        
-            <article class="article">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2016/11/blog-building---part-4---frontend/">Blog Building - Part 4 - Frontend</a></h2>
-        <p>Published: <time class="article-header-time" pubdate="pubdate" datetime="2016-11-19T08:01:38">2016-11-19 08:01:38 &#43;0000 UTC</time><p>
-    </header>
-    <section class="article-summary"><p>So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.</p>
-
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/hugo/">hugo</a></li><li><a class="article-tag" href="/tags/blog/">blog</a></li><li><a class="article-tag" href="/tags/js/">js</a></li><li><a class="article-tag" href="/tags/yarn/">yarn</a></li><li><a class="article-tag" href="/tags/node/">node</a></li>
-</ul></footer>
-</article>
-        
-            <article class="article">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2016/11/blog-building---part-3---theming/">Blog Building - Part 3 - Theming</a></h2>
-        <p>Published: <time class="article-header-time" pubdate="pubdate" datetime="2016-11-18T19:01:38">2016-11-18 19:01:38 &#43;0000 UTC</time><p>
-    </header>
-    <section class="article-summary"><p>In this article, I will show you how the theme has been constructed and show you how the overrides work. So far we have created a site, setup most of our workflow and posted our first article.
-</p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/hugo/">hugo</a></li><li><a class="article-tag" href="/tags/blogging/">blogging</a></li>
-</ul></footer>
-</article>
-        
-            <article class="article">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2016/11/blog-building---part-2---my-first-post/">Blog Building - Part 2 - My First Post</a></h2>
-        <p>Published: <time class="article-header-time" pubdate="pubdate" datetime="2016-11-17T23:01:38">2016-11-17 23:01:38 &#43;0000 UTC</time><p>
-    </header>
-    <section class="article-summary"><p>In <a href="/article/2016/11/blog-building---part-1---hello-hugo/">the last article</a>, we setup our workflow and all the pieces that you will need to create a new site. Now we need to install a theme and begin publishing. Prior to writing this series, I began evaluating the extensibility of hugo themes and started work on something I call bones - a no thrills template with no styling, just structure. As I improve the template it will become more useful, maybe. It will remain the template behind mysite as I continue to improve it.
-</p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/hugo/">hugo</a></li><li><a class="article-tag" href="/tags/blogging/">blogging</a></li>
-</ul></footer>
-</article>
-        
-            <article class="article">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/">Blog Building - Part 1 - Hello Hugo</a></h2>
-        <p>Published: <time class="article-header-time" pubdate="pubdate" datetime="2016-11-17T20:23:00">2016-11-17 20:23:00 &#43;0000 UTC</time><p>
-    </header>
-    <section class="article-summary"><p>As promised in this first mini-series, I am going to guide you through the steps that I have taken to get my blog up and running on Github pages and Cloudflare with SSL. As these the steps that I have taken to get this blog up and running, your milage may vary with this as different versions get released. That said, you should be fine.
-</p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/hugo/">hugo</a></li><li><a class="article-tag" href="/tags/go/">go</a></li><li><a class="article-tag" href="/tags/git/">git</a></li><li><a class="article-tag" href="/tags/blogging/">blogging</a></li>
-</ul></footer>
-</article>
-        
-    </section>
-    <footer class="tagpage-footer">
-    </footer>
-</article>
-
-
     </section>
     <footer id="pageFooter">
     <section id="pageFooter-copyright" class="pageFooter-section">
