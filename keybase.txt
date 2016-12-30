@@ -1,0 +1,68 @@
+==================================================================
+https://keybase.io/im5tu
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://im5tu.io
+  * I am im5tu (https://keybase.io/im5tu) on keybase.
+  * I have a public key with fingerprint 4DB4 4182 E554 B981 1860  CACB 176E 56F2 602C 4866
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "eldest_kid": "0101a828e208bea99459ced35af61524b0bae0d004d63ee56af763e0ca90597f22c60a",
+            "fingerprint": "4db44182e554b9811860cacb176e56f2602c4866",
+            "host": "keybase.io",
+            "key_id": "176e56f2602c4866",
+            "kid": "0101a828e208bea99459ced35af61524b0bae0d004d63ee56af763e0ca90597f22c60a",
+            "uid": "6a0791a9a96cdb2abfde1da60923f319",
+            "username": "im5tu"
+        },
+        "service": {
+            "hostname": "im5tu.io",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1483110263,
+    "expire_in": 157680000,
+    "prev": "4cdef493c7c2d97555da9bfee21f6529c2e0ab0899187732f2b19368f538291b",
+    "seqno": 5,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.61
+Comment: https://keybase.io/crypto
+
+yMIfAnicrVJbSFRBGN5NK5Iu3rsKdYhuaM3Muc5KhIFZ1INSYYmxzJwzxz2oe9bd
+o6u5QhoV9VKYFER2oR4iNUKoBEEsWzK8gFKgFlFPSUVSUESJNscKeuixeZmZf77v
+m+/7+R8vSfAkefPebOrz93fEvQMPz1V7DpnRaL1AbaNO8NUL5WxuYxUGizj+cssQ
+fAKAABINaQwBjTKCsSRjnRmiTEwFykiigBIGDAAkQxEZkxViqvwAdIKBjFUTIV0B
+RMgWTCtYxsKhsBV0uKxkUEmCGmKyLFGsQagpnKJTqCpcw0QKQLqkKQonBuyIy+Dm
+KImwrZbNa/zin7P3D/x/9l09J6cQoGJIMMGKblBEqGkwaBAFYCSaIsQuMMLCQVLJ
+ONqqlJ1qoSFb4KUaS2duV90Yfz//ChIK246t2xW8GnCcUMTnspy6kAuLMur/LeCn
+VtDgDeSMGhaOWHZQ8EGO1B3LVYSSJkIIkCJmC6w2ZIWZ33IRsqpogC/3H1bjtl03
+mClhUVd1ZGBVlmWDYGoyhqCpyAjriAFCgYYx1FRVRCaiEIuKZsqihjCkghupKmgL
+PpnbJGVcMmKVBYlTHWZCw6Pe0kSPN8mzYP48d7A8SYuS/4zbhQMLfyR+Sby5ZHrf
+QMaTq7HuC5fbJocTPq5pYdnOvcwNqe+3FY71nxg6NZW39vvL3Fza2XN2vGh1w/6x
+2QKrO361azbzZqw5MHL4we7PaceSrnlSU1ae2ntr+fDyI6uuFD7rm6lNmTzj7Wma
+2Lz+VXPvimXkfm/W05OnR4u9b1c9//S1Bqxpau/q+BQ/GM3wlva3x/Jf+Hbu6Gwb
+eT0kDsb3FPyoKol/7pqfkZ5sHd+ytHt7ijA+wr5VRhtBxVTrjHi+2CydeDcYa20s
+yU2rGkxon7yeMVS0a2PXt9b0lxd7A1PrFhfU78/5kHP3aD6bbnl+8o4/NptlZW2I
+J68bvf3dvnEpcH0g+BN7Vz/K
+=IbhT
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/im5tu
+
+==================================================================
