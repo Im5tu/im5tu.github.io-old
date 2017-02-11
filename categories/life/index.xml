@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Life on Stuart Blackler&#39;s Tech Blog</title>
+    <title>Life on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/categories/life/index.xml</link>
-    <description>Recent content in Life on Stuart Blackler&#39;s Tech Blog</description>
+    <description>Recent content in Life on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <atom:link href="https://im5tu.io/categories/life/index.xml" rel="self" type="application/rss+xml" />
@@ -46,6 +46,19 @@
 &lt;p&gt;After changing my job role towards the back end of last year, I will be looking at consolidating my position and growing within the role. It&amp;rsquo;s my first senior role, so I am getting used to the additional responsibilities that it brings. Moreover, I have transferred from the telecommunications industry to creative. Personally, I think getting a broad set of industry experience is crucial for developers as each industry will present different challenges. It&amp;rsquo;s also my first time working with a CMS system. Coming from a non-CMS background, some quirks have definitely caught me by surprise!&lt;/p&gt;
 
 &lt;p&gt;So that wraps up what I imagine 2017 to be like for me. I&amp;rsquo;ll keep myself accountable by posting regular updates on social media and here on the blog every few months. Thanks for reading, see you again soon!&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Hello World</title>
+      <link>https://im5tu.io/article/2016/11/hello-world/</link>
+      <pubDate>Thu, 17 Nov 2016 19:34:17 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2016/11/hello-world/</guid>
+      <description>&lt;p&gt;Hello World. Safe to say it&amp;rsquo;s been a little while since I have blogged or even had a website come to think of it. Alas, I am back with some fresh ideas and recharged to help you dear reader.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;Finally I&amp;rsquo;ve been able to match up my Github/Twitter handles with my website to make things alot easier to find. I&amp;rsquo;ve also began to build this site on a static site generator called hugo, hosted by Github pages and delivered through Cloudflare. My first port of call is to show you how i&amp;rsquo;ve done it should you wish to re-create my steps for yourself. Naturally, steps may vary as time progresses and things change - so feel free to fix any instructions on my &lt;a href=&#34;https://github.com/Im5tu/im5tu-hugo&#34;&gt;Github repository&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     
   </channel>
