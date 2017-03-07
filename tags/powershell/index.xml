@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Powershell on Stuart Blackler&#39;s Blog</title>
+    <link>https://im5tu.io/tags/powershell/index.xml</link>
+    <description>Recent content in Powershell on Stuart Blackler&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://im5tu.io/tags/powershell/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Up And Running With Git And Powershell</title>
+      <link>https://im5tu.io/article/2015/02/up-and-running-with-git-and-powershell/</link>
+      <pubDate>Mon, 23 Feb 2015 18:37:14 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2015/02/up-and-running-with-git-and-powershell/</guid>
+      <description>&lt;p&gt;We&amp;rsquo;ve all experienced a time where we use our pc&amp;rsquo;s for a prolonged period of time, accumulating a ton of crap along the way as we try out various technologies and fads. After a while, the pc begins to do funny things like crash for no apparent reason. This week, I needed to rebuild my dev machine and decided to change from Atlassian&amp;rsquo;s Source Tree over to Powershell and raw git.&lt;/p&gt;
+
+&lt;p&gt;If i&amp;rsquo;m honest, i wish I made the change earlier. I no longer have a confusing UI to deal with, just me, my memory and when that fails, Google. So in this post, I will show you what I&amp;rsquo;ve done in hopes that it will help someone else. We will run through:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Setting up git for the first time&lt;/li&gt;
+&lt;li&gt;Setting up Powershell so we can use git&lt;/li&gt;
+&lt;li&gt;Creating better diffs with &lt;code&gt;Out-Diff&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Creating helper functions and setting up a powershell profile&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;setting-up-git-for-the-first-time&#34;&gt;Setting up git for the first time&lt;/h2&gt;
+
+&lt;p&gt;First of all, you need to download the latest version of git from &lt;a href=&#34;http://git-scm.com/download/win&#34;&gt;here&lt;/a&gt;. At the time of writing, the version is: 1.9.5 released 2 months ago. When you start the setup program, everything is down to personal preference (eg: where you install, windows explorer integration) until you see the following screen:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/up-and-running-with-git/Git-install-command-prompt.png&#34; alt=&#34;Select the middle option&#34; title=&#34;Select the middle option&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It is important that you do not pick the top option here unless you are comfortable editing environment variables. The second option is the best for most windows users as this does the environment variables for you.&lt;/p&gt;
+
+&lt;p&gt;Following this, it is another case of common sense rules with choosing the style of line endings you need, typically checkin as-is suits (the last option).&lt;/p&gt;
+
+&lt;p&gt;When this is done, verify by heading into powershell/command prompt and typing:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This should produce something similar to the following output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;usage: git [--version] [--help] [-C &amp;lt;path&amp;gt;] [-c name=value]
+           [--exec-path[=&amp;lt;path&amp;gt;]] [--html-path] [--man-path] [--info-path]
+           [-p|--paginate|--no-pager] [--no-replace-objects] [--bare]
+           [--git-dir=&amp;lt;path&amp;gt;] [--work-tree=&amp;lt;path&amp;gt;] [--namespace=&amp;lt;name&amp;gt;]
+           &amp;lt;command&amp;gt; [&amp;lt;args&amp;gt;]
+
+The most commonly used git commands are:
+   add        Add file contents to the index
+   bisect     Find by binary search the change that introduced a bug
+   branch     List, create, or delete branches
+   checkout   Checkout a branch or paths to the working tree
+   clone      Clone a repository into a new directory
+   commit     Record changes to the repository
+   diff       Show changes between commits, commit and working tree, etc
+   fetch      Download objects and refs from another repository
+   grep       Print lines matching a pattern
+   init       Create an empty Git repository or reinitialize an existing one
+   log        Show commit logs
+   merge      Join two or more development histories together
+   mv         Move or rename a file, a directory, or a symlink
+   pull       Fetch from and integrate with another repository or a local branch
+   push       Update remote refs along with associated objects
+   rebase     Forward-port local commits to the updated upstream head
+   reset      Reset current HEAD to the specified state
+   rm         Remove files from the working tree and from the index
+   show       Show various types of objects
+   status     Show the working tree status
+   tag        Create, list, delete or verify a tag object signed with GPG
+
+&#39;git help -a&#39; and &#39;git help -g&#39; lists available subcommands and some
+concept guides. See &#39;git help &amp;lt;command&amp;gt;&#39; or &#39;git help &amp;lt;concept&amp;gt;&#39;
+to read about a specific subcommand or concept.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you get that, you&amp;rsquo;re ready for the next step. Otherwise, you will need to add the path to your git installation to the environment variables.&lt;/p&gt;
+
+&lt;h2 id=&#34;setting-up-powershell-so-we-can-use-git&#34;&gt;Setting up Powershell so we can use git&lt;/h2&gt;
+
+&lt;p&gt;Before you being, verify execution of scripts is allowed with &lt;code&gt;Get-ExecutionPolicy&lt;/code&gt; (should be &lt;code&gt;RemoteSigned&lt;/code&gt; or &lt;code&gt;Unrestricted&lt;/code&gt;). If scripts are not enabled, run PowerShell as Administrator and call &lt;code&gt;Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Confirm&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;After you have verified the execution policy above, you will be able to run the following script:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(new-object Net.WebClient).DownloadString(&amp;quot;http://psget.net/GetPsGet.ps1&amp;quot;) | iex
+Install-Module posh-git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will do two different things:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Install &lt;a href=&#34;http://psget.net/&#34;&gt;PsGet&lt;/a&gt; into powershell. It allows for easy installation of powershell modules.&lt;/li&gt;
+&lt;li&gt;Install &lt;a href=&#34;https://github.com/dahlbyk/posh-git&#34;&gt;Posh-git&lt;/a&gt;. The best way to deal with git from powershell in windows.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;After the installation, you will see the following output in the console (highlighted in bright green, so its easier to see):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PsGet is installed and ready to use
+... omitted for brevity
+Module posh-git was successfully installed.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t see that, refer to the installation guides of the various modules as listed above. Otherwise, we are technically done setting up powershell with git. Now we can do awesome things such as download new powershell modules from the ps-get directory, view the current status of a git repo and much much more.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;A repository will now show something along the lines of the following if you feel the need to verify:&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;C:\Dev\sblackler.github.io [master +1 ~2 -0 !]&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;creating-better-diffs-with-out-diff&#34;&gt;Creating better diffs with &lt;code&gt;Out-Diff&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Some of the output that we get using the built in &lt;code&gt;git diff&lt;/code&gt; command is a little horrid:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/up-and-running-with-git/git-diff-powershell.PNG&#34; alt=&#34;Sample output&#34; title=&#34;Sample Output&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;What &lt;a href=&#34;http://psget.net/directory/out-diff/&#34;&gt;Out-Diff&lt;/a&gt; does is create a unifed diff for you using the &lt;a href=&#34;http://en.wikipedia.org/wiki/Diff_utility#Unified_format&#34;&gt;Unified Diff Format&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To install the &lt;code&gt;Out-Diff&lt;/code&gt;, use the same powershell console as earlier and type/copy:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Install-Module Out-Diff
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After that you should see the following confirmation:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Module out-diff was successfully installed.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, when we run out &lt;code&gt;git diff&lt;/code&gt; command, we add a slight twist pointing it to the &lt;code&gt;Out-Diff&lt;/code&gt; function like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git diff | Out-Diff
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This results in brighter colours in the console and slightly cleaner output. If the output of git diff consists of many lines of text, PowerShell will redirect them to the Out-Diff function one line at a time. This is called a streaming pipeline and it allows PowerShell to be responsive and consume less memory even when processing large amounts of data.&lt;/p&gt;
+
+&lt;h2 id=&#34;creating-helper-functions-and-setting-up-a-powershell-profile&#34;&gt;Creating helper functions and setting up a powershell profile&lt;/h2&gt;
+
+&lt;p&gt;The current powershell profile we are in comes in a variable called &lt;code&gt;$PROFILE&lt;/code&gt; and we can hack this to do what we want. First of all, you need to expand that variable in the powershell window eg:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$PROFILE
+C:\Users\stuar_000\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can access the profile in one of two ways, through powershell or through our editor of choice. I choose powershell, naturally. To edit this through powershell, type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ise $PROFILE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which launches the powershell scripting environment. Currently, my profile is blank and only loads the &lt;code&gt;Posh-git&lt;/code&gt; sample profile:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Load posh-git example profile
+&#39;C:\Users\stuar_000\Documents\WindowsPowerShell\Modules\posh-git\profile.example.ps1&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When you reload the powershell console you may have seen that it couldn&amp;rsquo;t find the ssh-agent. This is something that we can fix here. To do that, add the following line to the top of the file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$env:path += &amp;quot;;&amp;quot; + (Get-Item &amp;quot;Env:ProgramFiles(x86)&amp;quot;).Value + &amp;quot;\Git\bin&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Unfortunately we have to do this because msysgit doesn&amp;rsquo;t automatically add that folder to the path variable. Then we can do really cool things after the &lt;code&gt;Posh-git&lt;/code&gt; profile has been loaded like setting our base directory:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; Set-Location C:\Dev
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Creating a better diff function so that we don&amp;rsquo;t have to type it out everytime:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function gdiff(){
+    git diff -U5 | Out-Diff
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or ever start our preffered IDE when we hit a solution file (vs only):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function ide(){
+    $files = Get-ChildItem *.sln -Recurse
+    foreach($file in $files){
+        Start-Process $file.Name
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here is only a small number of things that you can do now. So go git the power(shell). When you&amp;rsquo;re done save the profile and reload the powershell console for the changes to take effect.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>3 Easy Steps To Configuring Azure With Powershell</title>
+      <link>https://im5tu.io/article/2015/02/3-easy-steps-to-configuring-azure-with-powershell/</link>
+      <pubDate>Tue, 17 Feb 2015 18:37:00 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2015/02/3-easy-steps-to-configuring-azure-with-powershell/</guid>
+      <description>&lt;p&gt;Recently, I had to automate some tasks in Azure. This is the easiest way I could get started.
+&lt;/p&gt;
+
+&lt;p&gt;Before we begin, ensure that you have a administrative powershell window and have set the execution policy to unrestricted:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Set-ExecutionPolicy Unrestricted
+#Confirm the settings afterwards with Get-ExecutionPolicy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;step-1-download-settings&#34;&gt;Step 1 - Download Settings&lt;/h2&gt;
+
+&lt;p&gt;In order to download the settings you need to have a valid Azure administrative account and be logged in. Once you are logged in, use the powershell window to run the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Get-AzurePublishSettingsFile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will open up the Azure portal and download the file to disk. Remember the path to the downloaded file as you will need this in the next step.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-2-import-settings&#34;&gt;Step 2 - Import Settings&lt;/h2&gt;
+
+&lt;p&gt;Using the file downloading in the previous step, we can import the settings using the following commands, replacing &lt;code&gt;&amp;lt;pathToFile&amp;gt;&lt;/code&gt; with the actual file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$settingsFile = &amp;quot;&amp;lt;pathToFile&amp;gt;&amp;quot;
+Import-AzurePublishSettingsFile -PublishSettingsFile $settingsFile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This command sets up all of the available subscriptions for you in a nice easy manner.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-3-verify&#34;&gt;Step 3 - Verify&lt;/h2&gt;
+
+&lt;p&gt;The last step is to verify that everything has been setup correctly. To do this, simply run the &lt;code&gt;Get-AzureSubscription&lt;/code&gt; command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Get-AzureSubscription
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You should see all of your settings in the powershell window. Profit!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Don&amp;rsquo;t forget how to remove your details once you are done!&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

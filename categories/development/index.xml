@@ -96,7 +96,7 @@
 
 &lt;h2 id=&#34;reading-a-hashed-file&#34;&gt;Reading a hashed file&lt;/h2&gt;
 
-&lt;p&gt;As you may recall in &lt;a href=&#34;http://localhost:1313/article/2016/11/blog-building---part-4---frontend/&#34;&gt;my previous Hugo post&lt;/a&gt;, I setup my css files with cache busting capabilites by appending the hash onto the filename. In order to render this as part of the HTML, we need a few things:&lt;/p&gt;
+&lt;p&gt;As you may recall in &lt;a href=&#34;https://im5tu.io/article/2016/11/blog-building---part-4---frontend/&#34;&gt;my previous Hugo post&lt;/a&gt;, I setup my css files with cache busting capabilites by appending the hash onto the filename. In order to render this as part of the HTML, we need a few things:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Find the name of the hashed file&lt;/li&gt;
@@ -755,6 +755,783 @@ ef81fbc Create CNAME
 &lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;Finally I&amp;rsquo;ve been able to match up my Github/Twitter handles with my website to make things alot easier to find. I&amp;rsquo;ve also began to build this site on a static site generator called hugo, hosted by Github pages and delivered through Cloudflare. My first port of call is to show you how i&amp;rsquo;ve done it should you wish to re-create my steps for yourself. Naturally, steps may vary as time progresses and things change - so feel free to fix any instructions on my &lt;a href=&#34;https://github.com/Im5tu/im5tu-hugo&#34;&gt;Github repository&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Technical Debt: How We Get It And How To Avoid It</title>
+      <link>https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/</link>
+      <pubDate>Wed, 05 Aug 2015 18:37:26 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/</guid>
+      <description>&lt;p&gt;This post started as a rebuttal to Ralf Westphal&amp;rsquo;s &lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin&#34;&gt;blog&lt;/a&gt; and his post, &amp;ldquo;&lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin/archive/2015/07/22/there-is-no-such-thing-as-technical-debt.aspx&#34;&gt;There is no such thing as technical debt&lt;/a&gt;&amp;rdquo;. There are many points of view on the subject covered by various people such as &lt;a href=&#34;https://sites.google.com/site/unclebobconsultingllc/a-mess-is-not-a-technical-debt&#34;&gt;Uncle Bob&lt;/a&gt; and &lt;a href=&#34;http://martinfowler.com/bliki/TechnicalDebt.html&#34;&gt;Martin Fowler&lt;/a&gt;, but I thought it might be insightful to show how my team manages our code base.&lt;/p&gt;
+
+&lt;p&gt;I can see where Ralf is heading in his post, however, I don&amp;rsquo;t believe dissecting the financial analogy provides any benefit to the industry as a whole. As I will cover later, technical debt is a metaphor. Granted, one that can eventually be tracked to a monetary value yet negated quite substantially with proper management.&lt;/p&gt;
+
+&lt;p&gt;To give you an idea of the code base I am currently working with, it primarily consists of large monolithic applications that have patchy test coverage and confused design patterns. All of this code was written by many people before me and added to by many others, all with typical enterprise constraints. I have personally added and fixed various parts of the code base, ensuring that I add tests as I go. As our team expands, we are attempting to modernise our code base by identifying services that we can extract into meso-services (services that are slightly larger than a micro-service) and clear our predecessors misgivings. We also have numerous greenfield projects that have been built from the ground up using modern best practises - TDD, agile, SOLID principals, DI, Composition etc.&lt;/p&gt;
+
+&lt;p&gt;Before I talk about how we get into technical debt, I&amp;rsquo;d like to first remind you that technical debt is a metaphor. One that describes the engineering trade-off’s that software developers and business stakeholders must often make in order to meet schedules and customer expectations (&lt;a href=&#34;https://sites.google.com/site/unclebobconsultingllc/a-mess-is-not-a-technical-debt&#34;&gt;Uncle Bob&lt;/a&gt;). We can mistake the metaphor of technical debt with physical, measurable debt such as financial debt as demonstrated by Ralf.&lt;/p&gt;
+
+&lt;h2 id=&#34;getting-into-debt&#34;&gt;Getting into debt&lt;/h2&gt;
+
+&lt;p&gt;It&amp;rsquo;s frighteningly easy to get yourself into technical debt, but a lot harder to get out of. The most common ways that I have seen so far in my career are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Lack of knowledge&lt;/li&gt;
+&lt;li&gt;Lack of time or resource (often driven by business)&lt;/li&gt;
+&lt;li&gt;Not following best practises (eg: the SOLID principals)&lt;/li&gt;
+&lt;li&gt;MVP&amp;rsquo;s&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The lack of knowledge of any developer can be attributed to one of two things: the lack of effective experience (i.e.: not working on the same project for 5 years) and a lazy developer. Personally, I believe that if developers want to write better code, they will first find the time to learn more/read others code. If you&amp;rsquo;re too busy in the evening or feel demotivated after work, then try getting up earlier and doing it before your day becomes hectic - it&amp;rsquo;s about time management. It can be argued that junior developers are exempt from this and the responsibility of progressing them falls on to their technical lead(s)/senior developer(s). &lt;a href=&#34;https://twitter.com/smudge202&#34;&gt;Tommy Long&lt;/a&gt; quite accurately points out: &amp;ldquo;It is for Seniors to regularly, actively propogate knowledge to improve software development as a whole. Uncle Bob reckons we double in number of developers every 5 years right now. There is a tonne of shit mixed in with a few decent resources on the internet, juniors can&amp;rsquo;t go it alone.&amp;rdquo;&lt;/p&gt;
+
+&lt;p&gt;Lack of time or resource is unfortunately bestowed upon us from the business, after all the business is king - without it we would not have a job. This is probably the sole cause for the technical debt that I currently repaying. The trade off&amp;rsquo;s that we have to make often start off small but over time snowball into a huge immovable problem - classic inertia. Therefore the responsibility falls on us as developers accurately estimate our work then let the business decide which work items will not make the deadline.&lt;/p&gt;
+
+&lt;p&gt;Not following best practices is again, mostly the fault of the developer. At the end of the day, we, the developer write the code so it is our responsibility to write it properly. In the cases where business is the blocker, it is time that we as developers began to fight those long hard battles in our favour. This is the exact same thing that the developers at Microsoft have done. Their drive came from the bottom up, not top down.&lt;/p&gt;
+
+&lt;p&gt;Lastly, MVP&amp;rsquo;s or minimally viable products. The concept is absolutely solid when combined with other practises such as TDD/BDD*. One of the key identifiers with this entrant is the question of: &amp;ldquo;Should I do this because of feature x which &lt;strong&gt;should&lt;/strong&gt; be coming in the next 3 weeks, but it will add half a day to the implementation?&amp;ldquo;. Note the emphasis on &lt;strong&gt;should&lt;/strong&gt;. A sprints backlog is volatile and subject to the abuse of the business at any given moment. If you keep the code as is, you run the risk of the feature costing more time in the future. On the contrary, the future feature may never be needed because of a changing requirement therefore saving you time.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;*I believe that all code should be tested, even if it is a prototype/MVP. You never know whether or not it will be used again. This is one major pain point of many that i&amp;rsquo;ve experienced recently as I&amp;rsquo;ve picked up legacy projects.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;when-technical-debt-is-too-high&#34;&gt;When technical debt is too high&lt;/h2&gt;
+
+&lt;p&gt;There are a few signs of high technical debt, which are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;It&amp;rsquo;s hard to add new functionality&lt;/li&gt;
+&lt;li&gt;The code resembles a spaghetti junction&lt;/li&gt;
+&lt;li&gt;You cannot test your code effectively&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Typically, my first two points are attributed to developers not having enough knowledge or not following best practices. A prime example is if your class has more than a single responsibility such as it reads data from the database and contains business logic for validating a shopping basket. The example violates multiple principals and should make every developer feel like they&amp;rsquo;ve just jumped into a deep muddy puddle.&lt;/p&gt;
+
+&lt;p&gt;By effectively testing your code, I mean that you should be able to write all types of test against the code you write: Unit, Component and Integration. If you can only write integration tests for the code you have just written, then you likely need to change your code - Unit testing a database layer (specifically the ORM, not physical IO) is usually quite trivial if the code is structured correctly. That said, we are often stopped from unit testing when using certain frameworks such as Microsoft Azure Service Bus due to the lack of abstractions the library provides. In this case, integration tests are often the best that we can do - but at least it is under test.&lt;/p&gt;
+
+&lt;p&gt;The key point to make is that if your future self (or colleague) will have trouble maintaining the code you have just written, then we haven&amp;rsquo;t coded it well enough. If you have to write comments then you are probably doing it wrong - unless there is a concious design decision. &lt;a href=&#34;https://twitter.com/smudge202&#34;&gt;Tommy Long&lt;/a&gt; quite accurately reflects some of my own thoughts on comments in &lt;a href=&#34;http://blog.devbot.net/conventions-comments/#code&#34;&gt;his post about comments&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;strategies-to-avoid-high-levels-of-technical-debt&#34;&gt;Strategies to avoid high levels of technical debt&lt;/h2&gt;
+
+&lt;p&gt;Here at &lt;a href=&#34;http://www.4com.co.uk&#34;&gt;4Com&lt;/a&gt;, we employ the following techniques to help us track how much technical debt we have and to help us mitigate it:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The rule of 3&lt;/li&gt;
+&lt;li&gt;The hallway test&lt;/li&gt;
+&lt;li&gt;Issue tracking&lt;/li&gt;
+&lt;li&gt;Sprint management&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Our rule of 3 is quite simple, once two out of three developers agree on a certain decision whether it be deciding on uptake of a new framework or naming an api, that decision is usually the one used. Usually one of the 3 is our manager/technical lead who often plays the role of devils advocate in this scenario. Any person of the 3 can play the role of devils advocate. The rule of 3 helps other members of the team understand the thought processes and context for the decision - something that is often missed when developers leave. It also helps to quickly highlight any major problems based on past experiences. If the situation warrants it, a spike can be performed to further evaluate the decision. While the rule of 3 is extremely helpful for larger architectural decisions, often a simpler approach can be used which negates the resource requirements: The hallway test.&lt;/p&gt;
+
+&lt;p&gt;The hallway test is a phrase that I picked up off the folks at Microsoft. The basic premise is that a random developer should be able to understand and logically follow the code/api without documentation. Often the random will not have domain knowledge, which can make them perfect to bounce ideas off of. Sometimes, domain knowledge will be required - but the point is to bounce/review the idea with another developer which often leads to a cleaner/simpler design; thus, lowering the debt raised.&lt;/p&gt;
+
+&lt;p&gt;If we have made a shortcut for an MVP or have identified a piece of legacy code that can be tied up, the first thing we do is raise an issue within JIRA - our issue tracking platform. The reason for this is that we can assign it a priority and discuss whether or not it blocks future functionality/reduce time of implementation. Often the items might be small and can be added to a sprint if the focus of the sprint has already been completed (eg: 2 hours to go before the end of the sprint and the work is all done). Whilst this isn&amp;rsquo;t a way to avoid technical debt, it helps you to keep track of it and realise when you have too much debt that you need to repay.&lt;/p&gt;
+
+&lt;p&gt;Before each sprint, we asses the priorities of the business against our current backlog. Once the main priorities have been assigned work items within the sprint, we fill up the remaining space with technical debt. The order in which technical debt and features are tackled within a sprint depends on the business priorities. For example: feature/improvement A must be completed at all costs. As my colleague HerecyDev points out, you should be completing all work within a sprint and not over-committing. I personally favour tackling features first so the business gains value, unless tackling a piece of technical debt can improve the efficiency of implementing a feature. It might not always be possible to add technical debt every sprint, but so long as that is the minority of cases you should be perfectly fine.&lt;/p&gt;
+
+&lt;p&gt;With legacy projects, the primary focus should be getting unit tests in place (this might start as an integration test). This ensures that you will not break any existing functionality while you make the code better and flag work items for the future.&lt;/p&gt;
+
+&lt;h3 id=&#34;closing-words&#34;&gt;Closing words&lt;/h3&gt;
+
+&lt;p&gt;In his post, Ralf mentions that tackling technical debt is an addiction with the basic argument the business will keep postponing doing the right thing. If left unmanaged this is entirely true until it becomes a point where it is too costly to implement a feature. The key is the business will decide this. At &lt;a href=&#34;http://www.4com.co.uk&#34;&gt;4Com&lt;/a&gt;, we continuously flag items as technical debt for review at every sprint planning meeting. I firmly believe that if we didn&amp;rsquo;t, we wouldn&amp;rsquo;t have the same high standards in our code base as we do today.&lt;/p&gt;
+
+&lt;p&gt;In short, we should always leave the code in a better place than when we found it - never worse and raise an issue if there is something that could be done better. That&amp;rsquo;s what I believe the metaphor is for - something that we can do better within our code.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Up And Running With Git And Powershell</title>
+      <link>https://im5tu.io/article/2015/02/up-and-running-with-git-and-powershell/</link>
+      <pubDate>Mon, 23 Feb 2015 18:37:14 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2015/02/up-and-running-with-git-and-powershell/</guid>
+      <description>&lt;p&gt;We&amp;rsquo;ve all experienced a time where we use our pc&amp;rsquo;s for a prolonged period of time, accumulating a ton of crap along the way as we try out various technologies and fads. After a while, the pc begins to do funny things like crash for no apparent reason. This week, I needed to rebuild my dev machine and decided to change from Atlassian&amp;rsquo;s Source Tree over to Powershell and raw git.&lt;/p&gt;
+
+&lt;p&gt;If i&amp;rsquo;m honest, i wish I made the change earlier. I no longer have a confusing UI to deal with, just me, my memory and when that fails, Google. So in this post, I will show you what I&amp;rsquo;ve done in hopes that it will help someone else. We will run through:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Setting up git for the first time&lt;/li&gt;
+&lt;li&gt;Setting up Powershell so we can use git&lt;/li&gt;
+&lt;li&gt;Creating better diffs with &lt;code&gt;Out-Diff&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Creating helper functions and setting up a powershell profile&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;setting-up-git-for-the-first-time&#34;&gt;Setting up git for the first time&lt;/h2&gt;
+
+&lt;p&gt;First of all, you need to download the latest version of git from &lt;a href=&#34;http://git-scm.com/download/win&#34;&gt;here&lt;/a&gt;. At the time of writing, the version is: 1.9.5 released 2 months ago. When you start the setup program, everything is down to personal preference (eg: where you install, windows explorer integration) until you see the following screen:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/up-and-running-with-git/Git-install-command-prompt.png&#34; alt=&#34;Select the middle option&#34; title=&#34;Select the middle option&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It is important that you do not pick the top option here unless you are comfortable editing environment variables. The second option is the best for most windows users as this does the environment variables for you.&lt;/p&gt;
+
+&lt;p&gt;Following this, it is another case of common sense rules with choosing the style of line endings you need, typically checkin as-is suits (the last option).&lt;/p&gt;
+
+&lt;p&gt;When this is done, verify by heading into powershell/command prompt and typing:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This should produce something similar to the following output:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;usage: git [--version] [--help] [-C &amp;lt;path&amp;gt;] [-c name=value]
+           [--exec-path[=&amp;lt;path&amp;gt;]] [--html-path] [--man-path] [--info-path]
+           [-p|--paginate|--no-pager] [--no-replace-objects] [--bare]
+           [--git-dir=&amp;lt;path&amp;gt;] [--work-tree=&amp;lt;path&amp;gt;] [--namespace=&amp;lt;name&amp;gt;]
+           &amp;lt;command&amp;gt; [&amp;lt;args&amp;gt;]
+
+The most commonly used git commands are:
+   add        Add file contents to the index
+   bisect     Find by binary search the change that introduced a bug
+   branch     List, create, or delete branches
+   checkout   Checkout a branch or paths to the working tree
+   clone      Clone a repository into a new directory
+   commit     Record changes to the repository
+   diff       Show changes between commits, commit and working tree, etc
+   fetch      Download objects and refs from another repository
+   grep       Print lines matching a pattern
+   init       Create an empty Git repository or reinitialize an existing one
+   log        Show commit logs
+   merge      Join two or more development histories together
+   mv         Move or rename a file, a directory, or a symlink
+   pull       Fetch from and integrate with another repository or a local branch
+   push       Update remote refs along with associated objects
+   rebase     Forward-port local commits to the updated upstream head
+   reset      Reset current HEAD to the specified state
+   rm         Remove files from the working tree and from the index
+   show       Show various types of objects
+   status     Show the working tree status
+   tag        Create, list, delete or verify a tag object signed with GPG
+
+&#39;git help -a&#39; and &#39;git help -g&#39; lists available subcommands and some
+concept guides. See &#39;git help &amp;lt;command&amp;gt;&#39; or &#39;git help &amp;lt;concept&amp;gt;&#39;
+to read about a specific subcommand or concept.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you get that, you&amp;rsquo;re ready for the next step. Otherwise, you will need to add the path to your git installation to the environment variables.&lt;/p&gt;
+
+&lt;h2 id=&#34;setting-up-powershell-so-we-can-use-git&#34;&gt;Setting up Powershell so we can use git&lt;/h2&gt;
+
+&lt;p&gt;Before you being, verify execution of scripts is allowed with &lt;code&gt;Get-ExecutionPolicy&lt;/code&gt; (should be &lt;code&gt;RemoteSigned&lt;/code&gt; or &lt;code&gt;Unrestricted&lt;/code&gt;). If scripts are not enabled, run PowerShell as Administrator and call &lt;code&gt;Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Confirm&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;After you have verified the execution policy above, you will be able to run the following script:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(new-object Net.WebClient).DownloadString(&amp;quot;http://psget.net/GetPsGet.ps1&amp;quot;) | iex
+Install-Module posh-git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will do two different things:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Install &lt;a href=&#34;http://psget.net/&#34;&gt;PsGet&lt;/a&gt; into powershell. It allows for easy installation of powershell modules.&lt;/li&gt;
+&lt;li&gt;Install &lt;a href=&#34;https://github.com/dahlbyk/posh-git&#34;&gt;Posh-git&lt;/a&gt;. The best way to deal with git from powershell in windows.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;After the installation, you will see the following output in the console (highlighted in bright green, so its easier to see):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;PsGet is installed and ready to use
+... omitted for brevity
+Module posh-git was successfully installed.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If you don&amp;rsquo;t see that, refer to the installation guides of the various modules as listed above. Otherwise, we are technically done setting up powershell with git. Now we can do awesome things such as download new powershell modules from the ps-get directory, view the current status of a git repo and much much more.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;A repository will now show something along the lines of the following if you feel the need to verify:&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;C:\Dev\sblackler.github.io [master +1 ~2 -0 !]&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;creating-better-diffs-with-out-diff&#34;&gt;Creating better diffs with &lt;code&gt;Out-Diff&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;Some of the output that we get using the built in &lt;code&gt;git diff&lt;/code&gt; command is a little horrid:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/up-and-running-with-git/git-diff-powershell.PNG&#34; alt=&#34;Sample output&#34; title=&#34;Sample Output&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;What &lt;a href=&#34;http://psget.net/directory/out-diff/&#34;&gt;Out-Diff&lt;/a&gt; does is create a unifed diff for you using the &lt;a href=&#34;http://en.wikipedia.org/wiki/Diff_utility#Unified_format&#34;&gt;Unified Diff Format&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To install the &lt;code&gt;Out-Diff&lt;/code&gt;, use the same powershell console as earlier and type/copy:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Install-Module Out-Diff
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After that you should see the following confirmation:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Module out-diff was successfully installed.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, when we run out &lt;code&gt;git diff&lt;/code&gt; command, we add a slight twist pointing it to the &lt;code&gt;Out-Diff&lt;/code&gt; function like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git diff | Out-Diff
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This results in brighter colours in the console and slightly cleaner output. If the output of git diff consists of many lines of text, PowerShell will redirect them to the Out-Diff function one line at a time. This is called a streaming pipeline and it allows PowerShell to be responsive and consume less memory even when processing large amounts of data.&lt;/p&gt;
+
+&lt;h2 id=&#34;creating-helper-functions-and-setting-up-a-powershell-profile&#34;&gt;Creating helper functions and setting up a powershell profile&lt;/h2&gt;
+
+&lt;p&gt;The current powershell profile we are in comes in a variable called &lt;code&gt;$PROFILE&lt;/code&gt; and we can hack this to do what we want. First of all, you need to expand that variable in the powershell window eg:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$PROFILE
+C:\Users\stuar_000\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can access the profile in one of two ways, through powershell or through our editor of choice. I choose powershell, naturally. To edit this through powershell, type:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ise $PROFILE
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which launches the powershell scripting environment. Currently, my profile is blank and only loads the &lt;code&gt;Posh-git&lt;/code&gt; sample profile:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Load posh-git example profile
+&#39;C:\Users\stuar_000\Documents\WindowsPowerShell\Modules\posh-git\profile.example.ps1&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;When you reload the powershell console you may have seen that it couldn&amp;rsquo;t find the ssh-agent. This is something that we can fix here. To do that, add the following line to the top of the file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$env:path += &amp;quot;;&amp;quot; + (Get-Item &amp;quot;Env:ProgramFiles(x86)&amp;quot;).Value + &amp;quot;\Git\bin&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Unfortunately we have to do this because msysgit doesn&amp;rsquo;t automatically add that folder to the path variable. Then we can do really cool things after the &lt;code&gt;Posh-git&lt;/code&gt; profile has been loaded like setting our base directory:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; Set-Location C:\Dev
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Creating a better diff function so that we don&amp;rsquo;t have to type it out everytime:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function gdiff(){
+    git diff -U5 | Out-Diff
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Or ever start our preffered IDE when we hit a solution file (vs only):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function ide(){
+    $files = Get-ChildItem *.sln -Recurse
+    foreach($file in $files){
+        Start-Process $file.Name
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here is only a small number of things that you can do now. So go git the power(shell). When you&amp;rsquo;re done save the profile and reload the powershell console for the changes to take effect.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>3 Easy Steps To Configuring Azure With Powershell</title>
+      <link>https://im5tu.io/article/2015/02/3-easy-steps-to-configuring-azure-with-powershell/</link>
+      <pubDate>Tue, 17 Feb 2015 18:37:00 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2015/02/3-easy-steps-to-configuring-azure-with-powershell/</guid>
+      <description>&lt;p&gt;Recently, I had to automate some tasks in Azure. This is the easiest way I could get started.
+&lt;/p&gt;
+
+&lt;p&gt;Before we begin, ensure that you have a administrative powershell window and have set the execution policy to unrestricted:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Set-ExecutionPolicy Unrestricted
+#Confirm the settings afterwards with Get-ExecutionPolicy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;step-1-download-settings&#34;&gt;Step 1 - Download Settings&lt;/h2&gt;
+
+&lt;p&gt;In order to download the settings you need to have a valid Azure administrative account and be logged in. Once you are logged in, use the powershell window to run the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Get-AzurePublishSettingsFile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This will open up the Azure portal and download the file to disk. Remember the path to the downloaded file as you will need this in the next step.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-2-import-settings&#34;&gt;Step 2 - Import Settings&lt;/h2&gt;
+
+&lt;p&gt;Using the file downloading in the previous step, we can import the settings using the following commands, replacing &lt;code&gt;&amp;lt;pathToFile&amp;gt;&lt;/code&gt; with the actual file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$settingsFile = &amp;quot;&amp;lt;pathToFile&amp;gt;&amp;quot;
+Import-AzurePublishSettingsFile -PublishSettingsFile $settingsFile
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This command sets up all of the available subscriptions for you in a nice easy manner.&lt;/p&gt;
+
+&lt;h2 id=&#34;step-3-verify&#34;&gt;Step 3 - Verify&lt;/h2&gt;
+
+&lt;p&gt;The last step is to verify that everything has been setup correctly. To do this, simply run the &lt;code&gt;Get-AzureSubscription&lt;/code&gt; command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Get-AzureSubscription
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You should see all of your settings in the powershell window. Profit!&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Don&amp;rsquo;t forget how to remove your details once you are done!&lt;/em&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Dev Lunches: What, Why, How</title>
+      <link>https://im5tu.io/article/2014/12/dev-lunches-what-why-how/</link>
+      <pubDate>Wed, 17 Dec 2014 18:36:09 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/12/dev-lunches-what-why-how/</guid>
+      <description>&lt;p&gt;If you&amp;rsquo;re not up-to-date, you fall behind. You fall behind in your work, which leads you to fall behind at home. If continued, it&amp;rsquo;s a never ending circle that can seem like climbing Everest in order to overcome. I propose that we, as developers, start doing is utilizing our free time to help not only ourselves but our co-workers too. We can do this via dev lunches.  &lt;/p&gt;
+
+&lt;h2 id=&#34;so-what-is-a-dev-lunch&#34;&gt;So what is a dev lunch?&lt;/h2&gt;
+
+&lt;p&gt;A dev lunch, or developers lunch, is based upon the idea of sacrificing an hours lunch on a specific topic or topics, much like a mini-conference for you and your co-workers. Topics can range for technical deep dives to non-technical, team-wide talks such as &amp;ldquo;What does it mean to be Agile?&amp;rdquo;. The format is typically manifests as one of two styles:&lt;/p&gt;
+
+&lt;h3 id=&#34;single-talks&#34;&gt;Single talks&lt;/h3&gt;
+
+&lt;p&gt;With a single talk, a developer will take the topic in hand, research the subject and present it to the attendees. The talk will typically last about 30-40 minutes leaving time for Q&amp;amp;A etc.&lt;/p&gt;
+
+&lt;h3 id=&#34;lightning-talks&#34;&gt;Lightning talks&lt;/h3&gt;
+
+&lt;p&gt;Lightning talks take the form of a series of individuals from the team presenting for x time on a range of subjects. X is usually around 5-10 minutes. The subjects can be related, or completely unrelated. Essentially, they are multiple, compressed single talks.&lt;/p&gt;
+
+&lt;p&gt;It is important to remember that the topics are chosen by the presenter themselves. The presenter may ask for ideas/feedback from the team.&lt;/p&gt;
+
+&lt;h2 id=&#34;why-invest-in-dev-lunches&#34;&gt;Why invest in dev lunches?&lt;/h2&gt;
+
+&lt;p&gt;In my opinion, the benefits from the developer and business perspectives are pretty much the same:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Knowledge is shared throughout the team&lt;/li&gt;
+&lt;li&gt;Can be used as a sort of team bonding&lt;/li&gt;
+&lt;li&gt;Encourages the use of soft skills&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;how-do-i-get-started&#34;&gt;How do I get started?&lt;/h2&gt;
+
+&lt;p&gt;For starters, you&amp;rsquo;ve read up until here so the idea is already in your mind. In terms of setting up the event, pick a date/time about &lt;sup&gt;3&lt;/sup&gt;&amp;frasl;&lt;sub&gt;4&lt;/sub&gt; weeks in the future to give you time to prepare and allow people to keep that hour free. Then you can have a think of an idea like those listed at the bottom of the page. Once you have that sorted, simply send out a meeting request (or similar) letting people know what you are doing, when and where.&lt;/p&gt;
+
+&lt;p&gt;The presentations don&amp;rsquo;t have to be anything too fancy, just something on &lt;a href=&#34;http://slid.es&#34;&gt;Slid.es&lt;/a&gt; or Powerpoint will be fine. Just make sure that it is easily readable.&lt;/p&gt;
+
+&lt;p&gt;Don&amp;rsquo;t forget to talk to your boss and let them know what you are doing. On the off chance see if there is a chance of free food, you never know right?&lt;/p&gt;
+
+&lt;p&gt;I&amp;rsquo;ve already started this movement at two places I have worked and received exceptional feedback. So I encourage you to try and sort this at your workplace and see if it can help you become better. Here are a couple of tips from my experience:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You don&amp;rsquo;t need to be an expert, so don&amp;rsquo;t try and become one overnight,&lt;/li&gt;
+&lt;li&gt;It doesn&amp;rsquo;t matter if things go wrong, the attendees are your friends and can help,&lt;/li&gt;
+&lt;li&gt;Don&amp;rsquo;t pick a topic that is a) no interest to you, it will come off in your presentation; and b) too big, you will end up speed talking.&lt;/li&gt;
+&lt;li&gt;Do remember to have fun!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;resources&#34;&gt;Resources&lt;/h3&gt;
+
+&lt;h4 id=&#34;list-of-starter-ideas&#34;&gt;List of starter ideas&lt;/h4&gt;
+
+&lt;p&gt;With these topics, explore the title trying to think of what/why/how&amp;hellip;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Principals of SOLID&lt;/li&gt;
+&lt;li&gt;Dependency Injection&lt;/li&gt;
+&lt;li&gt;Grunt Tasks&lt;/li&gt;
+&lt;li&gt;What does it mean to be Agile?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;speaker-resources&#34;&gt;Speaker Resources&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.hanselman.com/speaking/&#34;&gt;http://www.hanselman.com/speaking&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://zachholman.com/talk/the-talk-on-talks/&#34;&gt;Talk on Talks&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    
+    <item>
+      <title>Message Queue Fundementals: MSMQ</title>
+      <link>https://im5tu.io/article/2014/09/message-queue-fundementals-msmq/</link>
+      <pubDate>Sun, 28 Sep 2014 18:35:57 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/09/message-queue-fundementals-msmq/</guid>
+      <description>&lt;p&gt;MSMQ is Microsoft&amp;rsquo;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API. &lt;/p&gt;
+
+&lt;p&gt;If you would like to read the first part to the article, &lt;a href=&#34;http://sblackler.net/2014/09/07/Message-Queue-Fundementals-Introduction/&#34;&gt;click here to read about Message Queue Fundamentals&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this article I will cover the following topics:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Types of Queues in MSMQ
+
+&lt;ul&gt;
+&lt;li&gt;Application Queues
+
+&lt;ul&gt;
+&lt;li&gt;Public/Private Queues&lt;/li&gt;
+&lt;li&gt;Transactional and non-transactional Queues&lt;/li&gt;
+&lt;li&gt;Sub-Queues&lt;/li&gt;
+&lt;li&gt;Administration Queues&lt;/li&gt;
+&lt;li&gt;Response Queues&lt;/li&gt;
+&lt;li&gt;Report Queues&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;System Queues
+
+&lt;ul&gt;
+&lt;li&gt;Journal Queues&lt;/li&gt;
+&lt;li&gt;Internal Private Queues&lt;/li&gt;
+&lt;li&gt;Dead-letter Queues&lt;/li&gt;
+&lt;li&gt;Connector Queues&lt;/li&gt;
+&lt;li&gt;Outgoing Queues&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Creating an MSMQ Message Queue&lt;/li&gt;
+&lt;li&gt;Accessing an MSMQ Message Queue&lt;/li&gt;
+&lt;li&gt;Sending a message to a MSMQ Message Queue
+
+&lt;ul&gt;
+&lt;li&gt;Sending a message to a MSMQ Message Queue using transactions&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Retrieving a message from a MSMQ Message Queue
+
+&lt;ul&gt;
+&lt;li&gt;Retrieving a message from a MSMQ Message Queue using transactions&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;Before you begin, you need to have MSMQ installed on your machine, please do this by following &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/aa967729(v=vs.110).aspx&#34;&gt;these instructions&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;types-of-queues-in-msmq&#34;&gt;Types of Queues in MSMQ&lt;/h2&gt;
+
+&lt;p&gt;This section describes the available queue types within MSMQ. Although I will not cover the consumption of all the available types of queue, I will briefly describe the following type of queue:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Application Queues
+
+&lt;ul&gt;
+&lt;li&gt;Public/Private Queues&lt;/li&gt;
+&lt;li&gt;Transactional and non-transactional Queues&lt;/li&gt;
+&lt;li&gt;Sub-Queues&lt;/li&gt;
+&lt;li&gt;Administration Queues&lt;/li&gt;
+&lt;li&gt;Response Queues&lt;/li&gt;
+&lt;li&gt;Report Queues&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;System Queues
+
+&lt;ul&gt;
+&lt;li&gt;Journal Queues&lt;/li&gt;
+&lt;li&gt;Internal Private Queues&lt;/li&gt;
+&lt;li&gt;Dead-letter Queues&lt;/li&gt;
+&lt;li&gt;Connector Queues&lt;/li&gt;
+&lt;li&gt;Outgoing Queues&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The quintessential difference between application and system queues is the ability to address messages to the queue. With application queues you can have, essentially, read/write capabilities, whereas you can only read messages from a system queue.&lt;/p&gt;
+
+&lt;h3 id=&#34;administration-queues&#34;&gt;Administration Queues&lt;/h3&gt;
+
+&lt;h4 id=&#34;private-vs-public-queues&#34;&gt;Private vs Public Queues&lt;/h4&gt;
+
+&lt;p&gt;Deciding between a public and private queue depends on the requirements of the application and the infrastructure available. Public queues use Active Directory Domain Services to replicate the queue through the domain forest, providing reliability. They are both persistent and available to other applications. In contrast, private queues are only displayed on the local computer that contains them. Because private queues involve no replication, they are quicker to create, have lower latency and has no replication overhead as they are not distributed through a domain forest.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;For further on the permissions required for a public queue, please see &lt;a href=&#34;http://technet.microsoft.com/en-us/library/cc772532.aspx&#34;&gt;this Technet article&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;transactional-vs-non-transactional-queues&#34;&gt;Transactional vs Non-Transactional Queues&lt;/h4&gt;
+
+&lt;p&gt;As the name suggests, a transactional queue that only contains transactional messages. That is, when a message is written to/read from the queue the server/client must confirm the receipt of the message before the message can be removed from/added to the message queue. In contrast, a non-transactional queue each message is sent as a single operation (regardless of how many destinations the message is sent to), so there are no guarantees that messages will reach their destination. This is similar to TCP vs UDP. TCP (Transactional) guarantees message delivery where as UDP (Non-transactional) does not.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;For more information on transactional and non-transactional messaging, please see &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ms704006(v=vs.85).aspx&#34;&gt;this MSDN article&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;sub-queues&#34;&gt;Sub-Queues&lt;/h4&gt;
+
+&lt;p&gt;Sub-Queues are useful for a variety of scenarios including work order processing and poison message handling. Work order processing is the process in which line items are ordered in a more efficient manner for processing. Poison message handling involves dealing with messages that have exceeded the send timeout; hit the retry limit; or any application specific error such as a transaction timeout. For a more detailed explanation of poison messages, I would suggest reading the &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ms789028(v=vs.110).aspx&#34;&gt;Poison Message Handling article on MSDN&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Unlike normal queues, the act of passing a message to a sub-queue invokes the creation of the queue if it does not already exist. If the sub-queue exists, the message is passed into the queue as normal. Furthermore, when the queue is empty and there are no open handles to the sub-queue, MSMQ removes the queue on your behalf. Apart from these main differences, sub-queues share the same properties as their parent queue, eg:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Quota&lt;/li&gt;
+&lt;li&gt;Access Control List (ACL)&lt;/li&gt;
+&lt;li&gt;Transactional Type&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;administration-queues-1&#34;&gt;Administration Queues&lt;/h4&gt;
+
+&lt;p&gt;Typically, you would not be accessing administration queues as they are application-generated for the purpose of positive/negative message acknowledgement. Although any non-transactional queue can be defined as an administration queue, I will not be covering this type of queue any further.&lt;/p&gt;
+
+&lt;h4 id=&#34;response-queues&#34;&gt;Response Queues&lt;/h4&gt;
+
+&lt;p&gt;Like administration queues, response queues are application generated that store application generated response messages returned by an application that is reading messages. Unlike administration queues however, any available queue can be specified as a response queue. Since MSMQ has no control over the contents of a message in a response queue, it is up to the receiving application to understand and process the message correctly.&lt;/p&gt;
+
+&lt;h4 id=&#34;report-queues&#34;&gt;Report Queues&lt;/h4&gt;
+
+&lt;p&gt;Each computer that has MSMQ installed can have a single report queue created on it. This is an application-generated queue that is used to store report messages that detail the route that the message took in order to reach its destination. The queue must have the following label and queue type identifier:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Label: MQReport Queue&lt;/li&gt;
+&lt;li&gt;Queue type identified: &lt;code&gt;{55EE8F32-CCE9-11CF-B108-0020AFD61CE9}&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A report queue can either be created through Active Directory Users and Computers, or programmatically if the correct label and queue type identifier has been specified.&lt;/p&gt;
+
+&lt;h3 id=&#34;system-queues&#34;&gt;System Queues&lt;/h3&gt;
+
+&lt;h4 id=&#34;journal-queues&#34;&gt;Journal Queues&lt;/h4&gt;
+
+&lt;p&gt;A journal queue is presented in two forms: A Queue Journal &amp;amp; A Computer Journal. A queue journal details all of the messages that have been removed from a queue. A computer journal contains copies of all the messages that are sent from a computer. Typically, you would use these queues for message diagnosis and audit purposes only.&lt;/p&gt;
+
+&lt;h4 id=&#34;internal-private-queues&#34;&gt;Internal Private Queues&lt;/h4&gt;
+
+&lt;p&gt;Internal queues are at the core of MSMQ. They are used as interim queues for storing and forwarding messages to a destination queue. They are not published in AD DS and are local to the current computer.&lt;/p&gt;
+
+&lt;h4 id=&#34;dead-letter-queues&#34;&gt;Dead-Letter Queues&lt;/h4&gt;
+
+&lt;p&gt;Dead-letter queues contain messages that cannot be delivered. MSMQ provides a transactional dead-letter queue and a non-transactional dead-letter queue. The process of storing undelivered messages on a source computer is sometimes referred to as negative source journalling. Applications can only read or delete messages from a dead letter queue. Sending to the queue is handled by the MSMQ internals.&lt;/p&gt;
+
+&lt;h4 id=&#34;connector-queues&#34;&gt;Connector Queues&lt;/h4&gt;
+
+&lt;p&gt;Simply put, Connector queues are used for cross-platform messaging. For a detailed guide on how this works, refer to the documentation &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ms706915(v=vs.85).aspx&#34;&gt;on MSDN&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h4 id=&#34;outgoing-queues&#34;&gt;Outgoing Queues&lt;/h4&gt;
+
+&lt;p&gt;Outgoing queues are local internal queues that are used to store messages sent to remote queues. Messages can be stored in outgoing queues under off-line conditions and then sent to target queues on remote computers when connectivity is restored. These queues are generated automatically and cannot be created or deleted manually.&lt;/p&gt;
+
+&lt;h2 id=&#34;creating-an-msmq-message-queue&#34;&gt;Creating an MSMQ Message Queue&lt;/h2&gt;
+
+&lt;p&gt;After you have installed MSMQ, you  can access the control panel for MSMQ by opening &lt;code&gt;Computer Management &amp;gt; Services and Applications &amp;gt; Message Queuing&lt;/code&gt;. From here you can see the four types of queue available within MSMQ as well as the MSMQ triggers (if you installed the triggers):&lt;/p&gt;
+
+&lt;h2 id=&#34;accessing-an-msmq-message-queue&#34;&gt;Accessing an MSMQ Message Queue&lt;/h2&gt;
+
+&lt;p&gt;In order to access a message queue, you need to add a reference &lt;code&gt;System.Messaging&lt;/code&gt;. This will provide you access to the &lt;code&gt;MessageQueue&lt;/code&gt; class. If you know the path, format name or label you can use &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ch1d814t(v=vs.110).aspx&#34;&gt;the following constructor overload&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var mq = new MessageQueue(pathOrFormatOrLabel);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The path name can be in the following &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ms706083(v=vs.85).aspx&#34;&gt;syntax&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var mq = new MessageQueue(@&amp;quot;ComputerName\QueueName&amp;quot;);
+var mq = new MessageQueue(@&amp;quot;ComputerName\PRIVATE$\QueueName&amp;quot;);
+var mq = new MessageQueue(@&amp;quot;.\QueueName&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The period shown in the last example is a common computer representation of the local computer.&lt;/p&gt;
+
+&lt;p&gt;In order to reference a queue by its label, the string must start with &lt;code&gt;Label:&lt;/code&gt; followed by the name of the queue. For example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var mq = new MessageQueue(&amp;quot;Label:TestQueue&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Lastly, accessing a queue via its GUID requires the following format `FormatName:Modifier=GUID&amp;rdquo;, for example:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var mq = new MessageQueue(&amp;quot;FormatName:Public=5A5F7535-AE9A-41d4-935C-845C2AFF7112&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Dead letter queues, computer journals and queue journals can all be monitored by using the following paths:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;var mq = new MessageQueue(@&amp;quot;.\DeadLetter$&amp;quot;); // Non-transactional Dead Letter Queue
+var mq = new MessageQueue(@&amp;quot;.\XactDeadLetter$&amp;quot;); // Transactional Dead Letter Queue 
+var mq = new MessageQueue(@&amp;quot;.\Journal$&amp;quot;); // Computer Journal
+var mq = new MessageQueue(@&amp;quot;.\TestQueue\Journal$&amp;quot;); // Queue Journal                
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;sending-a-message-to-an-msmq-message-queue&#34;&gt;Sending a message to an MSMQ Message Queue&lt;/h2&gt;
+
+&lt;p&gt;In order to send a message to a message queue, you need to know how to access the queue as described above. Next you need to create an instance of the &lt;code&gt;MessageQueue&lt;/code&gt; class using one of the following &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/System.Messaging.MessageQueue.MessageQueue(v=vs.110).aspx&#34;&gt;MessageQueue constructors&lt;/a&gt;. The &lt;code&gt;MessageQueue&lt;/code&gt; class inherits from Component, which implements &lt;code&gt;IDisposable&lt;/code&gt;, allowing us to cleanly free the resources of the queue by using a &lt;code&gt;using&lt;/code&gt; statement:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;using(var mq = new MessageQueue(&amp;quot;.\TestQueue&amp;quot;))
+{
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once the queue has been created, we should check that we can write to the queue by using the &lt;code&gt;CanWrite&lt;/code&gt; property:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;using(var mq = new MessageQueue(&amp;quot;.\TestQueue&amp;quot;))
+{
+    if(mq.CanWrite)
+    {
+    }
+    else
+    {
+        // we cannot write to the queue
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then we can create an instance of the &lt;code&gt;Message&lt;/code&gt; class and call the &lt;code&gt;Send&lt;/code&gt; method on the message queue to send our message:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;using(var mq = new MessageQueue(&amp;quot;.\TestQueue&amp;quot;))
+{
+    if(mq.CanWrite)
+    {
+        var msg = new Message(&amp;quot;Hello world&amp;quot;);
+        mq.Send(msg);           
+    }
+    else
+    {
+        // we cannot write to the queue
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;sending-a-message-to-an-msmq-message-queue-using-transactions&#34;&gt;Sending a message to an MSMQ Message Queue using transactions&lt;/h3&gt;
+
+&lt;p&gt;Sometimes we will be required to send messages to a transactional queue. We can extend our previous example to include a check on the &lt;code&gt;Transactional&lt;/code&gt; property:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;using(var mq = new MessageQueue(&amp;quot;.\TestQueue&amp;quot;))
+{
+    if(mq.CanWrite)
+    {
+        var msg = new Message(&amp;quot;Hello world&amp;quot;);
+        if(mq.Transactional)
+        {
+        }
+        else
+        {   
+            mq.Send(msg);
+        }                       
+    }
+    else
+    {
+        // we cannot write to the queue
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here I have branched out the original code into the else branch to compare. Next, we should construct a &lt;code&gt;MessageQueueTransaction&lt;/code&gt; object which in turn can be passed to the &lt;code&gt;Send&lt;/code&gt; method. Before we call the &lt;code&gt;Send&lt;/code&gt; method, we need to ensure that we have called the &lt;code&gt;Begin&lt;/code&gt; method on the transaction object, and &lt;code&gt;Commit&lt;/code&gt; when we have completed. This will ensure that MSMQ will use the correct transactional semantics:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;using(var mq = new MessageQueue(&amp;quot;.\TestQueue&amp;quot;))
+{
+    if(mq.CanWrite)
+    {
+        var msg = new Message(&amp;quot;Hello world&amp;quot;);
+        if(mq.Transactional)
+        {
+            var transaction = new MessageQueueTransaction();
+            transaction.Begin();
+            mq.Send(msg, transaction);
+            transaction.Commit();
+        }
+        else
+        {   
+            mq.Send(msg);
+        }                       
+    }
+    else
+    {
+        // we cannot write to the queue
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;retrieving-a-message-from-an-msmq-message-queue&#34;&gt;Retrieving a message from an MSMQ Message Queue&lt;/h2&gt;
+
+&lt;p&gt;In order to retrieve a message from a message queue, you need to know how to access the queue as described above. Next you need to create an instance of the &lt;code&gt;MessageQueue&lt;/code&gt; class using one of the following &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/System.Messaging.MessageQueue.MessageQueue(v=vs.110).aspx&#34;&gt;MessageQueue constructors&lt;/a&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;using(var mq = new MessageQueue(&amp;quot;.\TestQueue&amp;quot;))
+{    
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once the queue has been created, we should check that we can read from the queue by using the &lt;code&gt;CanRead&lt;/code&gt; property:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;using(var mq = new MessageQueue(&amp;quot;.\TestQueue&amp;quot;))
+{
+    if(mq.CanRead)
+    {
+    }
+    else
+    {
+        // we can not receive from the queue
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;From here, it is a case of calling the &lt;code&gt;Receive&lt;/code&gt; method and processing the result:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;using(var mq = new MessageQueue(&amp;quot;.\TestQueue&amp;quot;))
+{
+    if(mq.CanRead)
+    {
+        var msg = mq.Receive();
+        // do something with the received message
+    }
+    else
+    {
+        // we can not receive from the queue
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;You may have to set the &lt;code&gt;Formatter&lt;/code&gt; property as shown &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/y918yfy2(v=vs.110).aspx&#34;&gt;here&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;retrieving-a-message-from-an-msmq-message-queue-using-transactions&#34;&gt;Retrieving a message from an MSMQ Message Queue using transactions&lt;/h3&gt;
+
+&lt;p&gt;Similarly to the transactional code we used when sending a message, we can inspect the &lt;code&gt;Transactional&lt;/code&gt; property on the &lt;code&gt;MessageQueue&lt;/code&gt; before creating a &lt;code&gt;MessageQueueTransaction&lt;/code&gt; object, passing it to the &lt;code&gt;Receive&lt;/code&gt; method:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;using(var mq = new MessageQueue(&amp;quot;.\TestQueue&amp;quot;))
+{
+    if(mq.CanRead)
+    {
+        if(mq.Transactional)
+        {
+            var transaction = new MessageQueueTransaction();
+            transaction.Begin();
+            mq.Receive(transaction);
+            transaction.Commit();               
+        }
+        else
+        {
+            var msg = mq.Receive();
+            // do something with the received message
+        }
+    }
+    else
+    {
+        // we can not receive from the queue
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    
+    <item>
+      <title>Message Queue Fundementals: Introduction</title>
+      <link>https://im5tu.io/article/2014/09/message-queue-fundementals-introduction/</link>
+      <pubDate>Sun, 07 Sep 2014 18:35:37 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/09/message-queue-fundementals-introduction/</guid>
+      <description>&lt;p&gt;Message queues are a substantial part of modern day enterprise architectures and a vital part of providing scalable solutions. They are designed for asynchronous communication between different parts of the system. They help scale individual components of a system and increase reliability with the optional addition of the persistence of messages to a storage system.&lt;/p&gt;
+
+&lt;p&gt;In the next few articles I will be covering some of the basics of message queues followed by a couple of different implementations including &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/ms711472(v=vs.85).aspx&#34;&gt;Microsoft&amp;rsquo;s MSMQ&lt;/a&gt; and &lt;a href=&#34;http://particular.net/&#34;&gt;Particular&amp;rsquo;s&lt;/a&gt; &lt;a href=&#34;http://particular.net/nservicebus&#34;&gt;NServiceBus&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-is-a-message-queue-mq&#34;&gt;What is a Message Queue (MQ)?&lt;/h2&gt;
+
+&lt;p&gt;Messages queues can be thought of as any other first-in-first-out queue. Each message queue accepts a single message one at a time and stores it until a handler is ready to process this message. If there are no message handlers ready to receive the message, it remains in the queue. Some implementations of message queues allow the configuration of features such as a priority on each message, others do not.&lt;/p&gt;
+
+&lt;p&gt;As mentioned earlier, message queues are designed to perform asynchronous communication which they achieve in one of three principals:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Fire &amp;amp; Forget&lt;/li&gt;
+&lt;li&gt;Request-Response&lt;/li&gt;
+&lt;li&gt;Publish/Subscribe&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I will also detail a variant of the Request-Response pattern called Scatter-Gather and an additional technique of the Publish/Subscribe pattern called Subscription Filters.&lt;/p&gt;
+
+&lt;h2 id=&#34;fire-forget-messaging&#34;&gt;Fire &amp;amp; Forget Messaging&lt;/h2&gt;
+
+&lt;p&gt;Originally a military term, the phrase fire and forget has ported well to realms of programming. Typically when two entities are communicating, one entity sends a message and the other replies (be it (a)synchronously). With fire &amp;amp; forget messaging, the entity is not interested in any reply, simply the acknowledgement of the message.&lt;/p&gt;
+
+&lt;p&gt;The best example I can think of is notifications. Once the application server has sent the notification message to the message queue, it is free to process additional requests. When a handler is free to pick up the notification message it does and sends the message on to the relevant device via the correct medium. At any stage during, the only response is acknowledgement of receipt of the notification message. This is so that the queues do not attempt to resend the message. If an error occurs, or a time-out value expires, the message is left in the queue to be tried again, depending on the nature of the error.&lt;/p&gt;
+
+&lt;h2 id=&#34;request-reponse-messaging&#34;&gt;Request-Reponse Messaging&lt;/h2&gt;
+
+&lt;p&gt;In request-response, two different queues are used; one for processing requests and the other for processing the responses. Whilst sending the message to the request queue, the client often includes a reply address so that a response can be sent to the correct destination.&lt;/p&gt;
+
+&lt;p&gt;Each client typically has its own response queue, so that it only receives responses to its own requests. This pattern of messaging allows the client to continue processing while it waits for a response from the response queue, which would have otherwise been completed via synchronous communication.&lt;/p&gt;
+
+&lt;h3 id=&#34;scatter-gather-messaging&#34;&gt;Scatter-Gather Messaging&lt;/h3&gt;
+
+&lt;p&gt;Often responses are required from multiple sources. This is where the Scatter-Gather pattern comes in. The Scatter-Gather pattern is a composition of the publish-subcribe pattern that we will see later and the aggregator pattern. Once a message has been published, the subscribers return the responses to a central queue to be consumed by an aggregator.&lt;/p&gt;
+
+&lt;p&gt;The aggregator will know how many responses it should expect, either by using a pre-defined value or via header information. Once the aggregation is complete, the publisher is notified via the response message queue.&lt;/p&gt;
+
+&lt;p&gt;In this scenario, I would typically expect to see three distinct queues:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;A publisher queue&lt;/li&gt;
+&lt;li&gt;An aggregation queue&lt;/li&gt;
+&lt;li&gt;A response queue&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;publish-subscribe-messaging&#34;&gt;Publish/Subscribe Messaging&lt;/h2&gt;
+
+&lt;p&gt;The publish/subscribe pattern is not to dissimilar to the observer pattern found in C#/Java. Interested parties subscribe to a specific queue in order to receive notifications. Once a message has been sent to the queue, all parties receive a copy of the message.&lt;/p&gt;
+
+&lt;p&gt;This pattern is good for event-driven processing, since components can be added or removed with relative ease. An example would be a users address changes. The changes need to be reflected in the database, a CRM system and a third party provider. Without this pattern, the publisher would have to know about the three different systems in order to complete the processing. Instead, the publisher only knows about the queue, and the queue about the subscribers to that queue.&lt;/p&gt;
+
+&lt;p&gt;A natural extension of this pattern is the &lt;a href=&#34;http://msdn.microsoft.com/en-gb/data/gg577609.aspx&#34;&gt;Reactive Extensions Framework (Rx)&lt;/a&gt;. It is a library for composing asynchronous and event-based programs using observable sequences and LINQ-style query operators and has been ported to many different languages.&lt;/p&gt;
+
+&lt;h3 id=&#34;subscription-filters&#34;&gt;Subscription Filters&lt;/h3&gt;
+
+&lt;p&gt;Subscription filters can be applied to any queue that contains a publish-subscribe model. Upon receipt of a message, the queue is responsible for deciding which messages should be sent to each handler. This allows for greater security, because not all subscribers receive all messages, but at the cost of greater processing expense. The addition of each new subscriber will impact the throughput of the queue because the new subscriber has to be considered for every message that flows through the queue.&lt;/p&gt;</description>
     </item>
     
   </channel>

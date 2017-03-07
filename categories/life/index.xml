@@ -61,5 +61,23 @@
 &lt;p&gt;Finally I&amp;rsquo;ve been able to match up my Github/Twitter handles with my website to make things alot easier to find. I&amp;rsquo;ve also began to build this site on a static site generator called hugo, hosted by Github pages and delivered through Cloudflare. My first port of call is to show you how i&amp;rsquo;ve done it should you wish to re-create my steps for yourself. Naturally, steps may vary as time progresses and things change - so feel free to fix any instructions on my &lt;a href=&#34;https://github.com/Im5tu/im5tu-hugo&#34;&gt;Github repository&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     
+    <item>
+      <title>Becoming An MCP</title>
+      <link>https://im5tu.io/article/2013/06/becoming-an-mcp/</link>
+      <pubDate>Mon, 10 Jun 2013 20:14:39 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2013/06/becoming-an-mcp/</guid>
+      <description>&lt;p&gt;As the title suggests, today I passed the 70-483 Programming in C# exam to offically become a Microsoft Certifed Professional.
+&lt;/p&gt;
+
+&lt;p&gt;This is one of the things that has been in my sights for a very long time now, so I am extremly happy to have passed. I throughly recommend doing it for yourself if you haven&amp;rsquo;t done so already. I know exams aren&amp;rsquo;t everyones cup of tea, but even if you decide not to take the exam, I believe that the knownledge you gain during the study phase will prove invaluable to your day to day work.&lt;/p&gt;
+
+&lt;p&gt;Since I already had 5 years programming experience with the .Net environment, the exam was mainly a tick in the box. That said, I would throughly recommend you read the &lt;a href=&#34;http://www.amazon.co.uk/CLR-via-Developer-Reference-ebook/dp/B00AA36R4U/ref=tmm_kin_title_0/277-8084778-0056569&#34;&gt;CLR via C# Forth Edition&lt;/a&gt;. The book gives a fantasic insight into the inner workings of the CLR and why some features are not supported by C#.&lt;/p&gt;
+
+&lt;p&gt;I wish you all the best of luck if you decide to take this exam.&lt;/p&gt;
+
+&lt;p&gt;Stu&lt;/p&gt;</description>
+    </item>
+    
   </channel>
 </rss>

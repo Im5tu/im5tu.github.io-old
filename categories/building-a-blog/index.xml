@@ -38,7 +38,7 @@
 
 &lt;h2 id=&#34;reading-a-hashed-file&#34;&gt;Reading a hashed file&lt;/h2&gt;
 
-&lt;p&gt;As you may recall in &lt;a href=&#34;http://localhost:1313/article/2016/11/blog-building---part-4---frontend/&#34;&gt;my previous Hugo post&lt;/a&gt;, I setup my css files with cache busting capabilites by appending the hash onto the filename. In order to render this as part of the HTML, we need a few things:&lt;/p&gt;
+&lt;p&gt;As you may recall in &lt;a href=&#34;https://im5tu.io/article/2016/11/blog-building---part-4---frontend/&#34;&gt;my previous Hugo post&lt;/a&gt;, I setup my css files with cache busting capabilites by appending the hash onto the filename. In order to render this as part of the HTML, we need a few things:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Find the name of the hashed file&lt;/li&gt;

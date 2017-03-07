@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Expressions on Stuart Blackler&#39;s Blog</title>
+    <link>https://im5tu.io/tags/expressions/index.xml</link>
+    <description>Recent content in Expressions on Stuart Blackler&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://im5tu.io/tags/expressions/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Finding Reducible Expressions</title>
+      <link>https://im5tu.io/article/2014/06/finding-reducible-expressions/</link>
+      <pubDate>Tue, 24 Jun 2014 09:21:19 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/06/finding-reducible-expressions/</guid>
+      <description>&lt;p&gt;Today I just wanted to share a quick note regarding &lt;a href=&#34;http://stackoverflow.com/a/2040097/315711&#34;&gt;a Stack Overflow answer&lt;/a&gt; that I recently came across. In the answer the author explains that a call to &lt;code&gt;Expression.CanReduce&lt;/code&gt; will typically return false, while &lt;code&gt;Expression.Reduce()&lt;/code&gt; will return the current expression. The author continues to state that one of the types that overrides &lt;code&gt;Expression.Reduce()&lt;/code&gt; and &lt;code&gt;Expression.CanReduce&lt;/code&gt; is &lt;code&gt;MemberInitExpression&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;I wanted to find out when &lt;code&gt;Expression.CanReduce&lt;/code&gt; would actually return &lt;code&gt;true&lt;/code&gt;. I discovered the &lt;a href=&#34;http://www.codeplex.com/Download?ProjectName=dlr&amp;amp;DownloadId=246540&#34;&gt;173 page Expression Tree Specification&lt;/a&gt; which provides an additional insight to &lt;code&gt;CanReduce&lt;/code&gt; and &lt;code&gt;Reduce()&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&#34;canreduce&#34;&gt;CanReduce&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;This property returns whether the Reduce method returns a different but semantically equivalent ET.  By default, this property returns false.&lt;/p&gt;
+
+&lt;p&gt;In the typical case, the resulting ET contains all common ET nodes suitable for passing to any common compilation or ET processing code.  Sometimes the result is only partially reduced, and when walking the resulting ET, you&amp;rsquo;ll need to further reduce some nodes.&lt;/p&gt;
+
+&lt;p&gt;The value returned by this property should never change for a given object.&lt;/p&gt;
+
+&lt;p&gt;Signature:&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;public virtual Boolean CanReduce { get; }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;reduce&#34;&gt;Reduce&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;This method returns a semantically equivalent ET representing the same expression.  By default, this method returns the object on which it was invoked.&lt;/p&gt;
+
+&lt;p&gt;Typically the result comprises only common ET types, ET nodes suitable for passing to any compilation or ET processing code.  Usually the result is only partially reduced (that is, only the root node).  You&amp;rsquo;ll probably need to further reduce some nodes.&lt;/p&gt;
+
+&lt;p&gt;Signature:&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;public virtual Expression Reduce();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;reducible-types-inside-system-linq-expressions&#34;&gt;Reducible Types Inside System.Linq.Expressions&lt;/h3&gt;
+
+&lt;p&gt;Using &lt;a href=&#34;http://www.telerik.com/products/decompiler.aspx&#34;&gt;Telerik&amp;rsquo;s JustDecompile&lt;/a&gt;, I went through each public class to see which had an override on either &lt;code&gt;CanReduce&lt;/code&gt; or &lt;code&gt;Reduce()&lt;/code&gt;. The result came up with the following list:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-us/library/system.linq.expressions.binaryexpression.aspx&#34;&gt;BinaryExpression&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-us/library/system.linq.expressions.listinitexpression.aspx&#34;&gt;ListInitExpression&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-GB/library/system.linq.expressions.memberinitexpression.aspx&#34;&gt;MemberInitExpression&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-us/library/system.linq.expressions.unaryexpression.aspx&#34;&gt;UnaryExpression&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Furthermore, I searched for descendant types of the list above and found the following reducible classes that were marked as internal, as such I couldn&amp;rsquo;t find any official documentation for them:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;AssignBinaryExpression&lt;/li&gt;
+&lt;li&gt;CoalesceConversionBinaryExpression&lt;/li&gt;
+&lt;li&gt;LogicalBinaryExpression&lt;/li&gt;
+&lt;li&gt;SimpleBinaryExpression&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;further-reading&#34;&gt;Further Reading&lt;/h3&gt;
+
+&lt;p&gt;Inside the expression tree specification, I would also be inclined to read section 2.2 entitled &lt;em&gt;Reducible Nodes&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;If there are any additional expressions that can be reduced that I have missed, please send me a message and I will add it to the list.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

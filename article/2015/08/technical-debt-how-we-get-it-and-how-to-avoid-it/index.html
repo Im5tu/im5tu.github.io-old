@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Technical Debt: How We Get It And How To Avoid It - Stuart Blackler&#39;s Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="A discussion on technical debt including strategies to help avoid high levels of technical debt.">
+    
+    
+    <meta property="og:title" content="Technical Debt: How We Get It And How To Avoid It - Stuart Blackler&#39;s Blog" />
+<meta property="og:type" content="website" />
+
+<meta property="og:description" content="A discussion on technical debt including strategies to help avoid high levels of technical debt.">
+
+<meta property="og:url" content="https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/" />
+<meta property="og:image" content="https://im5tu.io/img/site-logo.png" />
+<meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@im5tu" />
+
+<style>*{margin:0;padding:0}body{font-size:100%}ul,ol{margin:1em 1em}ul li,ol li{margin:.25em auto}ol ul{margin:0.25em 1em}hr{margin:.5em auto}@font-face{font-family:"Droid Sans";font-style:normal;font-weight:400;src:local("Droid Sans"),url("/fonts/Droid_Sans/DroidSans.woff2") format("woff2")}@font-face{font-family:"Exo";font-style:normal;font-weight:400;src:local("Exo"),url("/fonts/Exo/Exo.woff2") format("woff2")}@font-face{font-family:"Raleway";font-style:normal;font-weight:400;src:local("Raleway"),url("/fonts/Raleway/Raleway.woff2") format("woff2")}html,body{height:100%;background:#f0f0f0;color:#222;text-align:justify;font-family:"Raleway","Helvetica Neue",Helvetica,Arial,sans-serif}h1,h2,h3,h4,h5{font-family:"Exo","Helvetica Neue",Helvetica,Arial,sans-serif;margin:1.25em 0 0.25em 0;font-weight:800;color:#161616;text-align:left}h1{font-size:2.3em;line-height:2.8em}h2{font-size:1.8em;line-height:2.3em}h3{font-size:1.3em;line-height:1.8em}h4{font-size:1.2em;line-height:1.7em}h5{font-size:1.1em;line-height:1.6em}p{font-size:1em;line-height:1.5em;margin-bottom:1em}p code{color:#4DA3CE}p code:hover{color:#89c2df}a:link,a:visited{color:#111;text-decoration:none}a:hover{color:#2B4D5E}pre{background:#fff;border:1px solid #cdcdcd;color:#222}pre:hover{border-color:#8d8d8d}pre,pre code{font-family:'Droid Sans Mono', monospace}.article-list>footer{margin:1em auto;font-size:1.25em;line-height:1.75em}.article-list .article footer{margin-bottom:0}.article-content a:link,.article-content a:visited{color:#328ab6}.article-content a:hover{color:#515151}.article-footer{margin:1em auto}.article blockquote{border-left:5px solid #626262;padding:25px;margin-left:-10px;font-style:italic;color:#959595;margin-bottom:1em;background:#fff}.article blockquote p{margin:0}.article pre{font-size:1em;line-height:1.5em;margin:.5em;padding:.5em;white-space:pre-wrap}.article img{max-width:100%}time.article-header-time{font-style:italic}ul.article-tags{margin-left:.5em;display:inline;list-style:none}ul.article-tags li{display:inline}ul.article-tags li:not(:last-child):after{content:", "}ul.article-tags li:last{margin-right:0}a.article-tag:link,a.article-tag:visited{color:#4DA3CE}a.article-tag:hover{color:#515151}.pageContainer{min-height:100%;position:relative}.pageContainer-content{max-width:980px;margin:0 auto;padding-bottom:6em}@media screen and (min-width: 320px){.pageContainer-content{width:85%}}@media screen and (min-width: 740px){.pageContainer-content{width:80%}}@media screen and (min-width: 980px){.pageContainer-content{width:70%}}#pageHeader{background:#fff;color:#000;padding:.5em 0;border-bottom:1px solid #d0d0d0}#pageHeader:hover{background:#fff;border-bottom-color:#b7b7b7}#pageHeader-wrapper{margin:0 auto}@media screen and (min-width: 320px){#pageHeader-wrapper{width:85%}}@media screen and (min-width: 740px){#pageHeader-wrapper{width:80%}}@media screen and (min-width: 980px){#pageHeader-wrapper{width:70%}}#pageHeader-wrapper:after{content:"";display:table;clear:both}#pageHeader-logo{float:left}#pageHeader-nav{float:right}#pageHeader-nav-ul{float:right;margin:0;list-style:none}#pageHeader-nav-ul li{float:left;margin-left:1em}#pageHeader .pageHeader-imagery{width:2em;height:2em}a.pageHeader-nav-ul-li-link:link,a.pageHeader-nav-ul-li-link:visited{color:#000;font-weight:900;font-family:"Reader","Helvetica Neue",Helvetica,Arial,sans-serif}a.pageHeader-nav-ul-li-link:hover{color:#3b6a81}#logo .logo-path{fill:#000;-webkit-transition:color 1300ms linear;transition:color 1300ms linear}#logo:hover .logo-path{fill:#333;-webkit-animation:animationFrames linear 0.7s;animation:animationFrames linear 0.7s;-webkit-animation-iteration-count:1;animation-iteration-count:1;-webkit-transform-origin:50%;-ms-transform-origin:50%;transform-origin:50%}@-webkit-keyframes animationFrames{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}20%{-webkit-transform:rotate(-5deg);transform:rotate(-5deg)}40%{-webkit-transform:rotate(5deg);transform:rotate(5deg)}60%{-webkit-transform:rotate(-3deg);transform:rotate(-3deg)}80%{-webkit-transform:rotate(2deg);transform:rotate(2deg)}100%{-webkit-transform:rotate(-1deg);transform:rotate(-1deg)}}@keyframes animationFrames{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}20%{-webkit-transform:rotate(-5deg);transform:rotate(-5deg)}40%{-webkit-transform:rotate(5deg);transform:rotate(5deg)}60%{-webkit-transform:rotate(-3deg);transform:rotate(-3deg)}80%{-webkit-transform:rotate(2deg);transform:rotate(2deg)}100%{-webkit-transform:rotate(-1deg);transform:rotate(-1deg)}}#pageFooter{padding:2em 0;width:100%;display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-flex-flow:row wrap;-ms-flex-flow:row wrap;flex-flow:row wrap;-webkit-align-content:flex-start;-ms-flex-line-pack:start;align-content:flex-start;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;background:#dedede;color:#5f5f5f;position:absolute;bottom:0;font-size:.9em;line-height:1.4em}#pageFooter a{color:inherit}.pageFooter-section{-webkit-box-flex:1;-webkit-flex-grow:1;-ms-flex-positive:1;flex-grow:1;text-align:center}.pageFooter-section:hover{color:#1f1f1f}
+</style><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Blog" /></head>
+<body>
+<section class="pageContainer">
+    <header id="pageHeader">
+    <section id="pageHeader-wrapper">
+        <section id="pageHeader-logo">
+            <a href="/" title="Homepage">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4405.28 4775.65" id="logo" class="pageHeader-imagery"><g id="logo-layer"><path class="logo-path" d="M3579.85,1950.46C3761.31,1770.51,3872,1521.91,3872,1246.73c0-550.29-571.68-1008.37-995.83-995.83H1729.81a174.58,174.58,0,0,0-33.93-3H678.66a187,187,0,0,0-135,56.84,191.23,191.23,0,0,0-56,135.72c0,100.35,76,184.41,172.6,194a122.28,122.28,0,0,0,16.24.72h32.45l2079.44-9.58c351.86,0,665.36,321.64,665.36,673.47,0,321.64-239,588-549.57,630a663,663,0,0,1-86.3,5.91H1213.45c-47.94,0-89.25,20.67-120.23,53.09-31.73,32.49-50.17,78.23-50.17,128.37,0,100.35,76.72,181.46,170.4,181.46H3351.17c350.38,0,635.87,315,635.87,677.21,0,360.69-315,638.75-665.37,638.75L961.18,3591.73c.72.72.72.72.72,1.51l-396.09-4.47c-126.89,14-302.45,64.18-411.62,173.39C45.74,3870.59,0,3984.19,0,4150.88c0,332.67,240.49,617.42,573.16,617.42l1820.54,7.35c332.66,0,879.28-120.23,1014.27-673.47H2983.82c-39.84,135-218.34,306.16-417.52,320.92l-1964.36-7.42a230.72,230.72,0,0,1-230.88-230.88,231.7,231.7,0,0,1,230.88-230.16l1890.6-9.58c22.15,0,182.94-5.91,202.85,0h714.06c548.81,0,995.83-458.8,995.83-1023.85C4405.28,2427.7,3972.27,2035.32,3579.85,1950.46ZM715.54,481.06v-.72a122.19,122.19,0,0,0,16.24.72Z"/><path class="logo-path" d="M1147.14,0a122.26,122.26,0,0,0,16.24.72h-16.24Z"/><path class="logo-path" d="M1163.39.72h-16.24V0A122.26,122.26,0,0,0,1163.39.72Z"/><path class="logo-path" d="M3421.33,3499.38h-422s-50.89-379.13-552.48-382.08H1271.8c-568,0-1028.28-461-1028.28-1028.25,0-284,115.08-541.5,301-727.35,186.61-185.92,443.31-301,727.32-301H2500.74a176.66,176.66,0,0,1,28-2.23H2848.1a184.82,184.82,0,0,1,185.17,185.21c0,102.51-82.63,185.85-185.17,185.85H1322.7c-182.94,0-348.15,72.32-467.66,190.32C735.53,1737.16,661.76,1898.74,661.76,2078c0,358.52,295.82,655.75,660.93,655.75l1124.2,12.53S3292.25,2747.76,3421.33,3499.38Z"/></g></svg>
+            </a>
+        </section>
+        <nav id="pageHeader-nav">
+            <ul id="pageHeader-nav-ul">
+                <li><a class="pageHeader-nav-ul-li-link" rel="noopener" target="_blank" href="http://bit.ly/ExploreArbonneWithStu">Arbonne</a></li>
+                <li><a class="pageHeader-nav-ul-li-link" rel="noopener" target="_blank" href="https://github.com/im5tu">Github</a></li>
+                <li><a class="pageHeader-nav-ul-li-link" rel="noopener" target="_blank" href="https://keybase.io/im5tu">Keybase</a></li>
+                <li><a class="pageHeader-nav-ul-li-link" rel="noopener" target="_blank" href="https://twitter.com/im5tu">Twitter</a></li>
+                <li><a class="pageHeader-nav-ul-li-link" rel="noopener" target="_blank" href="/article/index.xml">Rss</a></li>
+            </ul>
+        </nav>
+    </section>
+</header>
+    <section class="pageContainer-content">
+        <article class="article">
+    <header class="article-header">
+        <h1><a href="https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/">Technical Debt: How We Get It And How To Avoid It</a></h1>
+        <p>Published: <time class="article-header-time" pubdate="pubdate" datetime="2015-08-05T18:37:26">2015-08-05 18:37:26 &#43;0000 UTC</time><p>
+    </header>
+    <section class="article-content"><p>This post started as a rebuttal to Ralf Westphal&rsquo;s <a href="http://geekswithblogs.net/theArchitectsNapkin">blog</a> and his post, &ldquo;<a href="http://geekswithblogs.net/theArchitectsNapkin/archive/2015/07/22/there-is-no-such-thing-as-technical-debt.aspx">There is no such thing as technical debt</a>&rdquo;. There are many points of view on the subject covered by various people such as <a href="https://sites.google.com/site/unclebobconsultingllc/a-mess-is-not-a-technical-debt">Uncle Bob</a> and <a href="http://martinfowler.com/bliki/TechnicalDebt.html">Martin Fowler</a>, but I thought it might be insightful to show how my team manages our code base.</p>
+
+<p>I can see where Ralf is heading in his post, however, I don&rsquo;t believe dissecting the financial analogy provides any benefit to the industry as a whole. As I will cover later, technical debt is a metaphor. Granted, one that can eventually be tracked to a monetary value yet negated quite substantially with proper management.</p>
+
+<p>To give you an idea of the code base I am currently working with, it primarily consists of large monolithic applications that have patchy test coverage and confused design patterns. All of this code was written by many people before me and added to by many others, all with typical enterprise constraints. I have personally added and fixed various parts of the code base, ensuring that I add tests as I go. As our team expands, we are attempting to modernise our code base by identifying services that we can extract into meso-services (services that are slightly larger than a micro-service) and clear our predecessors misgivings. We also have numerous greenfield projects that have been built from the ground up using modern best practises - TDD, agile, SOLID principals, DI, Composition etc.</p>
+
+<p>Before I talk about how we get into technical debt, I&rsquo;d like to first remind you that technical debt is a metaphor. One that describes the engineering trade-off’s that software developers and business stakeholders must often make in order to meet schedules and customer expectations (<a href="https://sites.google.com/site/unclebobconsultingllc/a-mess-is-not-a-technical-debt">Uncle Bob</a>). We can mistake the metaphor of technical debt with physical, measurable debt such as financial debt as demonstrated by Ralf.</p>
+
+<h2 id="getting-into-debt">Getting into debt</h2>
+
+<p>It&rsquo;s frighteningly easy to get yourself into technical debt, but a lot harder to get out of. The most common ways that I have seen so far in my career are:</p>
+
+<ul>
+<li>Lack of knowledge</li>
+<li>Lack of time or resource (often driven by business)</li>
+<li>Not following best practises (eg: the SOLID principals)</li>
+<li>MVP&rsquo;s</li>
+</ul>
+
+<p>The lack of knowledge of any developer can be attributed to one of two things: the lack of effective experience (i.e.: not working on the same project for 5 years) and a lazy developer. Personally, I believe that if developers want to write better code, they will first find the time to learn more/read others code. If you&rsquo;re too busy in the evening or feel demotivated after work, then try getting up earlier and doing it before your day becomes hectic - it&rsquo;s about time management. It can be argued that junior developers are exempt from this and the responsibility of progressing them falls on to their technical lead(s)/senior developer(s). <a href="https://twitter.com/smudge202">Tommy Long</a> quite accurately points out: &ldquo;It is for Seniors to regularly, actively propogate knowledge to improve software development as a whole. Uncle Bob reckons we double in number of developers every 5 years right now. There is a tonne of shit mixed in with a few decent resources on the internet, juniors can&rsquo;t go it alone.&rdquo;</p>
+
+<p>Lack of time or resource is unfortunately bestowed upon us from the business, after all the business is king - without it we would not have a job. This is probably the sole cause for the technical debt that I currently repaying. The trade off&rsquo;s that we have to make often start off small but over time snowball into a huge immovable problem - classic inertia. Therefore the responsibility falls on us as developers accurately estimate our work then let the business decide which work items will not make the deadline.</p>
+
+<p>Not following best practices is again, mostly the fault of the developer. At the end of the day, we, the developer write the code so it is our responsibility to write it properly. In the cases where business is the blocker, it is time that we as developers began to fight those long hard battles in our favour. This is the exact same thing that the developers at Microsoft have done. Their drive came from the bottom up, not top down.</p>
+
+<p>Lastly, MVP&rsquo;s or minimally viable products. The concept is absolutely solid when combined with other practises such as TDD/BDD*. One of the key identifiers with this entrant is the question of: &ldquo;Should I do this because of feature x which <strong>should</strong> be coming in the next 3 weeks, but it will add half a day to the implementation?&ldquo;. Note the emphasis on <strong>should</strong>. A sprints backlog is volatile and subject to the abuse of the business at any given moment. If you keep the code as is, you run the risk of the feature costing more time in the future. On the contrary, the future feature may never be needed because of a changing requirement therefore saving you time.</p>
+
+<p><em>*I believe that all code should be tested, even if it is a prototype/MVP. You never know whether or not it will be used again. This is one major pain point of many that i&rsquo;ve experienced recently as I&rsquo;ve picked up legacy projects.</em></p>
+
+<h2 id="when-technical-debt-is-too-high">When technical debt is too high</h2>
+
+<p>There are a few signs of high technical debt, which are:</p>
+
+<ul>
+<li>It&rsquo;s hard to add new functionality</li>
+<li>The code resembles a spaghetti junction</li>
+<li>You cannot test your code effectively</li>
+</ul>
+
+<p>Typically, my first two points are attributed to developers not having enough knowledge or not following best practices. A prime example is if your class has more than a single responsibility such as it reads data from the database and contains business logic for validating a shopping basket. The example violates multiple principals and should make every developer feel like they&rsquo;ve just jumped into a deep muddy puddle.</p>
+
+<p>By effectively testing your code, I mean that you should be able to write all types of test against the code you write: Unit, Component and Integration. If you can only write integration tests for the code you have just written, then you likely need to change your code - Unit testing a database layer (specifically the ORM, not physical IO) is usually quite trivial if the code is structured correctly. That said, we are often stopped from unit testing when using certain frameworks such as Microsoft Azure Service Bus due to the lack of abstractions the library provides. In this case, integration tests are often the best that we can do - but at least it is under test.</p>
+
+<p>The key point to make is that if your future self (or colleague) will have trouble maintaining the code you have just written, then we haven&rsquo;t coded it well enough. If you have to write comments then you are probably doing it wrong - unless there is a concious design decision. <a href="https://twitter.com/smudge202">Tommy Long</a> quite accurately reflects some of my own thoughts on comments in <a href="http://blog.devbot.net/conventions-comments/#code">his post about comments</a>.</p>
+
+<h2 id="strategies-to-avoid-high-levels-of-technical-debt">Strategies to avoid high levels of technical debt</h2>
+
+<p>Here at <a href="http://www.4com.co.uk">4Com</a>, we employ the following techniques to help us track how much technical debt we have and to help us mitigate it:</p>
+
+<ul>
+<li>The rule of 3</li>
+<li>The hallway test</li>
+<li>Issue tracking</li>
+<li>Sprint management</li>
+</ul>
+
+<p>Our rule of 3 is quite simple, once two out of three developers agree on a certain decision whether it be deciding on uptake of a new framework or naming an api, that decision is usually the one used. Usually one of the 3 is our manager/technical lead who often plays the role of devils advocate in this scenario. Any person of the 3 can play the role of devils advocate. The rule of 3 helps other members of the team understand the thought processes and context for the decision - something that is often missed when developers leave. It also helps to quickly highlight any major problems based on past experiences. If the situation warrants it, a spike can be performed to further evaluate the decision. While the rule of 3 is extremely helpful for larger architectural decisions, often a simpler approach can be used which negates the resource requirements: The hallway test.</p>
+
+<p>The hallway test is a phrase that I picked up off the folks at Microsoft. The basic premise is that a random developer should be able to understand and logically follow the code/api without documentation. Often the random will not have domain knowledge, which can make them perfect to bounce ideas off of. Sometimes, domain knowledge will be required - but the point is to bounce/review the idea with another developer which often leads to a cleaner/simpler design; thus, lowering the debt raised.</p>
+
+<p>If we have made a shortcut for an MVP or have identified a piece of legacy code that can be tied up, the first thing we do is raise an issue within JIRA - our issue tracking platform. The reason for this is that we can assign it a priority and discuss whether or not it blocks future functionality/reduce time of implementation. Often the items might be small and can be added to a sprint if the focus of the sprint has already been completed (eg: 2 hours to go before the end of the sprint and the work is all done). Whilst this isn&rsquo;t a way to avoid technical debt, it helps you to keep track of it and realise when you have too much debt that you need to repay.</p>
+
+<p>Before each sprint, we asses the priorities of the business against our current backlog. Once the main priorities have been assigned work items within the sprint, we fill up the remaining space with technical debt. The order in which technical debt and features are tackled within a sprint depends on the business priorities. For example: feature/improvement A must be completed at all costs. As my colleague HerecyDev points out, you should be completing all work within a sprint and not over-committing. I personally favour tackling features first so the business gains value, unless tackling a piece of technical debt can improve the efficiency of implementing a feature. It might not always be possible to add technical debt every sprint, but so long as that is the minority of cases you should be perfectly fine.</p>
+
+<p>With legacy projects, the primary focus should be getting unit tests in place (this might start as an integration test). This ensures that you will not break any existing functionality while you make the code better and flag work items for the future.</p>
+
+<h3 id="closing-words">Closing words</h3>
+
+<p>In his post, Ralf mentions that tackling technical debt is an addiction with the basic argument the business will keep postponing doing the right thing. If left unmanaged this is entirely true until it becomes a point where it is too costly to implement a feature. The key is the business will decide this. At <a href="http://www.4com.co.uk">4Com</a>, we continuously flag items as technical debt for review at every sprint planning meeting. I firmly believe that if we didn&rsquo;t, we wouldn&rsquo;t have the same high standards in our code base as we do today.</p>
+
+<p>In short, we should always leave the code in a better place than when we found it - never worse and raise an issue if there is something that could be done better. That&rsquo;s what I believe the metaphor is for - something that we can do better within our code.</p></section>
+    <footer class="article-footer">
+        <hr />Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/clean-code/">Clean Code</a></li>
+</ul></footer>
+</article>
+    </section>
+    <footer id="pageFooter">
+    <section id="pageFooter-copyright" class="pageFooter-section">
+        &copy; 2016 Stuart Blackler
+    </section>
+    <section id="pageFooter-details" class="pageFooter-section">
+        <a href="https://github.com/im5tu/im5tu-hugo" rel="noopener" target="_blank">Edit me on Github</a>
+    </section>
+    <section id="pageFooter-scroll" class="pageFooter-section">
+        <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>
+    </section>
+</footer>
+</section>
+<script src="/js/site-e232180f.js" defer></script>
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5838c774d027e891" defer></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-88036425-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+</html>
