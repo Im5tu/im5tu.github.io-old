@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Devops on Stuart Blackler&#39;s Blog</title>
+    <link>https://im5tu.io/tags/devops/index.xml</link>
+    <description>Recent content in Devops on Stuart Blackler&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://im5tu.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>DevOps</title>
+      <link>https://im5tu.io/article/2015/01/devops/</link>
+      <pubDate>Sat, 24 Jan 2015 18:36:29 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2015/01/devops/</guid>
+      <description>&lt;p&gt;As part of my role as a .Net Developer, I have recently been getting to grips with the build and deployment features of both Teamcity and Octopus Deploy. This has been making me think about the industry buzz word &amp;ldquo;DevOps&amp;rdquo; and exactly what that means.&lt;/p&gt;
+
+&lt;p&gt;Broadly speaking, I think DevOps can be summarized along the lines of:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;DevOps is the combination of development and operational practises which allow the building, evolving and operating of rapidly-changing resilient systems.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I have seen a fair few videos of people trying to explain DevOps as the combination of development and operations teams, with a focus on communication, integration and collaboration. While I agree with the fact its the combination of development and operations; it&amp;rsquo;s the practises that should be combined, not the teams. Each team has a specific set of skills and tools that should be shared in order to enhance the deployments of a product. Combining the teams sounds a lot like budget cuts. You can&amp;rsquo;t replace a competent sys-admin with a developer and vise-versa.&lt;/p&gt;
+
+&lt;p&gt;DevOps works! There is no question of that in my mind. &lt;a href=&#34;http://puppetlabs.com/blog/what-is-a-devops-engineer&#34;&gt;PuppetLabs&lt;/a&gt; suggest that organisations adopting DevOps practises deploy up to 30 times more frequently, with 50% fewer deployment failures. It&amp;rsquo;s quiet easy to see why if you consider a DevOps team doing the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Automation of builds&lt;/li&gt;
+&lt;li&gt;Automation of testing&lt;/li&gt;
+&lt;li&gt;Automation of deployments&lt;/li&gt;
+&lt;li&gt;Version controlled scripts for the above&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It all revolves around taken the human element of out deployments and being able to map the changes to each deployment across time. For resilient operations we need to be consistent. That is why teams invest heavily in tools like Teamcity and Jenkins. They show you who made what change to which project and when. But perhaps more importantly, they make things easier to get right.&lt;/p&gt;
+
+&lt;p&gt;If we have a good audit trail provided to us by the tools above and we version control any remaining scripts such as deployment; we have a resilient system that we can rely on to build, test and deploy our solutions. So that is what DevOps is to me, the combination of development and operational practises which allow the building, evolving and operating of rapidly-changing resilient systems.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

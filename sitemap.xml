@@ -3,7 +3,12 @@
   
   <url>
     <loc>https://im5tu.io/</loc>
-    <lastmod>2017-03-01T19:32:24+00:00</lastmod>
+    <lastmod>2017-04-04T10:38:38+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/article/2017/04/talks-episerver-content-providers--lightening-talk/</loc>
+    <lastmod>2017-04-04T10:38:38+01:00</lastmod>
   </url>
   
   <url>
@@ -34,11 +39,6 @@
   <url>
     <loc>https://im5tu.io/article/2016/12/write-good-code-not-code-hastily/</loc>
     <lastmod>2016-12-21T23:25:27+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/me/about/</loc>
-    <lastmod>2016-11-25T22:33:48+00:00</lastmod>
   </url>
   
   <url>
@@ -79,6 +79,11 @@
   <url>
     <loc>https://im5tu.io/article/2015/02/3-easy-steps-to-configuring-azure-with-powershell/</loc>
     <lastmod>2015-02-17T18:37:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/article/2015/01/devops/</loc>
+    <lastmod>2015-01-24T18:36:29+00:00</lastmod>
   </url>
   
   <url>
@@ -149,10 +154,6 @@
   <url>
     <loc>https://im5tu.io/article/2012/12/extension-methods-in-dotnet/</loc>
     <lastmod>2012-12-01T17:51:38+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/article/1/01/</loc>
   </url>
   
 </urlset>

@@ -9,6 +9,28 @@
     <atom:link href="https://im5tu.io/tags/dotnet/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Talks: Episerver Content Providers &amp; Lightening Talk</title>
+      <link>https://im5tu.io/article/2017/04/talks-episerver-content-providers--lightening-talk/</link>
+      <pubDate>Tue, 04 Apr 2017 10:38:38 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/04/talks-episerver-content-providers--lightening-talk/</guid>
+      <description>&lt;p&gt;On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&amp;rsquo;s London offices. I ended up giving two talks: Episerver Content Providers &amp;amp; a 5 minute lightening talk.
+&lt;/p&gt;
+
+&lt;p&gt;The Episerver Content Providers talk was around the use of custom content providers within Episerver, their benefits, implementation and the pitfalls and nuances of using them. You can find the slides over at &lt;a href=&#34;http://slides.com/im5tu/epi-content-providers#/&#34;&gt;slid.es&lt;/a&gt;. On the slides you can find the speaker notes that I used, so I won&amp;rsquo;t duplicate them here.&lt;/p&gt;
+
+&lt;p&gt;For the lightening talk, I decided to cover three libraries that I think will play a big part in Episerver&amp;rsquo;s future. These are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/aspnet/dependencyinjection&#34;&gt;Dependency Injection&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/aspnet/logging&#34;&gt;Logging&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/aspnet/options&#34;&gt;Options&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These frameworks are well worth checking out and are used as part of my &lt;a href=&#34;https://github.com/im5tu/openmessage&#34;&gt;OpenMessage&lt;/a&gt; project.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
       <title>OpenMessage 2017 Roadmap</title>
       <link>https://im5tu.io/article/2017/02/openmessage-2017-roadmap/</link>
       <pubDate>Sat, 11 Feb 2017 12:15:27 +0000</pubDate>
@@ -64,6 +86,36 @@
 &lt;p&gt;As part of this update, the entire solution has been converted to the new (old) csproj system as part of Visual Studio 2017. Over the next few days i&amp;rsquo;ll be posting the roadmap for the project and where I plan to take it next. Feedback and ideas are welcome.&lt;/p&gt;
 
 &lt;p&gt;If you experience any problems, let me know.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>DevOps</title>
+      <link>https://im5tu.io/article/2015/01/devops/</link>
+      <pubDate>Sat, 24 Jan 2015 18:36:29 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2015/01/devops/</guid>
+      <description>&lt;p&gt;As part of my role as a .Net Developer, I have recently been getting to grips with the build and deployment features of both Teamcity and Octopus Deploy. This has been making me think about the industry buzz word &amp;ldquo;DevOps&amp;rdquo; and exactly what that means.&lt;/p&gt;
+
+&lt;p&gt;Broadly speaking, I think DevOps can be summarized along the lines of:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;DevOps is the combination of development and operational practises which allow the building, evolving and operating of rapidly-changing resilient systems.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;I have seen a fair few videos of people trying to explain DevOps as the combination of development and operations teams, with a focus on communication, integration and collaboration. While I agree with the fact its the combination of development and operations; it&amp;rsquo;s the practises that should be combined, not the teams. Each team has a specific set of skills and tools that should be shared in order to enhance the deployments of a product. Combining the teams sounds a lot like budget cuts. You can&amp;rsquo;t replace a competent sys-admin with a developer and vise-versa.&lt;/p&gt;
+
+&lt;p&gt;DevOps works! There is no question of that in my mind. &lt;a href=&#34;http://puppetlabs.com/blog/what-is-a-devops-engineer&#34;&gt;PuppetLabs&lt;/a&gt; suggest that organisations adopting DevOps practises deploy up to 30 times more frequently, with 50% fewer deployment failures. It&amp;rsquo;s quiet easy to see why if you consider a DevOps team doing the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Automation of builds&lt;/li&gt;
+&lt;li&gt;Automation of testing&lt;/li&gt;
+&lt;li&gt;Automation of deployments&lt;/li&gt;
+&lt;li&gt;Version controlled scripts for the above&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;It all revolves around taken the human element of out deployments and being able to map the changes to each deployment across time. For resilient operations we need to be consistent. That is why teams invest heavily in tools like Teamcity and Jenkins. They show you who made what change to which project and when. But perhaps more importantly, they make things easier to get right.&lt;/p&gt;
+
+&lt;p&gt;If we have a good audit trail provided to us by the tools above and we version control any remaining scripts such as deployment; we have a resilient system that we can rely on to build, test and deploy our solutions. So that is what DevOps is to me, the combination of development and operational practises which allow the building, evolving and operating of rapidly-changing resilient systems.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -1212,151 +1264,6 @@ public void NullTest()
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;So there it is. Hopefully now you can implement &lt;code&gt;IDisposable&lt;/code&gt; correctly according to your needs.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Semaphore vs SeamphoreSlim Micro Benchmark</title>
-      <link>https://im5tu.io/article/2013/03/semaphore-vs-seamphoreslim-micro-benchmark/</link>
-      <pubDate>Mon, 11 Mar 2013 18:06:28 +0000</pubDate>
-      
-      <guid>https://im5tu.io/article/2013/03/semaphore-vs-seamphoreslim-micro-benchmark/</guid>
-      <description>&lt;p&gt;In this post, I am going to show a small micro-benchmark to demonstrate the performance difference between the &lt;code&gt;Semaphore&lt;/code&gt; and &lt;code&gt;SemaphoreSlim&lt;/code&gt; classes in C#. A &lt;code&gt;Semaphore&lt;/code&gt; is often used to restrict the number of threads than can access some (physical or logical) resource. In this case, we want the restriction to be as little as possible.
-&lt;/p&gt;
-
-&lt;p&gt;Semaphores are of two types: local semaphores and named system semaphores. If you create a Semaphore object using a constructor that accepts a name, it is associated with an operating-system semaphore of that name. Named system semaphores are visible throughout the operating system, and can be used to synchronize the activities of processes. You can create multiple Semaphore objects that represent the same named system semaphore, and you can use the OpenExisting method to open an existing named system semaphore. &lt;em&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-gb/library/system.threading.semaphore.aspx&#34;&gt;Source&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;A local semaphore exists only within your process. It can be used by any thread in your process that has a reference to the local Semaphore object. Each Semaphore object is a separate local semaphore. &lt;em&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-gb/library/system.threading.semaphore.aspx&#34;&gt;Source&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;The machine that I am using for this benchmark is a Intel core i3, clocked at 4ghz with 4GB DDR3 ram running Windows 7 x64 SP1 and .Net Framework 4.5.&lt;/p&gt;
-
-&lt;p&gt;In order to begin the test, I created a new console application and imported the BMark package from the &lt;a href=&#34;https://nuget.org/packages/BMark/&#34;&gt;NuGet&lt;/a&gt; repository. Next, I added the following code to the application as shown below:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;const Int32 count = 106;
-
-Semaphore regularSemaphore = new Semaphore(count, count);
-SemaphoreSlim slimSemaphore = new SemaphoreSlim(count, count);
-
-UInt64 amountToRun = (UInt64)(count - PerformanceTester.PreRunAmount - 2);
-
-PerformanceTester.Run(&amp;quot;Semaphore.WaitOne&amp;quot;, amountToRun, () =&amp;gt; { regularSemaphore.WaitOne(); });
-PerformanceTester.Run(&amp;quot;Semaphore.Release&amp;quot;, amountToRun, () =&amp;gt; { regularSemaphore.Release(); });
-PerformanceTester.Run(&amp;quot;SemaphoreSlim.WaitOne&amp;quot;, amountToRun, () =&amp;gt; { slimSemaphore.Wait(); });
-PerformanceTester.Run(&amp;quot;SemaphoreSlim.Release&amp;quot;, amountToRun, () =&amp;gt; { slimSemaphore.Release(); });
-
-Console.WriteLine(PerformanceTester.GetResults());
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;By default, the &lt;code&gt;PerformanceTester&lt;/code&gt; will run each test 4 times before starting the actual timed test. Since we are dealing with a blocking resource, I added some extra capacity so that the test would not block at any point. When the code is run in release mode without the debugger, the output of the program is:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Semaphore.WaitOne:         0.09ms    NumberOfSamples: 100
-Semaphore.Release:         0.05ms    NumberOfSamples: 100
-SemaphoreSlim.WaitOne:     0.01ms    NumberOfSamples: 100
-SemaphoreSlim.Release:     0.01ms    NumberOfSamples: 100
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As the results show, the &lt;code&gt;SemaphoreSlim&lt;/code&gt; class is a tiny bit quicker. After testing this myself earlier, I thought that others could run this themselves and hopefully receive a small increase in performance in their applications. The reason for the performance increase is because the &lt;code&gt;SemaphoreSlim&lt;/code&gt; class provides a lightweight alternative to the &lt;code&gt;Semaphore&lt;/code&gt; class that doesn&amp;rsquo;t use Windows kernel semaphores.&lt;/p&gt;
-
-&lt;p&gt;In essence, if you do not need a named &lt;code&gt;Semaphore&lt;/code&gt;, use the &lt;code&gt;SemaphoreSlim&lt;/code&gt; class.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Flicker free forms and listview in .Net</title>
-      <link>https://im5tu.io/article/2012/12/flicker-free-forms-and-listview-in-.net/</link>
-      <pubDate>Sun, 30 Dec 2012 14:51:38 +0000</pubDate>
-      
-      <guid>https://im5tu.io/article/2012/12/flicker-free-forms-and-listview-in-.net/</guid>
-      <description>&lt;p&gt;On a project I have been working on recently, I came across a problem where under Windows an Mdi Child form would flicker when it loads. Trying to find information on what was the cause of this was near impossible. I ended up trying a lot of code snippets that I found when googling the problem and this is what I have come up with.
-&lt;/p&gt;
-
-&lt;p&gt;Next up, the code. Following this I shall explain, to the best of my ability, what the code does:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&#39;  VB
-    Protected Overrides ReadOnly Property CreateParams() As System.Windows.Forms.CreateParams
-        Get
-            Dim cp As CreateParams = MyBase.CreateParams
-            cp.ExStyle = cp.ExStyle Or &amp;amp;H2000000
-            Return cp
-        End Get
-    End Property
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Apparently there are two causes for the flicker that happens to a Windows form. Until writing this post I did not know of the reasons why. &lt;em&gt;&lt;a href=&#34;http://social.msdn.microsoft.com/Forums/en-US/winforms/thread/aaed00ce-4bc9-424e-8c05-c30213171c2c/&#34;&gt;Source MSDN
-Forums&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;1.&lt;/strong&gt; &lt;em&gt;Windows sends a control two messages when a control needs to be painted. The first one (&lt;code&gt;WM_ERASEBKGND&lt;/code&gt;) causes the background to be painted (&lt;code&gt;OnPaintBackground&lt;/code&gt;), the second causes the foreground to be painted (&lt;code&gt;WM_PAINT&lt;/code&gt;, firing &lt;code&gt;OnPaint&lt;/code&gt;). Seeing the background drawn first, then the foreground is noticeable when the drawing is slow. Windows Forms has a ready solution for this kind of flicker with ControlStyles.OptimizedDoubleBuffer.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;2.&lt;/strong&gt; &lt;em&gt;A form that has a lot of controls takes a long time to paint. Especially the Button control in its default style is expensive. Once you get over 50 controls, it starts getting noticeable. The Form class
-paints its background first and leaves &amp;ldquo;holes&amp;rdquo; where the controls need to go. Those holes are usually white, black when you use the &lt;code&gt;Opacity&lt;/code&gt; or &lt;code&gt;TransparencyKey property&lt;/code&gt;. Then each control gets painted, filling
-in the holes. The visual effect is ugly and there&amp;rsquo;s no ready solution for it in Windows Forms. &lt;code&gt;Double-buffering&lt;/code&gt; can&amp;rsquo;t solve it as it only works for a single control, not a composite set of controls.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;The &lt;code&gt;CreateParams&lt;/code&gt; property should only be overridden when wrapping an existing Windows control or when you need to set the style of the control. Microsoft recommend that you inherit the problem control and
-then override the &lt;code&gt;CreateParams&lt;/code&gt;, not the way that I actually used it.&lt;/p&gt;
-
-&lt;p&gt;I applied this at the top of every form in my code, ran the code under Windows 7 (my development machine) and Windows XP (the target machine) and everything appeared to render a lot better with the nasty double
-flicker gone. All I know about the code above, is that it overrides the styling of the controls and waits until the form is fully painted before showing the form.&lt;/p&gt;
-
-&lt;p&gt;It wasn&amp;rsquo;t until further testing of the code that I discovered that the original code caused an MDI child form to max out the CPU and hang the application. I tried commenting out all of the code, removing any
-background threads that were running (including timers etc) and as soon as I enabled the code, it would hang the application again. This left me and my colleagues very stumped for a few hours. After this period of
-time, I bit the bullet and decided to uncomment every section of my code until I could find the problem.&lt;/p&gt;
-
-&lt;p&gt;Eventually I found the code above to be the problem, which worked fine under Windows 7. So the solution was quiet easy, detect what version of the operating system we are on and only apply the style if we are on
-Vista or higher.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&#39;  VB
-    Protected Overrides ReadOnly Property CreateParams() As System.Windows.Forms.CreateParams
-        Get
-            Dim cp As CreateParams = MyBase.CreateParams
-            Dim OSVer As Version = System.Environment.OSVersion.Version()
-            Select Case OSVer.Major
-                Case Is &amp;lt;= 5
-                Case 5
-                    If OSVer.Minor &amp;gt; 0 Then
-                        cp.ExStyle = cp.ExStyle Or &amp;amp;H2000000
-                    End If
-                Case Is &amp;gt; 5
-                    cp.ExStyle = cp.ExStyle Or &amp;amp;H2000000
-                Case Else
-            End Select
-            Return cp
-        End Get
-    End Property
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;So I had finally fixed the problem with the CPU usage. Deployed the version for the client to test and everything was ok. By this time, I had a massive headache and it wasn&amp;rsquo;t quiet the end of the day. What a
-better way to end the day but by ending off with another rending issue. Although I had fixed the issue with the CPU, I had noticed that when you moved the form, and loading the form in some cases, a list view in
-details mode would not render correctly.&lt;/p&gt;
-
-&lt;p&gt;After reading around about the issue, I have merged from a number of source&amp;rsquo;s to create a flicker free list view. To use the code, place the class into your project, open up the target form&amp;rsquo;s designer code (&lt;em&gt;You
-will need to show all files in VS&lt;/em&gt;) and replace the instances of &lt;code&gt;ListView&lt;/code&gt; with &lt;code&gt;FlickerFreeListView&lt;/code&gt;. Here is the code:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Public Class FlickerFreeListView
-    Inherits System.Windows.Forms.ListView
-
-    Public Sub New()
-
-        MyBase.New()
-
-        Me.SetStyle(ControlStyles.Opaque, True)
-        Me.SetStyle(ControlStyles.OptimizedDoubleBuffer, True)
-        Me.SetStyle(ControlStyles.ResizeRedraw, True)
-        Me.SetStyle(ControlStyles.AllPaintingInWmPaint, True)
-        Me.SetStyle(ControlStyles.EnableNotifyMessage, True)
-
-    End Sub
-
-    Protected Overrides Sub OnNotifyMessage(ByVal m As Message)
-        If (m.Msg &amp;lt;&amp;gt; &amp;amp;H14) Then
-            MyBase.OnNotifyMessage(m)
-        End If
-    End Sub
-
-End Class
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The code basically blocks the background from being re-drawn every time an item is added into the &lt;code&gt;ListView&lt;/code&gt; control. It also sets the &lt;code&gt;OptimizedDoubleBuffer&lt;/code&gt; to help prevent any issues, amongst other things.&lt;/p&gt;
-
-&lt;p&gt;I hope that this will help someone have less of a headache that I had when I was looking around for a solution to this problem. Feel free to try it at your own risk and notify me if you have any
-troubles.&lt;/p&gt;</description>
     </item>
     
   </channel>

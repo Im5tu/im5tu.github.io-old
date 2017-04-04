@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Public Speaking on Stuart Blackler&#39;s Blog</title>
+    <link>https://im5tu.io/tags/public-speaking/index.xml</link>
+    <description>Recent content in Public Speaking on Stuart Blackler&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://im5tu.io/tags/public-speaking/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Talks: Episerver Content Providers &amp; Lightening Talk</title>
+      <link>https://im5tu.io/article/2017/04/talks-episerver-content-providers--lightening-talk/</link>
+      <pubDate>Tue, 04 Apr 2017 10:38:38 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/04/talks-episerver-content-providers--lightening-talk/</guid>
+      <description>&lt;p&gt;On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&amp;rsquo;s London offices. I ended up giving two talks: Episerver Content Providers &amp;amp; a 5 minute lightening talk.
+&lt;/p&gt;
+
+&lt;p&gt;The Episerver Content Providers talk was around the use of custom content providers within Episerver, their benefits, implementation and the pitfalls and nuances of using them. You can find the slides over at &lt;a href=&#34;http://slides.com/im5tu/epi-content-providers#/&#34;&gt;slid.es&lt;/a&gt;. On the slides you can find the speaker notes that I used, so I won&amp;rsquo;t duplicate them here.&lt;/p&gt;
+
+&lt;p&gt;For the lightening talk, I decided to cover three libraries that I think will play a big part in Episerver&amp;rsquo;s future. These are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/aspnet/dependencyinjection&#34;&gt;Dependency Injection&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/aspnet/logging&#34;&gt;Logging&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/aspnet/options&#34;&gt;Options&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These frameworks are well worth checking out and are used as part of my &lt;a href=&#34;https://github.com/im5tu/openmessage&#34;&gt;OpenMessage&lt;/a&gt; project.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
