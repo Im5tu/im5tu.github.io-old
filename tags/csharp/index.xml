@@ -717,7 +717,7 @@ public void NullTest()
       <pubDate>Tue, 10 Jun 2014 18:19:47 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/enabling-http-strict-transport-security-hsts-via-web-config/</guid>
-      <description>&lt;p&gt;In my previous post, I discussed how to &lt;a href=&#34;https://im5tu.io/article/2014/04/21/Enabling-HTTP-Strict-Transport-Security-HSTS-via-ASP-Net-MVC-ActionFilters/&#34;&gt;enable HSTS via MVC Action Filters&lt;/a&gt;. I thought that I would just do a follow up post showing you how to enable it via the web.config. &lt;/p&gt;
+      <description>&lt;p&gt;In my previous post, I discussed how to &lt;a href=&#34;https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/&#34;&gt;enable HSTS via MVC Action Filters&lt;/a&gt;. I thought that I would just do a follow up post showing you how to enable it via the web.config. &lt;/p&gt;
 
 &lt;p&gt;In order to do this via a web configuration file, you must be running IIS 7.0 or higher, &lt;a href=&#34;http://www.iis.net/configreference/system.webserver/httpprotocol/customheaders#002&#34;&gt;according to this compatability chart&lt;/a&gt;. The reason for this, is that the &lt;code&gt;HttpProtocol&lt;/code&gt; element was added in IIS 7.0. This is the element that is responsible for generating custom headers.&lt;/p&gt;
 

@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Extension methods in dotnet - Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/article/2012/12/extension-methods-in-dotnet/">
+    <title>Domain Driven Design Notes - Stuart Blackler&#39;s Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2017/05/domain-driven-design-notes/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <meta name="description" content="An introduction into .Net&#39;s extension methods, how to create them and how to use them.">
+    <meta name="description" content="A quick write up of my notes on Domain Driven Design for personal reflection, which may be useful to others.">
     
     
-    <meta property="og:title" content="Extension methods in dotnet - Stuart Blackler&#39;s Blog" />
+    <meta property="og:title" content="Domain Driven Design Notes - Stuart Blackler&#39;s Blog" />
 <meta property="og:type" content="website" />
 
-<meta property="og:description" content="An introduction into .Net&#39;s extension methods, how to create them and how to use them.">
+<meta property="og:description" content="A quick write up of my notes on Domain Driven Design for personal reflection, which may be useful to others.">
 
-<meta property="og:url" content="https://im5tu.io/article/2012/12/extension-methods-in-dotnet/" />
+<meta property="og:url" content="https://im5tu.io/article/2017/05/domain-driven-design-notes/" />
 <meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
 <meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
 <meta name="twitter:card" content="summary" />
@@ -50,264 +50,123 @@
     <section class="pageContainer-content pageWrap">
         <article class="article" itemscope itemtype="http://schema.org/blog">
     <header class="article-header">
-        <h1><a href="https://im5tu.io/article/2012/12/extension-methods-in-dotnet/" itemprop="name">Extension methods in dotnet</a></h1>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2012-12-01T17:51:38">2012-12-01 17:51:38 &#43;0000 UTC</time></p>
+        <h1><a href="https://im5tu.io/article/2017/05/domain-driven-design-notes/" itemprop="name">Domain Driven Design Notes</a></h1>
+        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-05-24T16:25:48">2017-05-24 16:25:48 &#43;0100 BST</time></p>
     </header>
-    <section class="article-content" itemprop="text"><p>In this article we will take a look at what extension methods are and how to use them in .Net. Personally, they are one of the best things that has been introduced into the .Net framework in terms of readability. I will take you through what extension methods are, how to create them (in c# and vb) then I will show you some of the extension methods that I have created (in c# only, conversion is for you to try).
-</p>
+    <section class="article-content" itemprop="text">
 
-<h2 id="contents">Contents</h2>
+<p><em>These are my notes on domain driven design whilst watching the course by Dino Esposito on <a href="https://app.pluralsight.com/library/courses/modern-software-architecture-domain-models-cqrs-event-sourcing/table-of-contents">Pluralsight</a>.</em></p>
+
+<p>Domain Driven Design (or DDD), is the process of discovering both data and behavioural requirements for a given problem domain where traditional approaches usually focus purely on data collection aspects. The aim is to provide better tools to tackle the complexity at the heart of software. <!-- more --></p>
+
+<p>Within DDD, there are two distinct parts: an analytical one and a strategical one. To use a DDD centric approach, the analytical aspects are required while the strategical aspects can take one of many forms depending on the requirements gained from analytical insight.</p>
+
+<h2 id="analytical">Analytical</h2>
+
+<p>The analytical aspect of DDD is useful for everyone and every project undertaken because it describes the domain in which you are working, using a common set of language. The common set of language used is called ubiquitous language within DDD jargon. These aspects of DDD are key in a couple of main areas:</p>
 
 <ul>
-<li>What are extension methods?</li>
-<li>How do we create extension methods?</li>
-<li>Examples of extension methods</li>
-<li>Related Links</li>
+<li>When there is a lot of domain logic that can be tricky to digest:
+
+<ul>
+<li>No synonyms for same/similar concepts;</li>
+<li>Ensures all terms are understood</li>
+</ul></li>
+<li>Or, the business logic is not completely defined:
+
+<ul>
+<li>Business is young (eg: startup);</li>
+<li>Logic is discovered on the way</li>
+</ul></li>
 </ul>
 
-<h3 id="what-are-extension-methods">What are extension methods?</h3>
+<h3 id="ubiquitous-language">Ubiquitous Language</h3>
 
-<p>Extension methods allow you to easily extend a type, such as an integer or string, without re-compiling or modifying the type. In essence, they are a type of <code>static</code> (<code>shared</code> in vb) method, but they are called as
-if the method is native to the type. Extension methods are available from the 3.5 version of the .Net Framework and can be implemented on any type in the .Net framework or any custom type that you define.</p>
+<p>The aim of ubiquitous language is to avoid misunderstandings and assumptions by creating business centric terminology shared by all members of a project, both technical and non-technical. Once defined, the language should used universally in spoken and written communication, avoiding synonym creation which breeds ambiguity and misunderstanding.</p>
 
-<p>One downside to extension methods is if that you create an extension method with the same name as another method in that type, the compiler will bind the method call to the native method not any extension. An
-extension method is only called when there is no native method found.</p>
+<p>Ubiquitous language is itteratively composed throughout interviews and brainstorming sessions using the natural language of the business, not creating new expressions for pre-existing concepts. The language will continually evolve over time, so it is important that updates are communicated across the business to reflect the understanding of the domain. It should neither be purely from domain experts nor technical experts. However, the ubiquitous language may contain some technical language to ensure clarity and consistency.</p>
 
-<h4 id="warning">Warning</h4>
+<p>Acronyms are widely used across many business sectors that are hard to remember and understand. Where possible, acronyms should be avoided, being replaced by words that retain the same meaning of the acronym. This makes the language easier to use and understand for all parties involved. The language, although continually evolving, should not be continuly stretched as this will create a bloated, less regirous language than intended.</p>
 
-<p>If you declare an extension method on the type Object, you will effectively create the extension method for every type in the framework including but not limited to String, Integer and Lists.</p>
+<p>Lastly, the language used should be agnostic to all technology and paradigms. Moreover, when naming elements of code, the names should be reflective of the language used ensuring that concepts above are adhered to (eg: no acronyms/no synonyms).</p>
 
-<h3 id="how-do-we-create-extension-methods">How do we create extension methods?</h3>
+<h3 id="bounded-contexts">Bounded Contexts</h3>
 
-<p>The basic outline of a creating extension methods goes something like this:</p>
+<p>Bounded contexts are areas of the domain in which an element has a unique, unambiguous, well-defined meaning. Outside the boundries of a given bounded context, the ubiquitous language changes. If the meaning behind the language is same, the context should be the same. Each bounded context may have it&rsquo;s own unique architecture and implementation. Moreover, each bounded context should have a well defined external interface so that it can be consumed from other bounded contexts.</p>
 
-<p>​1. Create a public <code>static</code> class (<code>module</code> in vb) <br />
- 2. Define functions that you wish to perform<br />
- 3. Make the functions an extension method</p>
-
-<p>Following through a complete example, I will now demonstrate how to create an extension method that returns the first 3 characters of a string. Using the list above, I must first create a <code>static class</code> or
-<code>module</code>:</p>
-
-<pre><code>    // C#
-    public static class Extensions
-    {
-
-    }
-
-    ' VB
-    Module Extenstions
-
-    End Module
-</code></pre>
-
-<p>The next phase would be to write the function that we are going need, which in this case is the following:</p>
-
-<pre><code>    // C#
-    public static class Extensions
-    {
-        public string GetFirstThreeCharacters(String str)
-        {
-            if(str.Length &lt; 3)
-            {
-                return str;
-            }
-            else
-            {
-                return str.Substring(0,3);
-            }
-        }
-    }
-
-    ' VB
-    Module Extenstions
-
-    Public Function GetFirstThreeCharacters(Byval str As String) As String
-        If (str.Length &lt; 3) Then
-            return str
-        Else
-            return str.SubString(0,3)
-        End If
-    End Function
-
-    End Module
-</code></pre>
-
-<p>So far, we have done nothing special. In the last phase is to make the functions extension methods. It is slightly more complicated in VB but not by much. I will deal with C# first.</p>
-
-<p>To make our C# version of our function an extension method we need to mark the function as static (so that it can be accessed at any time with out the need for declaring anything) and secondly, marking the first
-paramter with the <code>this</code> keyword. This keyword basically tells the CLR that when this extension method is called, to use &ldquo;this&rdquo; parameter as the source. See the following:</p>
-
-<pre><code>    public static class Extensions
-    {
-        public static string GetFirstThreeCharacters(this String str)
-        {
-            if(str.Length &lt; 3)
-            {
-                return str;
-            }
-            else
-            {
-                return str.Substring(0,3);
-            }
-        }
-    }
-</code></pre>
-
-<p>Now for the VB version. Instead of using the <code>this</code> keyword, we need to do something slightly different. We need to mark the function with the <code>System.Runtime.CompilerServices.Extension</code> attribute like so:</p>
-
-<pre><code>    &lt;System.Runtime.CompilerServices.Extension&gt; _
-    Public Function GetFirstThreeCharacters(Byval str As String) As String
-        If str.Length &lt; 3 Then
-                Return str
-        Else
-                Return str.Substring(0, 3)
-        End If
-    End Function
-</code></pre>
-
-<p>If you copy this code into any project, you should be able to call it like so:</p>
-
-<pre><code>    // C#
-    String str = &quot;my new String&quot;;
-    str = str.GetFirstThreeCharacters();
-
-    ' VB
-    Dim str as String = &quot;my new String&quot;
-    str = str.GetFirstThreeCharacters()
-</code></pre>
-
-<p>As I explained for both languages above, the effective use of the <code>this</code> keyword, makes the CLR take what ever we are calling the extension method from as the first parameter to our function.</p>
-
-<p><em>Hint: Try adding an additional <code>Integer</code> parameter and using that as a replacement for the 0 in the code above.</em></p>
-
-<h3 id="examples-of-extension-methods">Examples of extension methods</h3>
-
-<p>Here are a few of the extensions that I have found or created over time. These are helpful to me and I hope they are to you as well. If you have a question about any of these, drop me a comment below.</p>
-
-<h4 id="haselements">HasElements</h4>
-
-<p>Something that I often do is check a collection for a value. This method is designed to prevent me constantly checking for a null value and existance of any item in a given collection. This method will work on any collection that implents the <code>ICollection</code> interface.</p>
-
-<p><em>Definition:</em></p>
-
-<pre><code>    /// &lt;summary&gt;
-   /// Determines whether the specified collection has any elements in the sequence. This method also checks for a null collection.
-    /// &lt;/summary&gt;
-    /// &lt;param name=&quot;items&quot;&gt;The ICollection of items to check.&lt;/param&gt;
-    public static bool HasElements(this ICollection items)
-    {
-        return items != null &amp;&amp; items.Count &gt; 0;
-    }
-</code></pre>
-
-<p><em>Example usage:</em></p>
-
-<pre><code>    List&lt;String&gt; myList = new List&lt;String&gt;();
-    if (myList.HasElements())
-    {
-        // do some code
-    }
-</code></pre>
-
-<h4 id="isbetween">IsBetween</h4>
-
-<p>The <code>IsBetween</code> method returns a boolean and determins whether or not a value is between an inclusive upper and lower boundry. This will only work on types that implement the <code>IComparable</code> interface.</p>
-
-<p><em>Definition:</em></p>
-
-<pre><code>    /// &lt;summary&gt;
-    /// Determins whether a value is between a minimum and maximum value.
-    /// &lt;/summary&gt;
-    /// &lt;typeparam name=&quot;T&quot;&gt;The type of the value parameter.&lt;/typeparam&gt;
-    /// &lt;param name=&quot;value&quot;&gt;The value that needs to be checked.&lt;/param&gt;
-    /// &lt;param name=&quot;low&quot;&gt;The inclusive lower boundry.&lt;/param&gt;
-    /// &lt;param name=&quot;high&quot;&gt;The inclusive upper boundry.&lt;/param&gt;
-    public static bool IsBetween&lt;T&gt;(this T value, T low, T high) where T : IComparable&lt;T&gt;
-    {
-        return value.CompareTo(low) &gt;= 0 &amp;&amp; value.CompareTo(high) &lt;= 0;
-    }
-</code></pre>
-
-<p><em>Example usage:</em></p>
-
-<pre><code>    Int32 myInt = 0;
-    myInt.IsBetween(0, 5); // returns true
-    myInt.IsBetween(1, 5); // returns false
-</code></pre>
-
-<h4 id="each">Each</h4>
-
-<p>Quite often I have to perform a task on a collection of items. This is just a shortcut way for saying for each element in the collection, perform this action. This will work on any collection that implements
-the <code>ICollection</code> interface. The action that is parsed in can be a lambda expression or a function/subroutine.</p>
-
-<p><em>Definition:</em></p>
-
-<pre><code>    /// &lt;summary&gt;
-    /// Executes the given action against the given ICollection instance.
-    /// &lt;/summary&gt;
-    /// &lt;typeparam name=&quot;T&quot;&gt;The type of the ICollection parameter.&lt;/typeparam&gt;
-    /// &lt;param name=&quot;items&quot;&gt;The collection the action is performed against.&lt;/param&gt;
-    /// &lt;param name=&quot;action&quot;&gt;The action that is performed on each item.&lt;/param&gt;
-    public static void Each&lt;T&gt;(this ICollection&lt;T&gt; items, Action&lt;T&gt; action)
-    {
-        foreach (T item in items)
-        {
-            action(item);
-        }
-    }
-</code></pre>
-
-<p><em>Example usage:</em></p>
-
-<pre><code>    List&lt;String&gt; myList = new List&lt;String&gt;();
-    myList.Each(el =&gt; 
-    {
-        // perform an action(s) on the item
-        el.Substring(0,1);
-        el = el;
-    });
-</code></pre>
-
-<h4 id="in">In</h4>
-
-<p>Often it is neccessary to determine whether a value is in a set collection. For example, I need to check whether a string is in an allowed list. This method will allows us to check any value against an
-array of values of the same type.</p>
-
-<p><em>Definition:</em></p>
-
-<pre><code>    /// &lt;summary&gt;
-    /// Determines whether a parameter is in a given list of parameters. Eg. 11.In(1,2,3) will return false.
-    /// &lt;/summary&gt;
-    /// &lt;typeparam name=&quot;T&quot;&gt;The type of the source parameter.&lt;/typeparam&gt;
-    /// &lt;param name=&quot;source&quot;&gt;The item that needs to be checked.&lt;/param&gt;
-    /// &lt;param name=&quot;list&quot;&gt;The list that will be checked for the given source.&lt;/param&gt;
-    public static bool In&lt;T&gt;(this T source, params T[] list)
-    {
-        if (null == source) throw new ArgumentNullException(&quot;source&quot;);
-        return list.Contains(source);
-    }
-</code></pre>
-
-<p><em>Example usage:</em></p>
-
-<pre><code>    Int32 myInt = 0;
-    myInt.In(0, 0, 1, 2, 3); // returns true
-    myInt.In(1, 5, 6, 7, 8); // returns false
-</code></pre>
-
-<p>Hopefully, you now have an understanding of how to implement extension methods in both C# and VB.Net.</p>
-
-<h3 id="related-links">Related Links</h3>
+<p>This concept was introduced into DDD to help with the following problems:</p>
 
 <ul>
-<li><a href="http://msdn.microsoft.com/en-us/library/bb383977.aspx">MSDN: Extension Methods (C# Programming
-Guide)</a></li>
-<li><a href="http://www.extensionmethod.net/">Example of extension methods
-(</a><a href="http://www.extensionmethod.net/">http://www.extensionmethod.net/)</a>)</li>
-</ul></section>
+<li>Remove ambiguity and duplication from within ubiquitous language;</li>
+<li>Simplify design of software modules;</li>
+<li>Help to integrate legacy software tools and components.</li>
+</ul>
+
+<p>Within a given business domain, you may often find that the same term is used but with different meanings. When this occurs, it is a signal that the business domain should be split into multiple bounded contexts. However, these new contexts are not completely isolated as they are often connected through the way they communicate and interact with one another. Typically, the number of bounded contexts often reflects the physical organisation/department structure of the business.</p>
+
+<h3 id="context-maps">Context Maps</h3>
+
+<p>The overall layout of bounded contexts within a business domain can be represented on a context map, as shown below (credit: <a href="https://infoq.com">InfoQ</a>):</p>
+
+<p><img src="https://www.infoq.com/resource/articles/ddd-contextmapping/en/resources/ddd-contextmapping-figure11.jpg" alt="Example DDD Context Map" /></p>
+
+<p>On the image above, there are a few new terms to understand:</p>
+
+<ul>
+<li>U &amp; D or Upstream/Downstream:
+
+<ul>
+<li>Upstream/Downstream shows the direction of the relationship between bounded contexts</li>
+<li>Upstream influences downstreams context and is available as a reference to the downstream context</li>
+<li>Downstream is simply a consumer of the upstream context but cannot influence it&rsquo;s work directly (eg: change composition)</li>
+</ul></li>
+<li>Conformist:
+
+<ul>
+<li>Indicates that the downstream context completely depends on the upstream context (eg: when the upstream context is a legacy system/external service)</li>
+<li>Typically no neogation of changes is possible</li>
+</ul></li>
+<li>Customer/Supplier:
+
+<ul>
+<li>Indicates that the downstream context is dependent on the upstream context</li>
+<li>Negotiation of changes between the customer/supplier is possible and the customer can usually expect the changes to be made in some way</li>
+</ul></li>
+<li>Partner:
+
+<ul>
+<li>Indicates a mutual dependency between two bounded contexts</li>
+<li>Changes are negotiated between both teams</li>
+</ul></li>
+<li>ACL or Anti-Corruption Layer:
+
+<ul>
+<li>Fixed contract at the boundry of the bounded context</li>
+<li>Allows for internal changes without affecting consumers; so is most helpful when dealing with external API&rsquo;s</li>
+</ul></li>
+</ul>
+
+<h3 id="event-storming">Event Storming</h3>
+
+<p>Event Storming, originally developed by Alberto Brandolini, is an emerging practise to explore the business domain and identify key events and commands. The practise involves getting technical and domain experts together in a room to build a timeline of events and commands, draw sketches and make notes which helps to result in the following:
+    - Comprehensive vision of the business domain
+    - Identification of bounded contexts and aggregates in each context
+    - Types of users in the system (who runs commands and why)
+    - Identification of where UX is critical</p>
+
+<p>Usually, a long whiteboard is used to note down the observable events on the time line, ideally with colour identification (eg: sticky notes). With coloured sticky notes, you would typically have a single colour for events and a different colour for commands (etc). This aids in the visual representation of the domain and the flows throughout.</p>
+
+<p>The number of people in the meeting, should ideally not break the two pizza rule. The meeting should be kept on track through the presence of a facilitator, whos job it is to prevent long running discussions and guides the modeling effort. The facilitator doesn&rsquo;t necessarily have to be a domain expert but this might be useful to get the meeting started.</p>
+
+<blockquote>
+<p><strong>Two pizza rule</strong>: Never have a meeting where two pizzas couldn&rsquo;t feed the entire group</p>
+</blockquote>
+
+<p><em>In a future post I will go through various architectural patterns and their usages.</em></p>
+</section>
     <footer class="article-footer">
         <hr />Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/vb/">vb</a></li><li><a class="article-tag" href="/tags/csharp/">csharp</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li>
+    <li><a class="article-tag" href="/tags/architecture/">Architecture</a></li>
 </ul></footer>
 </article>
     </section>

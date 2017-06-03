@@ -6,8 +6,127 @@
     <description>Recent content in Articles on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 12 Apr 2017 16:25:48 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 24 May 2017 16:25:48 +0100</lastBuildDate>
     <atom:link href="https://im5tu.io/article/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Domain Driven Design Notes</title>
+      <link>https://im5tu.io/article/2017/05/domain-driven-design-notes/</link>
+      <pubDate>Wed, 24 May 2017 16:25:48 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/05/domain-driven-design-notes/</guid>
+      <description>
+
+&lt;p&gt;&lt;em&gt;These are my notes on domain driven design whilst watching the course by Dino Esposito on &lt;a href=&#34;https://app.pluralsight.com/library/courses/modern-software-architecture-domain-models-cqrs-event-sourcing/table-of-contents&#34;&gt;Pluralsight&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Domain Driven Design (or DDD), is the process of discovering both data and behavioural requirements for a given problem domain where traditional approaches usually focus purely on data collection aspects. The aim is to provide better tools to tackle the complexity at the heart of software. &lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;p&gt;Within DDD, there are two distinct parts: an analytical one and a strategical one. To use a DDD centric approach, the analytical aspects are required while the strategical aspects can take one of many forms depending on the requirements gained from analytical insight.&lt;/p&gt;
+
+&lt;h2 id=&#34;analytical&#34;&gt;Analytical&lt;/h2&gt;
+
+&lt;p&gt;The analytical aspect of DDD is useful for everyone and every project undertaken because it describes the domain in which you are working, using a common set of language. The common set of language used is called ubiquitous language within DDD jargon. These aspects of DDD are key in a couple of main areas:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;When there is a lot of domain logic that can be tricky to digest:
+
+&lt;ul&gt;
+&lt;li&gt;No synonyms for same/similar concepts;&lt;/li&gt;
+&lt;li&gt;Ensures all terms are understood&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Or, the business logic is not completely defined:
+
+&lt;ul&gt;
+&lt;li&gt;Business is young (eg: startup);&lt;/li&gt;
+&lt;li&gt;Logic is discovered on the way&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;ubiquitous-language&#34;&gt;Ubiquitous Language&lt;/h3&gt;
+
+&lt;p&gt;The aim of ubiquitous language is to avoid misunderstandings and assumptions by creating business centric terminology shared by all members of a project, both technical and non-technical. Once defined, the language should used universally in spoken and written communication, avoiding synonym creation which breeds ambiguity and misunderstanding.&lt;/p&gt;
+
+&lt;p&gt;Ubiquitous language is itteratively composed throughout interviews and brainstorming sessions using the natural language of the business, not creating new expressions for pre-existing concepts. The language will continually evolve over time, so it is important that updates are communicated across the business to reflect the understanding of the domain. It should neither be purely from domain experts nor technical experts. However, the ubiquitous language may contain some technical language to ensure clarity and consistency.&lt;/p&gt;
+
+&lt;p&gt;Acronyms are widely used across many business sectors that are hard to remember and understand. Where possible, acronyms should be avoided, being replaced by words that retain the same meaning of the acronym. This makes the language easier to use and understand for all parties involved. The language, although continually evolving, should not be continuly stretched as this will create a bloated, less regirous language than intended.&lt;/p&gt;
+
+&lt;p&gt;Lastly, the language used should be agnostic to all technology and paradigms. Moreover, when naming elements of code, the names should be reflective of the language used ensuring that concepts above are adhered to (eg: no acronyms/no synonyms).&lt;/p&gt;
+
+&lt;h3 id=&#34;bounded-contexts&#34;&gt;Bounded Contexts&lt;/h3&gt;
+
+&lt;p&gt;Bounded contexts are areas of the domain in which an element has a unique, unambiguous, well-defined meaning. Outside the boundries of a given bounded context, the ubiquitous language changes. If the meaning behind the language is same, the context should be the same. Each bounded context may have it&amp;rsquo;s own unique architecture and implementation. Moreover, each bounded context should have a well defined external interface so that it can be consumed from other bounded contexts.&lt;/p&gt;
+
+&lt;p&gt;This concept was introduced into DDD to help with the following problems:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Remove ambiguity and duplication from within ubiquitous language;&lt;/li&gt;
+&lt;li&gt;Simplify design of software modules;&lt;/li&gt;
+&lt;li&gt;Help to integrate legacy software tools and components.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Within a given business domain, you may often find that the same term is used but with different meanings. When this occurs, it is a signal that the business domain should be split into multiple bounded contexts. However, these new contexts are not completely isolated as they are often connected through the way they communicate and interact with one another. Typically, the number of bounded contexts often reflects the physical organisation/department structure of the business.&lt;/p&gt;
+
+&lt;h3 id=&#34;context-maps&#34;&gt;Context Maps&lt;/h3&gt;
+
+&lt;p&gt;The overall layout of bounded contexts within a business domain can be represented on a context map, as shown below (credit: &lt;a href=&#34;https://infoq.com&#34;&gt;InfoQ&lt;/a&gt;):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://www.infoq.com/resource/articles/ddd-contextmapping/en/resources/ddd-contextmapping-figure11.jpg&#34; alt=&#34;Example DDD Context Map&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On the image above, there are a few new terms to understand:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;U &amp;amp; D or Upstream/Downstream:
+
+&lt;ul&gt;
+&lt;li&gt;Upstream/Downstream shows the direction of the relationship between bounded contexts&lt;/li&gt;
+&lt;li&gt;Upstream influences downstreams context and is available as a reference to the downstream context&lt;/li&gt;
+&lt;li&gt;Downstream is simply a consumer of the upstream context but cannot influence it&amp;rsquo;s work directly (eg: change composition)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Conformist:
+
+&lt;ul&gt;
+&lt;li&gt;Indicates that the downstream context completely depends on the upstream context (eg: when the upstream context is a legacy system/external service)&lt;/li&gt;
+&lt;li&gt;Typically no neogation of changes is possible&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Customer/Supplier:
+
+&lt;ul&gt;
+&lt;li&gt;Indicates that the downstream context is dependent on the upstream context&lt;/li&gt;
+&lt;li&gt;Negotiation of changes between the customer/supplier is possible and the customer can usually expect the changes to be made in some way&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Partner:
+
+&lt;ul&gt;
+&lt;li&gt;Indicates a mutual dependency between two bounded contexts&lt;/li&gt;
+&lt;li&gt;Changes are negotiated between both teams&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;ACL or Anti-Corruption Layer:
+
+&lt;ul&gt;
+&lt;li&gt;Fixed contract at the boundry of the bounded context&lt;/li&gt;
+&lt;li&gt;Allows for internal changes without affecting consumers; so is most helpful when dealing with external API&amp;rsquo;s&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;event-storming&#34;&gt;Event Storming&lt;/h3&gt;
+
+&lt;p&gt;Event Storming, originally developed by Alberto Brandolini, is an emerging practise to explore the business domain and identify key events and commands. The practise involves getting technical and domain experts together in a room to build a timeline of events and commands, draw sketches and make notes which helps to result in the following:
+    - Comprehensive vision of the business domain
+    - Identification of bounded contexts and aggregates in each context
+    - Types of users in the system (who runs commands and why)
+    - Identification of where UX is critical&lt;/p&gt;
+
+&lt;p&gt;Usually, a long whiteboard is used to note down the observable events on the time line, ideally with colour identification (eg: sticky notes). With coloured sticky notes, you would typically have a single colour for events and a different colour for commands (etc). This aids in the visual representation of the domain and the flows throughout.&lt;/p&gt;
+
+&lt;p&gt;The number of people in the meeting, should ideally not break the two pizza rule. The meeting should be kept on track through the presence of a facilitator, whos job it is to prevent long running discussions and guides the modeling effort. The facilitator doesn&amp;rsquo;t necessarily have to be a domain expert but this might be useful to get the meeting started.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Two pizza rule&lt;/strong&gt;: Never have a meeting where two pizzas couldn&amp;rsquo;t feed the entire group&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;In a future post I will go through various architectural patterns and their usages.&lt;/em&gt;&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>5 Tips For Getting What You Want</title>
@@ -1067,181 +1186,6 @@ ef81fbc Create CNAME
 &lt;p&gt;In his post, Ralf mentions that tackling technical debt is an addiction with the basic argument the business will keep postponing doing the right thing. If left unmanaged this is entirely true until it becomes a point where it is too costly to implement a feature. The key is the business will decide this. At &lt;a href=&#34;http://www.4com.co.uk&#34;&gt;4Com&lt;/a&gt;, we continuously flag items as technical debt for review at every sprint planning meeting. I firmly believe that if we didn&amp;rsquo;t, we wouldn&amp;rsquo;t have the same high standards in our code base as we do today.&lt;/p&gt;
 
 &lt;p&gt;In short, we should always leave the code in a better place than when we found it - never worse and raise an issue if there is something that could be done better. That&amp;rsquo;s what I believe the metaphor is for - something that we can do better within our code.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Up And Running With Git And Powershell</title>
-      <link>https://im5tu.io/article/2015/02/up-and-running-with-git-and-powershell/</link>
-      <pubDate>Mon, 23 Feb 2015 18:37:14 +0000</pubDate>
-      
-      <guid>https://im5tu.io/article/2015/02/up-and-running-with-git-and-powershell/</guid>
-      <description>&lt;p&gt;We&amp;rsquo;ve all experienced a time where we use our pc&amp;rsquo;s for a prolonged period of time, accumulating a ton of crap along the way as we try out various technologies and fads. After a while, the pc begins to do funny things like crash for no apparent reason. This week, I needed to rebuild my dev machine and decided to change from Atlassian&amp;rsquo;s Source Tree over to Powershell and raw git.&lt;/p&gt;
-
-&lt;p&gt;If i&amp;rsquo;m honest, i wish I made the change earlier. I no longer have a confusing UI to deal with, just me, my memory and when that fails, Google. So in this post, I will show you what I&amp;rsquo;ve done in hopes that it will help someone else. We will run through:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Setting up git for the first time&lt;/li&gt;
-&lt;li&gt;Setting up Powershell so we can use git&lt;/li&gt;
-&lt;li&gt;Creating better diffs with &lt;code&gt;Out-Diff&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Creating helper functions and setting up a powershell profile&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;setting-up-git-for-the-first-time&#34;&gt;Setting up git for the first time&lt;/h2&gt;
-
-&lt;p&gt;First of all, you need to download the latest version of git from &lt;a href=&#34;http://git-scm.com/download/win&#34;&gt;here&lt;/a&gt;. At the time of writing, the version is: 1.9.5 released 2 months ago. When you start the setup program, everything is down to personal preference (eg: where you install, windows explorer integration) until you see the following screen:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/up-and-running-with-git/Git-install-command-prompt.png&#34; alt=&#34;Select the middle option&#34; title=&#34;Select the middle option&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;It is important that you do not pick the top option here unless you are comfortable editing environment variables. The second option is the best for most windows users as this does the environment variables for you.&lt;/p&gt;
-
-&lt;p&gt;Following this, it is another case of common sense rules with choosing the style of line endings you need, typically checkin as-is suits (the last option).&lt;/p&gt;
-
-&lt;p&gt;When this is done, verify by heading into powershell/command prompt and typing:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This should produce something similar to the following output:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;usage: git [--version] [--help] [-C &amp;lt;path&amp;gt;] [-c name=value]
-           [--exec-path[=&amp;lt;path&amp;gt;]] [--html-path] [--man-path] [--info-path]
-           [-p|--paginate|--no-pager] [--no-replace-objects] [--bare]
-           [--git-dir=&amp;lt;path&amp;gt;] [--work-tree=&amp;lt;path&amp;gt;] [--namespace=&amp;lt;name&amp;gt;]
-           &amp;lt;command&amp;gt; [&amp;lt;args&amp;gt;]
-
-The most commonly used git commands are:
-   add        Add file contents to the index
-   bisect     Find by binary search the change that introduced a bug
-   branch     List, create, or delete branches
-   checkout   Checkout a branch or paths to the working tree
-   clone      Clone a repository into a new directory
-   commit     Record changes to the repository
-   diff       Show changes between commits, commit and working tree, etc
-   fetch      Download objects and refs from another repository
-   grep       Print lines matching a pattern
-   init       Create an empty Git repository or reinitialize an existing one
-   log        Show commit logs
-   merge      Join two or more development histories together
-   mv         Move or rename a file, a directory, or a symlink
-   pull       Fetch from and integrate with another repository or a local branch
-   push       Update remote refs along with associated objects
-   rebase     Forward-port local commits to the updated upstream head
-   reset      Reset current HEAD to the specified state
-   rm         Remove files from the working tree and from the index
-   show       Show various types of objects
-   status     Show the working tree status
-   tag        Create, list, delete or verify a tag object signed with GPG
-
-&#39;git help -a&#39; and &#39;git help -g&#39; lists available subcommands and some
-concept guides. See &#39;git help &amp;lt;command&amp;gt;&#39; or &#39;git help &amp;lt;concept&amp;gt;&#39;
-to read about a specific subcommand or concept.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you get that, you&amp;rsquo;re ready for the next step. Otherwise, you will need to add the path to your git installation to the environment variables.&lt;/p&gt;
-
-&lt;h2 id=&#34;setting-up-powershell-so-we-can-use-git&#34;&gt;Setting up Powershell so we can use git&lt;/h2&gt;
-
-&lt;p&gt;Before you being, verify execution of scripts is allowed with &lt;code&gt;Get-ExecutionPolicy&lt;/code&gt; (should be &lt;code&gt;RemoteSigned&lt;/code&gt; or &lt;code&gt;Unrestricted&lt;/code&gt;). If scripts are not enabled, run PowerShell as Administrator and call &lt;code&gt;Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Confirm&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;After you have verified the execution policy above, you will be able to run the following script:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;(new-object Net.WebClient).DownloadString(&amp;quot;http://psget.net/GetPsGet.ps1&amp;quot;) | iex
-Install-Module posh-git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will do two different things:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Install &lt;a href=&#34;http://psget.net/&#34;&gt;PsGet&lt;/a&gt; into powershell. It allows for easy installation of powershell modules.&lt;/li&gt;
-&lt;li&gt;Install &lt;a href=&#34;https://github.com/dahlbyk/posh-git&#34;&gt;Posh-git&lt;/a&gt;. The best way to deal with git from powershell in windows.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;After the installation, you will see the following output in the console (highlighted in bright green, so its easier to see):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;PsGet is installed and ready to use
-... omitted for brevity
-Module posh-git was successfully installed.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you don&amp;rsquo;t see that, refer to the installation guides of the various modules as listed above. Otherwise, we are technically done setting up powershell with git. Now we can do awesome things such as download new powershell modules from the ps-get directory, view the current status of a git repo and much much more.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;A repository will now show something along the lines of the following if you feel the need to verify:&lt;/em&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;C:\Dev\sblackler.github.io [master +1 ~2 -0 !]&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;creating-better-diffs-with-out-diff&#34;&gt;Creating better diffs with &lt;code&gt;Out-Diff&lt;/code&gt;&lt;/h2&gt;
-
-&lt;p&gt;Some of the output that we get using the built in &lt;code&gt;git diff&lt;/code&gt; command is a little horrid:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/up-and-running-with-git/git-diff-powershell.PNG&#34; alt=&#34;Sample output&#34; title=&#34;Sample Output&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;What &lt;a href=&#34;http://psget.net/directory/out-diff/&#34;&gt;Out-Diff&lt;/a&gt; does is create a unifed diff for you using the &lt;a href=&#34;http://en.wikipedia.org/wiki/Diff_utility#Unified_format&#34;&gt;Unified Diff Format&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;To install the &lt;code&gt;Out-Diff&lt;/code&gt;, use the same powershell console as earlier and type/copy:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Install-Module Out-Diff
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;After that you should see the following confirmation:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Module out-diff was successfully installed.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now, when we run out &lt;code&gt;git diff&lt;/code&gt; command, we add a slight twist pointing it to the &lt;code&gt;Out-Diff&lt;/code&gt; function like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git diff | Out-Diff
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This results in brighter colours in the console and slightly cleaner output. If the output of git diff consists of many lines of text, PowerShell will redirect them to the Out-Diff function one line at a time. This is called a streaming pipeline and it allows PowerShell to be responsive and consume less memory even when processing large amounts of data.&lt;/p&gt;
-
-&lt;h2 id=&#34;creating-helper-functions-and-setting-up-a-powershell-profile&#34;&gt;Creating helper functions and setting up a powershell profile&lt;/h2&gt;
-
-&lt;p&gt;The current powershell profile we are in comes in a variable called &lt;code&gt;$PROFILE&lt;/code&gt; and we can hack this to do what we want. First of all, you need to expand that variable in the powershell window eg:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$PROFILE
-C:\Users\stuar_000\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now we can access the profile in one of two ways, through powershell or through our editor of choice. I choose powershell, naturally. To edit this through powershell, type:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ise $PROFILE
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Which launches the powershell scripting environment. Currently, my profile is blank and only loads the &lt;code&gt;Posh-git&lt;/code&gt; sample profile:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# Load posh-git example profile
-&#39;C:\Users\stuar_000\Documents\WindowsPowerShell\Modules\posh-git\profile.example.ps1&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;When you reload the powershell console you may have seen that it couldn&amp;rsquo;t find the ssh-agent. This is something that we can fix here. To do that, add the following line to the top of the file:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$env:path += &amp;quot;;&amp;quot; + (Get-Item &amp;quot;Env:ProgramFiles(x86)&amp;quot;).Value + &amp;quot;\Git\bin&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Unfortunately we have to do this because msysgit doesn&amp;rsquo;t automatically add that folder to the path variable. Then we can do really cool things after the &lt;code&gt;Posh-git&lt;/code&gt; profile has been loaded like setting our base directory:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt; Set-Location C:\Dev
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Creating a better diff function so that we don&amp;rsquo;t have to type it out everytime:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;function gdiff(){
-    git diff -U5 | Out-Diff
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or ever start our preffered IDE when we hit a solution file (vs only):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;function ide(){
-    $files = Get-ChildItem *.sln -Recurse
-    foreach($file in $files){
-        Start-Process $file.Name
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here is only a small number of things that you can do now. So go git the power(shell). When you&amp;rsquo;re done save the profile and reload the powershell console for the changes to take effect.&lt;/p&gt;</description>
     </item>
     
   </channel>

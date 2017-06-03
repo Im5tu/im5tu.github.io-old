@@ -9,6 +9,125 @@
     <atom:link href="https://im5tu.io/categories/development/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Domain Driven Design Notes</title>
+      <link>https://im5tu.io/article/2017/05/domain-driven-design-notes/</link>
+      <pubDate>Wed, 24 May 2017 16:25:48 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/05/domain-driven-design-notes/</guid>
+      <description>
+
+&lt;p&gt;&lt;em&gt;These are my notes on domain driven design whilst watching the course by Dino Esposito on &lt;a href=&#34;https://app.pluralsight.com/library/courses/modern-software-architecture-domain-models-cqrs-event-sourcing/table-of-contents&#34;&gt;Pluralsight&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Domain Driven Design (or DDD), is the process of discovering both data and behavioural requirements for a given problem domain where traditional approaches usually focus purely on data collection aspects. The aim is to provide better tools to tackle the complexity at the heart of software. &lt;!-- more --&gt;&lt;/p&gt;
+
+&lt;p&gt;Within DDD, there are two distinct parts: an analytical one and a strategical one. To use a DDD centric approach, the analytical aspects are required while the strategical aspects can take one of many forms depending on the requirements gained from analytical insight.&lt;/p&gt;
+
+&lt;h2 id=&#34;analytical&#34;&gt;Analytical&lt;/h2&gt;
+
+&lt;p&gt;The analytical aspect of DDD is useful for everyone and every project undertaken because it describes the domain in which you are working, using a common set of language. The common set of language used is called ubiquitous language within DDD jargon. These aspects of DDD are key in a couple of main areas:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;When there is a lot of domain logic that can be tricky to digest:
+
+&lt;ul&gt;
+&lt;li&gt;No synonyms for same/similar concepts;&lt;/li&gt;
+&lt;li&gt;Ensures all terms are understood&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Or, the business logic is not completely defined:
+
+&lt;ul&gt;
+&lt;li&gt;Business is young (eg: startup);&lt;/li&gt;
+&lt;li&gt;Logic is discovered on the way&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;ubiquitous-language&#34;&gt;Ubiquitous Language&lt;/h3&gt;
+
+&lt;p&gt;The aim of ubiquitous language is to avoid misunderstandings and assumptions by creating business centric terminology shared by all members of a project, both technical and non-technical. Once defined, the language should used universally in spoken and written communication, avoiding synonym creation which breeds ambiguity and misunderstanding.&lt;/p&gt;
+
+&lt;p&gt;Ubiquitous language is itteratively composed throughout interviews and brainstorming sessions using the natural language of the business, not creating new expressions for pre-existing concepts. The language will continually evolve over time, so it is important that updates are communicated across the business to reflect the understanding of the domain. It should neither be purely from domain experts nor technical experts. However, the ubiquitous language may contain some technical language to ensure clarity and consistency.&lt;/p&gt;
+
+&lt;p&gt;Acronyms are widely used across many business sectors that are hard to remember and understand. Where possible, acronyms should be avoided, being replaced by words that retain the same meaning of the acronym. This makes the language easier to use and understand for all parties involved. The language, although continually evolving, should not be continuly stretched as this will create a bloated, less regirous language than intended.&lt;/p&gt;
+
+&lt;p&gt;Lastly, the language used should be agnostic to all technology and paradigms. Moreover, when naming elements of code, the names should be reflective of the language used ensuring that concepts above are adhered to (eg: no acronyms/no synonyms).&lt;/p&gt;
+
+&lt;h3 id=&#34;bounded-contexts&#34;&gt;Bounded Contexts&lt;/h3&gt;
+
+&lt;p&gt;Bounded contexts are areas of the domain in which an element has a unique, unambiguous, well-defined meaning. Outside the boundries of a given bounded context, the ubiquitous language changes. If the meaning behind the language is same, the context should be the same. Each bounded context may have it&amp;rsquo;s own unique architecture and implementation. Moreover, each bounded context should have a well defined external interface so that it can be consumed from other bounded contexts.&lt;/p&gt;
+
+&lt;p&gt;This concept was introduced into DDD to help with the following problems:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Remove ambiguity and duplication from within ubiquitous language;&lt;/li&gt;
+&lt;li&gt;Simplify design of software modules;&lt;/li&gt;
+&lt;li&gt;Help to integrate legacy software tools and components.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Within a given business domain, you may often find that the same term is used but with different meanings. When this occurs, it is a signal that the business domain should be split into multiple bounded contexts. However, these new contexts are not completely isolated as they are often connected through the way they communicate and interact with one another. Typically, the number of bounded contexts often reflects the physical organisation/department structure of the business.&lt;/p&gt;
+
+&lt;h3 id=&#34;context-maps&#34;&gt;Context Maps&lt;/h3&gt;
+
+&lt;p&gt;The overall layout of bounded contexts within a business domain can be represented on a context map, as shown below (credit: &lt;a href=&#34;https://infoq.com&#34;&gt;InfoQ&lt;/a&gt;):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://www.infoq.com/resource/articles/ddd-contextmapping/en/resources/ddd-contextmapping-figure11.jpg&#34; alt=&#34;Example DDD Context Map&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On the image above, there are a few new terms to understand:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;U &amp;amp; D or Upstream/Downstream:
+
+&lt;ul&gt;
+&lt;li&gt;Upstream/Downstream shows the direction of the relationship between bounded contexts&lt;/li&gt;
+&lt;li&gt;Upstream influences downstreams context and is available as a reference to the downstream context&lt;/li&gt;
+&lt;li&gt;Downstream is simply a consumer of the upstream context but cannot influence it&amp;rsquo;s work directly (eg: change composition)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Conformist:
+
+&lt;ul&gt;
+&lt;li&gt;Indicates that the downstream context completely depends on the upstream context (eg: when the upstream context is a legacy system/external service)&lt;/li&gt;
+&lt;li&gt;Typically no neogation of changes is possible&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Customer/Supplier:
+
+&lt;ul&gt;
+&lt;li&gt;Indicates that the downstream context is dependent on the upstream context&lt;/li&gt;
+&lt;li&gt;Negotiation of changes between the customer/supplier is possible and the customer can usually expect the changes to be made in some way&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Partner:
+
+&lt;ul&gt;
+&lt;li&gt;Indicates a mutual dependency between two bounded contexts&lt;/li&gt;
+&lt;li&gt;Changes are negotiated between both teams&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;ACL or Anti-Corruption Layer:
+
+&lt;ul&gt;
+&lt;li&gt;Fixed contract at the boundry of the bounded context&lt;/li&gt;
+&lt;li&gt;Allows for internal changes without affecting consumers; so is most helpful when dealing with external API&amp;rsquo;s&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;event-storming&#34;&gt;Event Storming&lt;/h3&gt;
+
+&lt;p&gt;Event Storming, originally developed by Alberto Brandolini, is an emerging practise to explore the business domain and identify key events and commands. The practise involves getting technical and domain experts together in a room to build a timeline of events and commands, draw sketches and make notes which helps to result in the following:
+    - Comprehensive vision of the business domain
+    - Identification of bounded contexts and aggregates in each context
+    - Types of users in the system (who runs commands and why)
+    - Identification of where UX is critical&lt;/p&gt;
+
+&lt;p&gt;Usually, a long whiteboard is used to note down the observable events on the time line, ideally with colour identification (eg: sticky notes). With coloured sticky notes, you would typically have a single colour for events and a different colour for commands (etc). This aids in the visual representation of the domain and the flows throughout.&lt;/p&gt;
+
+&lt;p&gt;The number of people in the meeting, should ideally not break the two pizza rule. The meeting should be kept on track through the presence of a facilitator, whos job it is to prevent long running discussions and guides the modeling effort. The facilitator doesn&amp;rsquo;t necessarily have to be a domain expert but this might be useful to get the meeting started.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Two pizza rule&lt;/strong&gt;: Never have a meeting where two pizzas couldn&amp;rsquo;t feed the entire group&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;In a future post I will go through various architectural patterns and their usages.&lt;/em&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Talks: Episerver Content Providers &amp; Lightening Talk</title>
       <link>https://im5tu.io/article/2017/04/talks-episerver-content-providers--lightening-talk/</link>
       <pubDate>Tue, 04 Apr 2017 10:38:38 +0100</pubDate>
@@ -1107,76 +1226,6 @@ Import-AzurePublishSettingsFile -PublishSettingsFile $settingsFile
 &lt;p&gt;It all revolves around taken the human element of out deployments and being able to map the changes to each deployment across time. For resilient operations we need to be consistent. That is why teams invest heavily in tools like Teamcity and Jenkins. They show you who made what change to which project and when. But perhaps more importantly, they make things easier to get right.&lt;/p&gt;
 
 &lt;p&gt;If we have a good audit trail provided to us by the tools above and we version control any remaining scripts such as deployment; we have a resilient system that we can rely on to build, test and deploy our solutions. So that is what DevOps is to me, the combination of development and operational practises which allow the building, evolving and operating of rapidly-changing resilient systems.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Dev Lunches: What, Why, How</title>
-      <link>https://im5tu.io/article/2014/12/dev-lunches-what-why-how/</link>
-      <pubDate>Wed, 17 Dec 2014 18:36:09 +0000</pubDate>
-      
-      <guid>https://im5tu.io/article/2014/12/dev-lunches-what-why-how/</guid>
-      <description>&lt;p&gt;If you&amp;rsquo;re not up-to-date, you fall behind. You fall behind in your work, which leads you to fall behind at home. If continued, it&amp;rsquo;s a never ending circle that can seem like climbing Everest in order to overcome. I propose that we, as developers, start doing is utilizing our free time to help not only ourselves but our co-workers too. We can do this via dev lunches.  &lt;/p&gt;
-
-&lt;h2 id=&#34;so-what-is-a-dev-lunch&#34;&gt;So what is a dev lunch?&lt;/h2&gt;
-
-&lt;p&gt;A dev lunch, or developers lunch, is based upon the idea of sacrificing an hours lunch on a specific topic or topics, much like a mini-conference for you and your co-workers. Topics can range for technical deep dives to non-technical, team-wide talks such as &amp;ldquo;What does it mean to be Agile?&amp;rdquo;. The format is typically manifests as one of two styles:&lt;/p&gt;
-
-&lt;h3 id=&#34;single-talks&#34;&gt;Single talks&lt;/h3&gt;
-
-&lt;p&gt;With a single talk, a developer will take the topic in hand, research the subject and present it to the attendees. The talk will typically last about 30-40 minutes leaving time for Q&amp;amp;A etc.&lt;/p&gt;
-
-&lt;h3 id=&#34;lightning-talks&#34;&gt;Lightning talks&lt;/h3&gt;
-
-&lt;p&gt;Lightning talks take the form of a series of individuals from the team presenting for x time on a range of subjects. X is usually around 5-10 minutes. The subjects can be related, or completely unrelated. Essentially, they are multiple, compressed single talks.&lt;/p&gt;
-
-&lt;p&gt;It is important to remember that the topics are chosen by the presenter themselves. The presenter may ask for ideas/feedback from the team.&lt;/p&gt;
-
-&lt;h2 id=&#34;why-invest-in-dev-lunches&#34;&gt;Why invest in dev lunches?&lt;/h2&gt;
-
-&lt;p&gt;In my opinion, the benefits from the developer and business perspectives are pretty much the same:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Knowledge is shared throughout the team&lt;/li&gt;
-&lt;li&gt;Can be used as a sort of team bonding&lt;/li&gt;
-&lt;li&gt;Encourages the use of soft skills&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;how-do-i-get-started&#34;&gt;How do I get started?&lt;/h2&gt;
-
-&lt;p&gt;For starters, you&amp;rsquo;ve read up until here so the idea is already in your mind. In terms of setting up the event, pick a date/time about &lt;sup&gt;3&lt;/sup&gt;&amp;frasl;&lt;sub&gt;4&lt;/sub&gt; weeks in the future to give you time to prepare and allow people to keep that hour free. Then you can have a think of an idea like those listed at the bottom of the page. Once you have that sorted, simply send out a meeting request (or similar) letting people know what you are doing, when and where.&lt;/p&gt;
-
-&lt;p&gt;The presentations don&amp;rsquo;t have to be anything too fancy, just something on &lt;a href=&#34;http://slid.es&#34;&gt;Slid.es&lt;/a&gt; or Powerpoint will be fine. Just make sure that it is easily readable.&lt;/p&gt;
-
-&lt;p&gt;Don&amp;rsquo;t forget to talk to your boss and let them know what you are doing. On the off chance see if there is a chance of free food, you never know right?&lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;ve already started this movement at two places I have worked and received exceptional feedback. So I encourage you to try and sort this at your workplace and see if it can help you become better. Here are a couple of tips from my experience:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;You don&amp;rsquo;t need to be an expert, so don&amp;rsquo;t try and become one overnight,&lt;/li&gt;
-&lt;li&gt;It doesn&amp;rsquo;t matter if things go wrong, the attendees are your friends and can help,&lt;/li&gt;
-&lt;li&gt;Don&amp;rsquo;t pick a topic that is a) no interest to you, it will come off in your presentation; and b) too big, you will end up speed talking.&lt;/li&gt;
-&lt;li&gt;Do remember to have fun!&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;resources&#34;&gt;Resources&lt;/h3&gt;
-
-&lt;h4 id=&#34;list-of-starter-ideas&#34;&gt;List of starter ideas&lt;/h4&gt;
-
-&lt;p&gt;With these topics, explore the title trying to think of what/why/how&amp;hellip;.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Principals of SOLID&lt;/li&gt;
-&lt;li&gt;Dependency Injection&lt;/li&gt;
-&lt;li&gt;Grunt Tasks&lt;/li&gt;
-&lt;li&gt;What does it mean to be Agile?&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;speaker-resources&#34;&gt;Speaker Resources&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.hanselman.com/speaking/&#34;&gt;http://www.hanselman.com/speaking&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://zachholman.com/talk/the-talk-on-talks/&#34;&gt;Talk on Talks&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;</description>
     </item>
     
   </channel>

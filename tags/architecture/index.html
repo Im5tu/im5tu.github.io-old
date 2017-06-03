@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Finding Reducible Expressions - Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/article/2014/06/finding-reducible-expressions/">
+    <title>Stuart Blackler&#39;s Blog</title>
+    <link rel="canonical" href="https://im5tu.io/tags/architecture/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <meta name="description" content="This post details the Expressions that can be reduced in the System.Linq.Expressions namespace.">
     
     
-    <meta property="og:title" content="Finding Reducible Expressions - Stuart Blackler&#39;s Blog" />
+    
+    <meta property="og:title" content="Architecture - Stuart Blackler&#39;s Blog" />
 <meta property="og:type" content="website" />
 
-<meta property="og:description" content="This post details the Expressions that can be reduced in the System.Linq.Expressions namespace.">
+<meta property="og:description" content="A little place for all my thoughts on all things cyber.">
 
-<meta property="og:url" content="https://im5tu.io/article/2014/06/finding-reducible-expressions/" />
+<meta property="og:url" content="https://im5tu.io/tags/architecture/" />
 <meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
 <meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
 <meta name="twitter:card" content="summary" />
@@ -48,74 +48,32 @@
     </section>
 </header>
     <section class="pageContainer-content pageWrap">
-        <article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h1><a href="https://im5tu.io/article/2014/06/finding-reducible-expressions/" itemprop="name">Finding Reducible Expressions</a></h1>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2014-06-24T09:21:19">2014-06-24 09:21:19 &#43;0000 UTC</time></p>
+        
+
+<article class="tagpage">
+    <header class="tagpage-header">
+        <h1>Pages tagged: Architecture</p>
     </header>
-    <section class="article-content" itemprop="text"><p>Today I just wanted to share a quick note regarding <a href="http://stackoverflow.com/a/2040097/315711">a Stack Overflow answer</a> that I recently came across. In the answer the author explains that a call to <code>Expression.CanReduce</code> will typically return false, while <code>Expression.Reduce()</code> will return the current expression. The author continues to state that one of the types that overrides <code>Expression.Reduce()</code> and <code>Expression.CanReduce</code> is <code>MemberInitExpression</code>.
-</p>
-
-<p>I wanted to find out when <code>Expression.CanReduce</code> would actually return <code>true</code>. I discovered the <a href="http://www.codeplex.com/Download?ProjectName=dlr&amp;DownloadId=246540">173 page Expression Tree Specification</a> which provides an additional insight to <code>CanReduce</code> and <code>Reduce()</code>.</p>
-
-<h3 id="canreduce">CanReduce</h3>
-
-<blockquote>
-<p>This property returns whether the Reduce method returns a different but semantically equivalent ET.  By default, this property returns false.</p>
-
-<p>In the typical case, the resulting ET contains all common ET nodes suitable for passing to any common compilation or ET processing code.  Sometimes the result is only partially reduced, and when walking the resulting ET, you&rsquo;ll need to further reduce some nodes.</p>
-
-<p>The value returned by this property should never change for a given object.</p>
-
-<p>Signature:</p>
-</blockquote>
-
-<pre><code>public virtual Boolean CanReduce { get; }
-</code></pre>
-
-<h3 id="reduce">Reduce</h3>
-
-<blockquote>
-<p>This method returns a semantically equivalent ET representing the same expression.  By default, this method returns the object on which it was invoked.</p>
-
-<p>Typically the result comprises only common ET types, ET nodes suitable for passing to any compilation or ET processing code.  Usually the result is only partially reduced (that is, only the root node).  You&rsquo;ll probably need to further reduce some nodes.</p>
-
-<p>Signature:</p>
-</blockquote>
-
-<pre><code>public virtual Expression Reduce();
-</code></pre>
-
-<h3 id="reducible-types-inside-system-linq-expressions">Reducible Types Inside System.Linq.Expressions</h3>
-
-<p>Using <a href="http://www.telerik.com/products/decompiler.aspx">Telerik&rsquo;s JustDecompile</a>, I went through each public class to see which had an override on either <code>CanReduce</code> or <code>Reduce()</code>. The result came up with the following list:</p>
-
-<ul>
-<li><a href="http://msdn.microsoft.com/en-us/library/system.linq.expressions.binaryexpression.aspx">BinaryExpression</a></li>
-<li><a href="http://msdn.microsoft.com/en-us/library/system.linq.expressions.listinitexpression.aspx">ListInitExpression</a></li>
-<li><a href="http://msdn.microsoft.com/en-GB/library/system.linq.expressions.memberinitexpression.aspx">MemberInitExpression</a></li>
-<li><a href="http://msdn.microsoft.com/en-us/library/system.linq.expressions.unaryexpression.aspx">UnaryExpression</a></li>
-</ul>
-
-<p>Furthermore, I searched for descendant types of the list above and found the following reducible classes that were marked as internal, as such I couldn&rsquo;t find any official documentation for them:</p>
-
-<ul>
-<li>AssignBinaryExpression</li>
-<li>CoalesceConversionBinaryExpression</li>
-<li>LogicalBinaryExpression</li>
-<li>SimpleBinaryExpression</li>
-</ul>
-
-<h3 id="further-reading">Further Reading</h3>
-
-<p>Inside the expression tree specification, I would also be inclined to read section 2.2 entitled <em>Reducible Nodes</em>.</p>
-
-<p>If there are any additional expressions that can be reduced that I have missed, please send me a message and I will add it to the list.</p></section>
-    <footer class="article-footer">
-        <hr />Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/csharp/">csharp</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/expressions/">expressions</a></li>
+    <section class="tagpage-content">
+        
+            <article class="article" itemscope itemtype="http://schema.org/blog">
+    <header class="article-header">
+        <h2><a href="https://im5tu.io/article/2017/05/domain-driven-design-notes/" itemprop="name">Domain Driven Design Notes</a></h2>
+        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-05-24T16:25:48">2017-05-24 16:25:48 &#43;0100 BST</time></p>
+    </header>
+    <section class="article-summary" itemprop="about">These are my notes on domain driven design whilst watching the course by Dino Esposito on Pluralsight.
+Domain Driven Design (or DDD), is the process of discovering both data and behavioural requirements for a given problem domain where traditional approaches usually focus purely on data collection aspects. The aim is to provide better tools to tackle the complexity at the heart of software. Within DDD, there are two distinct parts: an analytical one and a strategical one.</section>
+    <footer class="article-footer">Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/architecture/">Architecture</a></li>
 </ul></footer>
 </article>
+        
+    </section>
+    <footer class="tagpage-footer">
+    </footer>
+</article>
+
+
     </section>
     <footer id="pageFooter">
     <section id="pageFooter-copyright" class="pageFooter-section">
