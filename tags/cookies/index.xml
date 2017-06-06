@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cookies on Stuart Blackler&#39;s Blog</title>
+    <link>https://im5tu.io/tags/cookies/index.xml</link>
+    <description>Recent content in Cookies on Stuart Blackler&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://im5tu.io/tags/cookies/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Ensuring httpOnly cookies with URL Rewrite</title>
+      <link>https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/</link>
+      <pubDate>Tue, 06 Jun 2017 15:01:04 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/</guid>
+      <description>&lt;p&gt;In this article, I will give a brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite. We will also be creating our first outbound rewrite rule with a pre-condition.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;See my &lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;previous posts&lt;/a&gt; for information on inbound rewrite rules.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-are-cookies&#34;&gt;What are cookies?&lt;/h2&gt;
+
+&lt;p&gt;Unfornately, in this sense they are not a snack. They are, usually, small bits of information continually transferred between the browser and the server in order to do things like session tracking &amp;amp; identification, or maintain informantion pertainent to your browsing session. If not secured in the right way, you can expose details of your browsing session unknowingly. First up, we can make the cookies &lt;code&gt;httpOnly&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-are-httponly-cookies&#34;&gt;What are httpOnly cookies?&lt;/h2&gt;
+
+&lt;p&gt;By adding the modifier to the cookie, we prevent any scripts running from accessing the cookie. The biggest benefit here is protection against Cross-Site Scripting, or XSS. Unless you have very specific requirements for cookies, this flag should always be enabled.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;For more information, checkout &lt;a href=&#34;https://scotthelme.co.uk/tough-cookies/&#34;&gt;Scott Helme&amp;rsquo;s incredible post&lt;/a&gt; on getting tougher cookies.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;how-can-we-ensure-our-cookies-are-httponly-with-url-rewrite&#34;&gt;How can we ensure our cookies are httpOnly with URL Rewrite&lt;/h2&gt;
+
+&lt;p&gt;When a server indicates that it wants to set a cookie, it does so by sending the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header along with the response. There are a few modifiers that this can have to make them more secure in compliant browsers (eg: Chrome, Firefox, Edge, Safari): &lt;code&gt;httpOnly&lt;/code&gt;, &lt;code&gt;secure&lt;/code&gt; and &lt;code&gt;sameSite=(lax|strict)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This rewrite snippet requires two portions: the rule and a set of precondtions.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;rewrite&amp;gt;
+    &amp;lt;outboundRules&amp;gt;
+        &amp;lt;rule name=&amp;quot;Ensure httpOnly Cookies&amp;quot; preCondition=&amp;quot;Missing httpOnly cookie&amp;quot;&amp;gt;
+            &amp;lt;match serverVariable=&amp;quot;RESPONSE_Set_Cookie&amp;quot; pattern=&amp;quot;.*&amp;quot; negate=&amp;quot;false&amp;quot; /&amp;gt;
+            &amp;lt;action type=&amp;quot;Rewrite&amp;quot; value=&amp;quot;{R:0}; HttpOnly&amp;quot; /&amp;gt;
+        &amp;lt;/rule&amp;gt;
+        &amp;lt;preConditions&amp;gt;
+            &amp;lt;preCondition name=&amp;quot;Missing httpOnly cookie&amp;quot;&amp;gt;
+                &amp;lt;!-- Don&#39;t remove the first line! --&amp;gt;
+                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;.&amp;quot; /&amp;gt;
+                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;; HttpOnly&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
+            &amp;lt;/preCondition&amp;gt;
+        &amp;lt;/preconditions&amp;gt;
+    &amp;lt;/outboundRules&amp;gt;
+&amp;lt;/rewrite&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Within our rule, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt;. In previous posts we have added the attribute to stop processing, but here we want to continue processing rewrite rules because we may want to do additional work to the response. Next, we match the server varible for a &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header (&lt;code&gt;RESPONSE_Set_Cookie&lt;/code&gt;) and ensure that it&amp;rsquo;s present for us to continue. For our action, we rewrite the &lt;code&gt;Set-Cookie&lt;/code&gt; header to be the original value, with the &lt;code&gt;HttpOnly&lt;/code&gt; modifier appended.&lt;/p&gt;
+
+&lt;p&gt;Within the precondition, which is matched by name to the &lt;code&gt;preCondition&lt;/code&gt; attribute in the rule, we do two things:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;(&lt;em&gt;I think, see below&lt;/em&gt;) Make sure that the &lt;code&gt;Set-Cookie&lt;/code&gt; header has been set (via the server variable &lt;code&gt;{RESPONSE_Set_Cookie}&lt;/code&gt;);&lt;/li&gt;
+&lt;li&gt;Make sure that we do not already have the &lt;code&gt;HttpOnly&lt;/code&gt; modifier set&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For an unknown reason, probably due to a knowledge gap, the first line is required. I have made a guess as to what this could be, but I am unsure. Strange things happen in the dev tools in Chrome if that first line is not there.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;It is worth noting that a precondition is not limited to a single rule, it can be re-used. There is probably scope for making this rule smaller, if there is i&amp;rsquo;ll edit the post to reflect the smaller rule.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s it. If you check your debug tool of choice after implementing this, you should see that all cookies are now sent with the &lt;code&gt;HttpOnly&lt;/code&gt; modifier.&lt;/p&gt;
+
+&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

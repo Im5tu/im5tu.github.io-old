@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta name="generator" content="Hugo 0.18-DEV" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/">
+    <title>Ensuring httpOnly cookies with URL Rewrite - Stuart Blackler&#39;s Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="A brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite.">
     
     
-    
-    <meta property="og:title" content="Stuart Blackler&#39;s Blog - Stuart Blackler&#39;s Blog" />
+    <meta property="og:title" content="Ensuring httpOnly cookies with URL Rewrite - Stuart Blackler&#39;s Blog" />
 <meta property="og:type" content="website" />
 
-<meta property="og:description" content="A little place for all my thoughts on all things cyber.">
+<meta property="og:description" content="A brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite.">
 
-<meta property="og:url" content="https://im5tu.io/" />
+<meta property="og:url" content="https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/" />
 <meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
 <meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
 <meta name="twitter:card" content="summary" />
@@ -49,120 +48,80 @@
     </section>
 </header>
     <section class="pageContainer-content pageWrap">
-        
-<h2>Latest Articles</h2>
-<section class="article-list">
-    <article class="article" itemscope itemtype="http://schema.org/blog">
+        <article class="article" itemscope itemtype="http://schema.org/blog">
     <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/" itemprop="name">Ensuring httpOnly cookies with URL Rewrite</a></h2>
+        <h1><a href="https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/" itemprop="name">Ensuring httpOnly cookies with URL Rewrite</a></h1>
         <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-06-06T15:01:04">2017-06-06 15:01:04 &#43;0100 BST</time></p>
     </header>
-    <section class="article-summary" itemprop="about"><p>In this article, I will give a brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite. We will also be creating our first outbound rewrite rule with a pre-condition.</p>
+    <section class="article-content" itemprop="text"><p>In this article, I will give a brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite. We will also be creating our first outbound rewrite rule with a pre-condition.</p>
 
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
+<p></p>
+
+<p>See my <a href="/article/2017/06/removing-trailing-slashes-with-url-rewrite/">previous posts</a> for information on inbound rewrite rules.</p>
+
+<h2 id="what-are-cookies">What are cookies?</h2>
+
+<p>Unfornately, in this sense they are not a snack. They are, usually, small bits of information continually transferred between the browser and the server in order to do things like session tracking &amp; identification, or maintain informantion pertainent to your browsing session. If not secured in the right way, you can expose details of your browsing session unknowingly. First up, we can make the cookies <code>httpOnly</code>.</p>
+
+<h2 id="what-are-httponly-cookies">What are httpOnly cookies?</h2>
+
+<p>By adding the modifier to the cookie, we prevent any scripts running from accessing the cookie. The biggest benefit here is protection against Cross-Site Scripting, or XSS. Unless you have very specific requirements for cookies, this flag should always be enabled.</p>
+
+<p><em>For more information, checkout <a href="https://scotthelme.co.uk/tough-cookies/">Scott Helme&rsquo;s incredible post</a> on getting tougher cookies.</em></p>
+
+<h2 id="how-can-we-ensure-our-cookies-are-httponly-with-url-rewrite">How can we ensure our cookies are httpOnly with URL Rewrite</h2>
+
+<p>When a server indicates that it wants to set a cookie, it does so by sending the <code>Set-Cookie</code> HTTP header along with the response. There are a few modifiers that this can have to make them more secure in compliant browsers (eg: Chrome, Firefox, Edge, Safari): <code>httpOnly</code>, <code>secure</code> and <code>sameSite=(lax|strict)</code>.</p>
+
+<p>This rewrite snippet requires two portions: the rule and a set of precondtions.</p>
+
+<pre><code>&lt;rewrite&gt;
+    &lt;outboundRules&gt;
+        &lt;rule name=&quot;Ensure httpOnly Cookies&quot; preCondition=&quot;Missing httpOnly cookie&quot;&gt;
+            &lt;match serverVariable=&quot;RESPONSE_Set_Cookie&quot; pattern=&quot;.*&quot; negate=&quot;false&quot; /&gt;
+            &lt;action type=&quot;Rewrite&quot; value=&quot;{R:0}; HttpOnly&quot; /&gt;
+        &lt;/rule&gt;
+        &lt;preConditions&gt;
+            &lt;preCondition name=&quot;Missing httpOnly cookie&quot;&gt;
+                &lt;!-- Don't remove the first line! --&gt;
+                &lt;add input=&quot;{RESPONSE_Set_Cookie}&quot; pattern=&quot;.&quot; /&gt;
+                &lt;add input=&quot;{RESPONSE_Set_Cookie}&quot; pattern=&quot;; HttpOnly&quot; negate=&quot;true&quot; /&gt;
+            &lt;/preCondition&gt;
+        &lt;/preconditions&gt;
+    &lt;/outboundRules&gt;
+&lt;/rewrite&gt;
+</code></pre>
+
+<p>Within our rule, we are defining the name of the rule which can be viewed inside of <code>inetmgr (IIS Manager)</code>. In previous posts we have added the attribute to stop processing, but here we want to continue processing rewrite rules because we may want to do additional work to the response. Next, we match the server varible for a <code>Set-Cookie</code> HTTP header (<code>RESPONSE_Set_Cookie</code>) and ensure that it&rsquo;s present for us to continue. For our action, we rewrite the <code>Set-Cookie</code> header to be the original value, with the <code>HttpOnly</code> modifier appended.</p>
+
+<p>Within the precondition, which is matched by name to the <code>preCondition</code> attribute in the rule, we do two things:</p>
+
+<ul>
+<li>(<em>I think, see below</em>) Make sure that the <code>Set-Cookie</code> header has been set (via the server variable <code>{RESPONSE_Set_Cookie}</code>);</li>
+<li>Make sure that we do not already have the <code>HttpOnly</code> modifier set</li>
+</ul>
+
+<p>For an unknown reason, probably due to a knowledge gap, the first line is required. I have made a guess as to what this could be, but I am unsure. Strange things happen in the dev tools in Chrome if that first line is not there.</p>
+
+<p><em>It is worth noting that a precondition is not limited to a single rule, it can be re-used. There is probably scope for making this rule smaller, if there is i&rsquo;ll edit the post to reflect the smaller rule.</em></p>
+
+<p>That&rsquo;s it. If you check your debug tool of choice after implementing this, you should see that all cookies are now sent with the <code>HttpOnly</code> modifier.</p>
+
+<h2 id="other-posts-in-this-series">Other Posts In This Series</h2>
+
+<ol>
+<li><a href="/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/">Up and running with URL Rewrite - going from HTTP to HTTPS</a></li>
+<li><a href="/article/2017/06/canonical-host-urls-with-url-rewrite/">Canonical host urls with URL Rewrite</a></li>
+<li><a href="/article/2017/06/removing-trailing-slashes-with-url-rewrite/">Removing trailing slashes with URL Rewrite</a></li>
+<li><a href="/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/">Ensuring httpOnly cookies with URL Rewrite</a> <em>(This Post)</em></li>
+<li><a href="/article/2017/06/ensuring-secure-cookies-with-url-rewrite/">Ensuring secure cookies with URL Rewrite</a></li>
+<li><a href="/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/">Ensuring samesite cookies with URL Rewrite</a></li>
+</ol></section>
+    <footer class="article-footer">
+        <hr />Tags: <ul class="article-tags">
     <li><a class="article-tag" href="/tags/iis/">IIS</a></li><li><a class="article-tag" href="/tags/url-rewrite/">Url Rewrite</a></li><li><a class="article-tag" href="/tags/cookies/">Cookies</a></li>
 </ul></footer>
-</article><article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/" itemprop="name">Removing trailing slashes with URL Rewrite</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-06-05T15:00:59">2017-06-05 15:00:59 &#43;0100 BST</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>In the <a href="/article/2017/06/canonical-host-urls-with-url-rewrite/">previous post</a>, I explained why canonical urls are important and how to enforce them . In this article, I will show you how to have a canonical host url.</p>
-
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/iis/">IIS</a></li><li><a class="article-tag" href="/tags/url-rewrite/">Url Rewrite</a></li><li><a class="article-tag" href="/tags/seo/">SEO</a></li>
-</ul></footer>
-</article><article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/" itemprop="name">Canonical host urls with URL Rewrite</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-06-04T15:00:55">2017-06-04 15:00:55 &#43;0100 BST</time></p>
-    </header>
-    <section class="article-summary" itemprop="about">In the previous post, I gave a brief intoduction to URL Rewriting and showed you how to get from HTTP to HTTPS. In this article, I will show you how to have a canonical host url.
-What is a canonical host url? It can be incredibly easy to distribute different urls for your website. Lets say that we have www.site.com/post1 and site.com/post1. If you&rsquo;re a search engine, you think that these are different different pages with the same content.</section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/iis/">IIS</a></li><li><a class="article-tag" href="/tags/url-rewrite/">Url Rewrite</a></li><li><a class="article-tag" href="/tags/seo/">SEO</a></li>
-</ul></footer>
-</article><article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/" itemprop="name">Up and running with URL Rewrite - going from HTTP to HTTPS</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-06-03T15:00:51">2017-06-03 15:00:51 &#43;0100 BST</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>In this series, I am going to take you through a few <code>web.config</code> snippets that have come in handy for me when using URL Rewrite on IIS. Firstly, I am going to introduce the URL Rewrite module then show a sample of going from HTTP to HTTPS.</p>
-
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/iis/">IIS</a></li><li><a class="article-tag" href="/tags/url-rewrite/">Url Rewrite</a></li>
-</ul></footer>
-</article><article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/05/domain-driven-design-notes/" itemprop="name">Domain Driven Design Notes</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-05-24T16:25:48">2017-05-24 16:25:48 &#43;0100 BST</time></p>
-    </header>
-    <section class="article-summary" itemprop="about">These are my notes on domain driven design whilst watching the course by Dino Esposito on Pluralsight.
-Domain Driven Design (or DDD), is the process of discovering both data and behavioural requirements for a given problem domain where traditional approaches usually focus purely on data collection aspects. The aim is to provide better tools to tackle the complexity at the heart of software. Within DDD, there are two distinct parts: an analytical one and a strategical one.</section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/architecture/">Architecture</a></li>
-</ul></footer>
-</article><article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/04/5-tips-for-getting-what-you-want/" itemprop="name">5 Tips For Getting What You Want</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-04-12T16:25:48">2017-04-12 16:25:48 &#43;0100 BST</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>Over recent months, some close friends and I have found ourselves in a bit of a rut and woken up to the fact that we aren&rsquo;t getting any younger and don&rsquo;t really have a plan. Naturally, this can be upsetting to a person and it&rsquo;s something that can be easily rectified. </p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/personal-development/">Personal Development</a></li>
-</ul></footer>
-</article><article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/04/talks-episerver-content-providers--lightening-talk/" itemprop="name">Talks: Episerver Content Providers &amp; Lightening Talk</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-04-04T10:38:38">2017-04-04 10:38:38 &#43;0100 BST</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&rsquo;s London offices. I ended up giving two talks: Episerver Content Providers &amp; a 5 minute lightening talk.
-</p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/public-speaking/">public speaking</a></li>
-</ul></footer>
-</article><article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/03/news-roundup-march-2017/" itemprop="name">News Roundup March 2017</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-03-01T19:32:24">2017-03-01 19:32:24 &#43;0000 UTC</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>In this the first of many <a href="/categories/news">news roundups</a>, I am going to look back through the news that you may have missed and the stories/blogs that have interested me over the previous month(s). In this round up I will be taking a look at content from arround mid January, through to the 1st March 2017.</p>
-
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/news/">News</a></li><li><a class="article-tag" href="/tags/roundup/">Roundup</a></li>
-</ul></footer>
-</article><article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/02/openmessage-2017-roadmap/" itemprop="name">OpenMessage 2017 Roadmap</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-02-11T12:15:27">2017-02-11 12:15:27 &#43;0000 UTC</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p><a href="https://github.com/im5tu/openmessage">OpenMessage</a> originally started out as a replacement for an internal library that was used across teams. At the time, the team I was apart of needed the latest version of dotnet core for the library where as the other team were stuck on RC1. They were also developing features for that version of the framework and a few pre-existing details that we were unhappy with (eg: the request/response implementation). With that in mind, I created a minimal wrapper for what we needed. Looking forward, I plan to dedicate a bit more time to the project and improve it.</p>
-
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/openmessage/">OpenMessage</a></li><li><a class="article-tag" href="/tags/csharp/">csharp</a></li><li><a class="article-tag" href="/tags/vb/">vb</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/messaging/">messaging</a></li>
-</ul></footer>
-</article><article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/02/openmessage-1.1-released/" itemprop="name">OpenMessage 1.1 Released</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-02-05T15:31:54">2017-02-05 15:31:54 &#43;0000 UTC</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>Just a quick update to say that the Azure provider for <a href="https://github.com/Im5tu/OpenMessage">OpenMessage</a> has been released. This update fixes an issue with scheduling messages on topics.</p>
-
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/openmessage/">OpenMessage</a></li><li><a class="article-tag" href="/tags/csharp/">csharp</a></li><li><a class="article-tag" href="/tags/vb/">vb</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/messaging/">messaging</a></li>
-</ul></footer>
 </article>
-    <footer>
-        <p><a href="/article/">View All Posts</a></p>
-    </footer>
-</section>
-
     </section>
     <footer id="pageFooter">
     <section id="pageFooter-copyright" class="pageFooter-section">

@@ -6,8 +6,277 @@
     <description>Recent content in Articles on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 24 May 2017 16:25:48 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 06 Jun 2017 15:01:04 +0100</lastBuildDate>
     <atom:link href="https://im5tu.io/article/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Ensuring httpOnly cookies with URL Rewrite</title>
+      <link>https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/</link>
+      <pubDate>Tue, 06 Jun 2017 15:01:04 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/</guid>
+      <description>&lt;p&gt;In this article, I will give a brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite. We will also be creating our first outbound rewrite rule with a pre-condition.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;See my &lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;previous posts&lt;/a&gt; for information on inbound rewrite rules.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-are-cookies&#34;&gt;What are cookies?&lt;/h2&gt;
+
+&lt;p&gt;Unfornately, in this sense they are not a snack. They are, usually, small bits of information continually transferred between the browser and the server in order to do things like session tracking &amp;amp; identification, or maintain informantion pertainent to your browsing session. If not secured in the right way, you can expose details of your browsing session unknowingly. First up, we can make the cookies &lt;code&gt;httpOnly&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-are-httponly-cookies&#34;&gt;What are httpOnly cookies?&lt;/h2&gt;
+
+&lt;p&gt;By adding the modifier to the cookie, we prevent any scripts running from accessing the cookie. The biggest benefit here is protection against Cross-Site Scripting, or XSS. Unless you have very specific requirements for cookies, this flag should always be enabled.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;For more information, checkout &lt;a href=&#34;https://scotthelme.co.uk/tough-cookies/&#34;&gt;Scott Helme&amp;rsquo;s incredible post&lt;/a&gt; on getting tougher cookies.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;how-can-we-ensure-our-cookies-are-httponly-with-url-rewrite&#34;&gt;How can we ensure our cookies are httpOnly with URL Rewrite&lt;/h2&gt;
+
+&lt;p&gt;When a server indicates that it wants to set a cookie, it does so by sending the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header along with the response. There are a few modifiers that this can have to make them more secure in compliant browsers (eg: Chrome, Firefox, Edge, Safari): &lt;code&gt;httpOnly&lt;/code&gt;, &lt;code&gt;secure&lt;/code&gt; and &lt;code&gt;sameSite=(lax|strict)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This rewrite snippet requires two portions: the rule and a set of precondtions.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;rewrite&amp;gt;
+    &amp;lt;outboundRules&amp;gt;
+        &amp;lt;rule name=&amp;quot;Ensure httpOnly Cookies&amp;quot; preCondition=&amp;quot;Missing httpOnly cookie&amp;quot;&amp;gt;
+            &amp;lt;match serverVariable=&amp;quot;RESPONSE_Set_Cookie&amp;quot; pattern=&amp;quot;.*&amp;quot; negate=&amp;quot;false&amp;quot; /&amp;gt;
+            &amp;lt;action type=&amp;quot;Rewrite&amp;quot; value=&amp;quot;{R:0}; HttpOnly&amp;quot; /&amp;gt;
+        &amp;lt;/rule&amp;gt;
+        &amp;lt;preConditions&amp;gt;
+            &amp;lt;preCondition name=&amp;quot;Missing httpOnly cookie&amp;quot;&amp;gt;
+                &amp;lt;!-- Don&#39;t remove the first line! --&amp;gt;
+                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;.&amp;quot; /&amp;gt;
+                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;; HttpOnly&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
+            &amp;lt;/preCondition&amp;gt;
+        &amp;lt;/preconditions&amp;gt;
+    &amp;lt;/outboundRules&amp;gt;
+&amp;lt;/rewrite&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Within our rule, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt;. In previous posts we have added the attribute to stop processing, but here we want to continue processing rewrite rules because we may want to do additional work to the response. Next, we match the server varible for a &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header (&lt;code&gt;RESPONSE_Set_Cookie&lt;/code&gt;) and ensure that it&amp;rsquo;s present for us to continue. For our action, we rewrite the &lt;code&gt;Set-Cookie&lt;/code&gt; header to be the original value, with the &lt;code&gt;HttpOnly&lt;/code&gt; modifier appended.&lt;/p&gt;
+
+&lt;p&gt;Within the precondition, which is matched by name to the &lt;code&gt;preCondition&lt;/code&gt; attribute in the rule, we do two things:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;(&lt;em&gt;I think, see below&lt;/em&gt;) Make sure that the &lt;code&gt;Set-Cookie&lt;/code&gt; header has been set (via the server variable &lt;code&gt;{RESPONSE_Set_Cookie}&lt;/code&gt;);&lt;/li&gt;
+&lt;li&gt;Make sure that we do not already have the &lt;code&gt;HttpOnly&lt;/code&gt; modifier set&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For an unknown reason, probably due to a knowledge gap, the first line is required. I have made a guess as to what this could be, but I am unsure. Strange things happen in the dev tools in Chrome if that first line is not there.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;It is worth noting that a precondition is not limited to a single rule, it can be re-used. There is probably scope for making this rule smaller, if there is i&amp;rsquo;ll edit the post to reflect the smaller rule.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s it. If you check your debug tool of choice after implementing this, you should see that all cookies are now sent with the &lt;code&gt;HttpOnly&lt;/code&gt; modifier.&lt;/p&gt;
+
+&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>Removing trailing slashes with URL Rewrite</title>
+      <link>https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/</link>
+      <pubDate>Mon, 05 Jun 2017 15:00:59 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/</guid>
+      <description>&lt;p&gt;In the &lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;previous post&lt;/a&gt;, I explained why canonical urls are important and how to enforce them . In this article, I will show you how to have a canonical host url.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;why-does-adding-or-removing-trailing-slashes-matter&#34;&gt;Why does adding or removing trailing slashes matter?&lt;/h2&gt;
+
+&lt;p&gt;In essence, it matters for the same reasons as I described in &lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;my previous post&lt;/a&gt;. That is, search engines will see &lt;code&gt;site.com/post1&lt;/code&gt; as different content to &lt;code&gt;site.com/post1/&lt;/code&gt; so we need to correct this in order to get a bit of SEO benefit. In this article, I will be redirecting any URL that comes with a slash at the end to one without.&lt;/p&gt;
+
+&lt;h2 id=&#34;adding-or-removing-trailing-slashes-via-url-rewrite&#34;&gt;Adding or removing trailing slashes via URL Rewrite&lt;/h2&gt;
+
+&lt;p&gt;As per the snippet in our previous posts, we are going to create an inbound rule (which lives under &lt;code&gt;system.web &amp;gt; rewrite &amp;gt; rules&lt;/code&gt; in our &lt;code&gt;web.config&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;rule name=&amp;quot;Remove trailing slash&amp;quot; stopProcessing=&amp;quot;true&amp;quot;&amp;gt;
+    &amp;lt;match url=&amp;quot;(.*)/$&amp;quot; /&amp;gt;
+    &amp;lt;conditions logicalGrouping=&amp;quot;MatchAll&amp;quot; trackAllCaptures=&amp;quot;false&amp;quot;&amp;gt;
+        &amp;lt;add input=&amp;quot;{REQUEST_FILENAME}&amp;quot; matchType=&amp;quot;IsFile&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
+        &amp;lt;add input=&amp;quot;{REQUEST_FILENAME}&amp;quot; matchType=&amp;quot;IsDirectory&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
+    &amp;lt;/conditions&amp;gt;
+    &amp;lt;action type=&amp;quot;Redirect&amp;quot; url=&amp;quot;{R:1}&amp;quot; redirectType=&amp;quot;Temporary&amp;quot; /&amp;gt;
+&amp;lt;/rule&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the first line, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt; saying that we want to stop at this rule and return the response to the client. Next up, we give our matching criteria which we have wildcarded to match all requests that end with a &lt;code&gt;/&lt;/code&gt;. Then we have added a condition set which is definted to match all criteria inside. We use the server variable &lt;code&gt;{REQUEST_FILENAME}&lt;/code&gt; to determine whether or not the path requested is a physical file or directory on disk. The last attribute in each condition is a negation, which is equivilent of saying don&amp;rsquo;t match a physical directory or file (we don&amp;rsquo;t want to screw the routing for those!).&lt;/p&gt;
+
+&lt;p&gt;Finally, we define the action that we wish to take if both the &lt;code&gt;match&lt;/code&gt; and all the conditions in the &lt;code&gt;conditions&lt;/code&gt; section have been satisfied. The action that we wish to take is to redirect the user to the page without the slash, so we use the request capture group &lt;code&gt;{R:1}&lt;/code&gt; (more on this in a future article).&lt;/p&gt;
+
+&lt;p&gt;And that&amp;rsquo;s it, you should be redirecting people from say &lt;code&gt;site.com/post1/&lt;/code&gt; to &lt;code&gt;site.com/post1&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>Canonical host urls with URL Rewrite</title>
+      <link>https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/</link>
+      <pubDate>Sun, 04 Jun 2017 15:00:55 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/</guid>
+      <description>
+
+&lt;p&gt;In the &lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;previous post&lt;/a&gt;, I gave a brief intoduction to URL Rewriting and showed you how to get from HTTP to HTTPS. In this article, I will show you how to have a canonical host url.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h2 id=&#34;what-is-a-canonical-host-url&#34;&gt;What is a canonical host url?&lt;/h2&gt;
+
+&lt;p&gt;It can be incredibly easy to distribute different urls for your website. Lets say that we have &lt;code&gt;www.site.com/post1&lt;/code&gt; and &lt;code&gt;site.com/post1&lt;/code&gt;. If you&amp;rsquo;re a search engine, you think that these are different different pages with the same content. When you have the same content, you ranking decreases because the content is not original. As a human looking at the site, we think that the pages are the same content on the same site, so we don&amp;rsquo;t see the duplication.&lt;/p&gt;
+
+&lt;p&gt;So a canonical url is basically saying to the search engine: hey, &lt;code&gt;www.site.com/post1&lt;/code&gt; and &lt;code&gt;site.com/post1&lt;/code&gt; are the same content and you should access me through this link (&lt;em&gt;which we define to be a single one of the above&lt;/em&gt;).&lt;/p&gt;
+
+&lt;p&gt;We can set this through metadata on our webpages, but this doesn&amp;rsquo;t guarentee that people will distribute the correct link to your site. To fix this, we can rewrite the url to either append or remove the &lt;code&gt;www.&lt;/code&gt;. In this case, because I prefer shorter url&amp;rsquo;s, we will remove the www sub-domain prefix.&lt;/p&gt;
+
+&lt;h2 id=&#34;making-a-canonical-host-url-via-url-rewrite&#34;&gt;Making a canonical host url via URL Rewrite&lt;/h2&gt;
+
+&lt;p&gt;As per the snippet in our previous post, we are going to create an inbound rule (which lives under &lt;code&gt;system.web &amp;gt; rewrite &amp;gt; rules&lt;/code&gt; in our &lt;code&gt;web.config&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;rule name=&amp;quot;Canonical Hostname&amp;quot; stopProcessing=&amp;quot;true&amp;quot;&amp;gt;
+    &amp;lt;match url=&amp;quot;(.*)&amp;quot; /&amp;gt;
+    &amp;lt;conditions logicalGrouping=&amp;quot;MatchAll&amp;quot; trackAllCaptures=&amp;quot;false&amp;quot;&amp;gt;
+        &amp;lt;add input=&amp;quot;{HTTP_HOST}&amp;quot; pattern=&amp;quot;^www\.([.a-zA-Z0-9]+)$&amp;quot;/&amp;gt;
+    &amp;lt;/conditions&amp;gt;
+    &amp;lt;action type=&amp;quot;Redirect&amp;quot; url=&amp;quot;https://{C:1}/{R:1}&amp;quot; redirectType=&amp;quot;Temporary&amp;quot; /&amp;gt;
+&amp;lt;/rule&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the first line, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt; saying that we want to stop at this rule and return the response to the client. Next up, we give our matching criteria which we have wildcarded to match all requests. Then we have added a condition which takes a server variable (&lt;code&gt;{HTTP_HOST}&lt;/code&gt; which tells us the DNS name or IP address that has been used to reach this server eg: site.com or www.site.com), and we&amp;rsquo;ve matched it against any request starting with &lt;code&gt;www.&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Finally, we define the action that we wish to take if both the &lt;code&gt;match&lt;/code&gt; and &lt;code&gt;conditions&lt;/code&gt; sections have been satisfied. The action that we wish to take is to redirect the user to a non &lt;code&gt;www.&lt;/code&gt; version of the page. In order to do this, we use one of the capture groups (which comes from the conditions section regex) to redirect to (in this case it&amp;rsquo;s &lt;code&gt;{C:1}&lt;/code&gt;) and combine it with the original path and query.&lt;/p&gt;
+
+&lt;p&gt;And that&amp;rsquo;s it, you should be redirecting people from say &lt;code&gt;www.site.com&lt;/code&gt; to &lt;code&gt;site.com&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Up and running with URL Rewrite - going from HTTP to HTTPS</title>
+      <link>https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/</link>
+      <pubDate>Sat, 03 Jun 2017 15:00:51 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/</guid>
+      <description>&lt;p&gt;In this series, I am going to take you through a few &lt;code&gt;web.config&lt;/code&gt; snippets that have come in handy for me when using URL Rewrite on IIS. Firstly, I am going to introduce the URL Rewrite module then show a sample of going from HTTP to HTTPS.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;what-is-url-rewrite&#34;&gt;What is URL Rewrite?&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.iis.net/downloads/microsoft/url-rewrite&#34;&gt;URL Rewrite&lt;/a&gt;  is a module extensions for IIS which allows administrators to create powerful inbound and outbound rules that alter a HTTP request or response. Scenarios where you might consider using the URL Rewrite module include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Rewrite URLs based on the values of server variables or HTTP headers&lt;/li&gt;
+&lt;li&gt;Provide SEO benefits such as canonical host names&lt;/li&gt;
+&lt;li&gt;Setup redirects from old posts to new&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;URL rewrite can be install from the &lt;a href=&#34;http://go.microsoft.com/fwlink/?LinkID=615137&#34;&gt;Web Platform Installer&lt;/a&gt; for IIS 7.5 or above.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;url-rewrite-and-web-config&#34;&gt;URL Rewrite and Web.Config&lt;/h2&gt;
+
+&lt;p&gt;Inside of the &lt;code&gt;web.config&lt;/code&gt; you can define a &lt;code&gt;&amp;lt;rewrite&amp;gt;&lt;/code&gt; section beneath the &lt;code&gt;&amp;lt;system.web&amp;gt;&lt;/code&gt; section:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;system.web&amp;gt;
+    &amp;lt;rewrite&amp;gt;
+        &amp;lt;!-- Your rules here --&amp;gt;
+    &amp;lt;/rewrite&amp;gt;
+&amp;lt;/system.web&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Within the &lt;code&gt;&amp;lt;rewrite&amp;gt;&lt;/code&gt; section you can define either a &lt;code&gt;&amp;lt;rules&amp;gt;&lt;/code&gt; section or an &lt;code&gt;&amp;lt;outbound&amp;gt;&lt;/code&gt; section. The former is for inbound request rewriting and the latter is for response rewriting. I&amp;rsquo;ll expand on each section as we go through the series.&lt;/p&gt;
+
+&lt;p&gt;*&lt;strong&gt;Note:&lt;/strong&gt; if you don&amp;rsquo;t have the URL Rewrite module installed, you&amp;rsquo;ll get a lovely yellow screen of death when you start your application.*&lt;/p&gt;
+
+&lt;h2 id=&#34;redirecting-http-to-https&#34;&gt;Redirecting HTTP to HTTPS&lt;/h2&gt;
+
+&lt;p&gt;The are some obvious benefits to serving pages over a secure connection (HTTPS), which include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Encryption: The data exchanged between client and server cannot easily be read&lt;/li&gt;
+&lt;li&gt;Authority: Proving that the server you are talking to is who you are expecting to talk to&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;However, there are a few lesser known benefits including:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;SEO: Search engines are preferring websites that are secure by default&lt;/li&gt;
+&lt;li&gt;HTTP2: Major browsers do not support HTTP2 over insecure connections&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Assuming you would like all of the above benefit, here is the rule snippet that you will need:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;system.web&amp;gt;
+  &amp;lt;rewrite&amp;gt;
+      &amp;lt;rules&amp;gt;
+          &amp;lt;rule name=&amp;quot;Redirect to http&amp;quot; patternSyntax=&amp;quot;Wildcard&amp;quot; stopProcessing=&amp;quot;true&amp;quot;&amp;gt;
+            &amp;lt;match url=&amp;quot;*&amp;quot; negate=&amp;quot;false&amp;quot; /&amp;gt;
+            &amp;lt;conditions logicalGrouping=&amp;quot;MatchAny&amp;quot; trackAllCaptures=&amp;quot;false&amp;quot;&amp;gt;
+                  &amp;lt;add input=&amp;quot;{HTTPS}&amp;quot; pattern=&amp;quot;off&amp;quot; /&amp;gt;
+              &amp;lt;/conditions&amp;gt;
+            &amp;lt;action type=&amp;quot;Redirect&amp;quot; url=&amp;quot;https://{HTTP_HOST}/{R:1}&amp;quot; redirectType=&amp;quot;Temporary&amp;quot; /&amp;gt;
+        &amp;lt;/rule&amp;gt;
+      &amp;lt;/rules&amp;gt;
+    &amp;lt;/rewrite&amp;gt;
+&amp;lt;/system.web&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So what&amp;rsquo;s going on in the snippet above?&lt;/p&gt;
+
+&lt;p&gt;In the first line, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt;; saying which pattern style we are going to use (either regex or wildcard) and saying that we want to stop at this rule and return the response to the client. Next up, we give our matching criteria which we have wildcarded to match all requests. Then we have added a condition which takes a server variable (&lt;code&gt;{HTTPS}&lt;/code&gt; which indicates whether or not this request has been delivered over a secure connection), and made sure we only track insecure requests.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;With conditions inside of a rule, you can match a single entry in the condition set or all the conditions within the set. Use either &lt;code&gt;MatchAny&lt;/code&gt; or &lt;code&gt;MatchAll&lt;/code&gt; depending on your needs.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Finally, we define the action that we wish to take if both the &lt;code&gt;match&lt;/code&gt; and &lt;code&gt;conditions&lt;/code&gt; sections have been satisfied. The action &lt;code&gt;type&lt;/code&gt; can be &lt;code&gt;Redirect&lt;/code&gt; or &lt;code&gt;Rewrite&lt;/code&gt; depending on your needs. We wish to redirect a user to a secure connection, so we define the type as &lt;code&gt;Redirect&lt;/code&gt; and the url equal to a secure connection to the host requested with the original path &amp;amp; query appended. The final attribute is the redirect type which can be one of the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Permenant: &lt;a href=&#34;https://httpstatuses.com/301&#34;&gt;A HTTP 301 Response&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Found: &lt;a href=&#34;https://httpstatuses.com/302&#34;&gt;A HTTP 302 Response&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;SeeOther: &lt;a href=&#34;https://httpstatuses.com/303&#34;&gt;A HTTP 303 Response&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Temporary: &lt;a href=&#34;https://httpstatuses.com/307&#34;&gt;A HTTP 307 Response&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That&amp;rsquo;s it! Hopefully this article gives you everything that you need to get HTTP to HTTPS redirects working without&lt;/p&gt;
+
+&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
     
     <item>
       <title>Domain Driven Design Notes</title>
@@ -911,281 +1180,6 @@ hugo server -D
 &lt;p&gt;Anything under the static folder, will get copied across to the main site when it gets rendered. This behaved slightly differently than I expected when I first tried this out. I had a file located under &lt;code&gt;/root/static/img/img1.jpg&lt;/code&gt;. When I attempted to render an image tag on the page with the src set to &lt;code&gt;/static/img/img1.jpg&lt;/code&gt; it didn&amp;rsquo;t work. When I rendered the files to disk by calling &lt;code&gt;hugo&lt;/code&gt; and checking the public folder, I could see that it rendered the image under &lt;code&gt;/img/img1.jpg&lt;/code&gt;. Slightly different that what I was expecting, but it still worked nevertheless.&lt;/p&gt;
 
 &lt;p&gt;Hopefully you will now have a basic understanding of how a theme is constructed so that you can roll your own and override portions of the theme you have selecting. Next up, I will setup my frontend pipeline of choice so that I can start applying styling to my site.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Blog Building - Part 2 - My First Post</title>
-      <link>https://im5tu.io/article/2016/11/blog-building---part-2---my-first-post/</link>
-      <pubDate>Thu, 17 Nov 2016 23:01:38 +0000</pubDate>
-      
-      <guid>https://im5tu.io/article/2016/11/blog-building---part-2---my-first-post/</guid>
-      <description>&lt;p&gt;In &lt;a href=&#34;https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/&#34;&gt;the last article&lt;/a&gt;, we setup our workflow and all the pieces that you will need to create a new site. Now we need to install a theme and begin publishing. Prior to writing this series, I began evaluating the extensibility of hugo themes and started work on something I call bones - a no thrills template with no styling, just structure. As I improve the template it will become more useful, maybe. It will remain the template behind mysite as I continue to improve it.
-&lt;/p&gt;
-
-&lt;h2 id=&#34;installing-a-theme&#34;&gt;Installing a theme&lt;/h2&gt;
-
-&lt;p&gt;To install a theme, you need to know the repositories git url. You can see additional themes at &lt;a href=&#34;http://themes.gohugo.io/&#34;&gt;http://themes.gohugo.io/&lt;/a&gt;. I will be using my &lt;a href=&#34;https://github.com/Im5tu/hugo-bones.git&#34;&gt;bones theme&lt;/a&gt; as the base.&lt;/p&gt;
-
-&lt;p&gt;Once you have the themes git url:
-    - Open the command line to repository that has our generation files in it
-    - Change directories to the themes folder
-    - Clone the git repo to this location, eg: &lt;code&gt;git clone https://github.com/Im5tu/hugo-bones.git&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Once the repository is cloned, we need to tell hugo how to use our new theme. To do this we need to open the &lt;code&gt;config.toml&lt;/code&gt; file inside of the root directory and create an entry called theme. When this is done, your config file should look something along the lines of the following:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c#&#34;&gt;baseurl = &amp;quot;http://example.org/&amp;quot;
-title = &amp;quot;My New Hugo Site&amp;quot;
-languageCode = &amp;quot;en-us&amp;quot;
-theme = &amp;quot;hugo-bones&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Whilst I am here, I am going to change the other properties accordingly:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c#&#34;&gt;baseurl = &amp;quot;https://im5tu.io/&amp;quot;
-title = &amp;quot;Stuart Blackler&#39;s Tech Blog&amp;quot;
-languageCode = &amp;quot;en-us&amp;quot;
-theme = &amp;quot;hugo-bones&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Don&amp;rsquo;t forget to save the file. It&amp;rsquo;s also probably a good idea to commit your progress as you go.&lt;/p&gt;
-
-&lt;h2 id=&#34;creating-our-first-post&#34;&gt;Creating our first post&lt;/h2&gt;
-
-&lt;p&gt;Now that we have our theme all setup, we should probably create a hello world post. Assuming that you are using the bones theme like me, we can go back the root of our repository and run this command to generate a new post: &lt;code&gt;hugo new article\hello-world.md&lt;/code&gt;. This creates a file under the &lt;code&gt;content\article&lt;/code&gt; directory.&lt;/p&gt;
-
-&lt;p&gt;We can preview this site by running the command: &lt;code&gt;hugo server -D&lt;/code&gt; and navigating to &lt;code&gt;http://localhost:1313/&lt;/code&gt;. All being well you should see the following:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/blog-building-part-2/first-post.JPG&#34; alt=&#34;First Post Image&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;One of the great things about hugo is that it has live reload capabilities built in. This means that we can navigate to the page that we want to edit in the browser and everytime we make a change to the file, it will be synced to the screen. Try it! This magic happens because we called &lt;code&gt;hugo server&lt;/code&gt; which, in a way, breaks down to mean:
-    - &lt;code&gt;hugo&lt;/code&gt;: build my site please
-    - &lt;code&gt;server&lt;/code&gt;: load a simple http server with my content&lt;/p&gt;
-
-&lt;p&gt;Additionally, I added the flag &lt;code&gt;-D&lt;/code&gt; which means that I want to build draft posts. In the template that I created, I wanted to create everything as a draft so that I could work on it in isolation and be safe in the knowledge that I wouldn&amp;rsquo;t accidently post something that wasn&amp;rsquo;t ready.&lt;/p&gt;
-
-&lt;h2 id=&#34;additional-configuration&#34;&gt;Additional configuration&lt;/h2&gt;
-
-&lt;p&gt;Before I finish up this post and write more, I want to change a few of the configuration options. Personally, I like working with json rather than yaml/toml inside of the markdown files, it feels more natural to me. Other changes that I wish to make include: changing permalink styles, output verbosity and enabling the robots.txt file.&lt;/p&gt;
-
-&lt;p&gt;In order to make these changes, we need to once more open the &lt;code&gt;config.toml&lt;/code&gt; file and add the properties as follows:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c#&#34;&gt;baseurl = &amp;quot;https://im5tu.io/&amp;quot;
-title = &amp;quot;Stuart Blackler&#39;s Tech Blog&amp;quot;
-languageCode = &amp;quot;en-us&amp;quot;
-theme = &amp;quot;hugo-bones&amp;quot;
-metaDataFormat = &amp;quot;json&amp;quot;
-enableRobotsTXT = true
-[permalinks]
-	article = &amp;quot;article/:year/:month/:title/&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;next-steps&#34;&gt;Next steps&lt;/h2&gt;
-
-&lt;p&gt;One of the next things that I will be doing is working with the template to ensure that everything is setup in terms of category/tag pages, rss feeds etc. This, although unstyled, will be enough to begin pushing to the live site.&lt;/p&gt;
-
-&lt;p&gt;After that is complete, I will be setting up gulp to build, clean and minify my javascript and css files. From there I can start working on the visual styling of the site. I will blog the entire process, but this may take some time as I figure out exactly what I want.&lt;/p&gt;
-
-&lt;p&gt;Finally, it&amp;rsquo;s setting up Github and Cloudflare so that everyone can enjoy an SSL enabled site around the world at blazing speeds.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Blog Building - Part 1 - Hello Hugo</title>
-      <link>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</link>
-      <pubDate>Thu, 17 Nov 2016 20:23:00 +0000</pubDate>
-      
-      <guid>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</guid>
-      <description>&lt;p&gt;As promised in this first mini-series, I am going to guide you through the steps that I have taken to get my blog up and running on Github pages and Cloudflare with SSL. As these the steps that I have taken to get this blog up and running, your milage may vary with this as different versions get released. That said, you should be fine.
-&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;NB: I had already pushed a hello world up into my hosted repository with an index file containing hello world before I decided to write this guide.&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;prerequisite-installing-git&#34;&gt;Prerequisite: Installing Git&lt;/h2&gt;
-
-&lt;p&gt;The likelyhood is that you&amp;rsquo;ve already installed git, but if you haven&amp;rsquo;t download and install the latest version of git from &lt;a href=&#34;https://git-scm.com/&#34;&gt;the git website&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;installing-hugo&#34;&gt;Installing Hugo&lt;/h2&gt;
-
-&lt;p&gt;Now that we have git installed, we are ready and raring to go. I&amp;rsquo;m going to make the assumption that you are on Windows with the instructions. We are going to install go, then use go to install hugo from source, installing all the updates as we go.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Navigate in your favourite browser to: &lt;a href=&#34;https://golang.org/dl/&#34;&gt;https://golang.org/dl/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Download the installer of choice and follow the instructions in the installer, making a note of installation directory (eg: &lt;code&gt;E:\GoLang\&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;Open a new command prompt and enter: &lt;code&gt;echo %GOROOT%&lt;/code&gt;. You should see the installation directory echo&amp;rsquo;d out to the console window. Close the command prompt for the next step&lt;/li&gt;
-&lt;li&gt;Next, we need to ensure that &lt;code&gt;GOPATH&lt;/code&gt; is set on your path
-
-&lt;ul&gt;
-&lt;li&gt;Right click on the start button&lt;/li&gt;
-&lt;li&gt;Click on System&lt;/li&gt;
-&lt;li&gt;Click on Advanced System Settings on the left&lt;/li&gt;
-&lt;li&gt;Click on the Environment Variables� button on the bottom&lt;/li&gt;
-&lt;li&gt;In the User variables section, click the New� button&lt;/li&gt;
-&lt;li&gt;Type the name &lt;code&gt;GOPATH&lt;/code&gt; for the variable name&lt;/li&gt;
-&lt;li&gt;In the value textbox, type in the folder where you wish to extract hugo to. Eg: &lt;code&gt;E:\GoLang\&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;With the Environment Variables window open still, edit the PATH variable under user to include `%GOPATH%\bin&lt;/li&gt;
-&lt;li&gt;Re-open any command prompt windows so that the variables take effect&lt;/li&gt;
-&lt;li&gt;Now we are ready to install hugo by running the following command: &lt;code&gt;go get -u -v github.com/spf13/hugo&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;This will download hugo, update its dependencies and build hugo. Expect this process to take 5 minutes or so.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Verify that hugo has downloaded successfully by running &lt;code&gt;hugo --help&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;configuring-git&#34;&gt;Configuring Git&lt;/h2&gt;
-
-&lt;p&gt;Typically you can host on Github pages for two scenarios: Project pages or User/Organisation pages. When you are hosting the former, you will have a branch named &lt;code&gt;gh-pages&lt;/code&gt; which hosts the site within the project. The latter is what we are going to setup which requires the site to be present on the master branch. For this, we are going to use git submodules. This will mean that we actually have two repositories created, one for the hosted site and one for the structure code. This is actually quiet a nice way around an otherwise awkward branching model.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create repository &lt;code&gt;&amp;lt;github-handle&amp;gt;.github.io&lt;/code&gt;, eg: &lt;code&gt;im5tu.github.io&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;This repository will contain the finished site&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Create repository &lt;code&gt;&amp;lt;github-handle&amp;gt;-hugo&lt;/code&gt;, eg: &lt;code&gt;im5tu-hugo&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;This repository will contain all of the generation code and templates etc&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Create a location on disk where you will store the generation files and navigate to that directory on the command line
-
-&lt;ul&gt;
-&lt;li&gt;Eg: &lt;code&gt;mkdir E:\im5tu-hugo &amp;amp;&amp;amp; cd E:\im5tu-hugo&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Next run the following command to make a new site in the new directory: &lt;code&gt;hugo new site .&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;It&amp;rsquo;s probably a good time to create the git respository and commit the code we have currently
-
-&lt;ul&gt;
-&lt;li&gt;To initialize the git repository: &lt;code&gt;git init&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Add all the current files: &lt;code&gt;git add -A&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Commit all of the files: &lt;code&gt;git commit -am &amp;quot;Initial Commit&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Add the remote url of your Github repository: &lt;code&gt;git remote add origin https://github.com/Im5tu/im5tu-hugo.git&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Push the code to your new repository: &lt;code&gt;git push -u origin master&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Next we are going to create a sub-module in the public directory. This folder is where the generated output goes.
-
-&lt;ul&gt;
-&lt;li&gt;I used GitKraken to do this, but you could do it from the command line also:&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;git submodule add -b master git@github.com:&amp;lt;github-handle&amp;gt;/&amp;lt;github-handle&amp;gt;.github.io.git public&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Now we have that setup, commit everything again
-
-&lt;ul&gt;
-&lt;li&gt;Commit all of the files: &lt;code&gt;git commit -am &amp;quot;Initialized submodules&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Push the code to Github: &lt;code&gt;git push&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;From now on, when we generate our site with &lt;code&gt;hugo&lt;/code&gt; (the way we will generate our site) the files will be generated inside of the public directory. Then its a case of either committing the files in the main repository or changing to the public folder and committing the changes in that repository to push it to our live site.&lt;/p&gt;
-
-&lt;p&gt;Out of curiosity, I tested to make sure that they have different git histories:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;E:\im5tu-hugo&amp;gt;git log --oneline
-f3c2595 Initialized submodules
-e60426b Initial commit
-
-E:\im5tu-hugo&amp;gt;cd public &amp;amp;&amp;amp; git log --oneline
-ef81fbc Create CNAME
-3043605 Hello World
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This can be verified on both repositories &lt;a href=&#34;https://github.com/Im5tu/im5tu-hugo/commits/master&#34;&gt;here&lt;/a&gt; and &lt;a href=&#34;https://github.com/Im5tu/im5tu.github.io/commits/master&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
-
-&lt;p&gt;So far we have created our git repositories, installed both Go Lang and hugo and setup our workflow ready to begin work on our site. In the next article, I will begin adding a theme so that we can start publishing the posts that we are writing.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Hello World</title>
-      <link>https://im5tu.io/article/2016/11/hello-world/</link>
-      <pubDate>Thu, 17 Nov 2016 19:34:17 +0000</pubDate>
-      
-      <guid>https://im5tu.io/article/2016/11/hello-world/</guid>
-      <description>&lt;p&gt;Hello World. Safe to say it&amp;rsquo;s been a little while since I have blogged or even had a website come to think of it. Alas, I am back with some fresh ideas and recharged to help you dear reader.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;Finally I&amp;rsquo;ve been able to match up my Github/Twitter handles with my website to make things alot easier to find. I&amp;rsquo;ve also began to build this site on a static site generator called hugo, hosted by Github pages and delivered through Cloudflare. My first port of call is to show you how i&amp;rsquo;ve done it should you wish to re-create my steps for yourself. Naturally, steps may vary as time progresses and things change - so feel free to fix any instructions on my &lt;a href=&#34;https://github.com/Im5tu/im5tu-hugo&#34;&gt;Github repository&lt;/a&gt;.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Technical Debt: How We Get It And How To Avoid It</title>
-      <link>https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/</link>
-      <pubDate>Wed, 05 Aug 2015 18:37:26 +0000</pubDate>
-      
-      <guid>https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/</guid>
-      <description>&lt;p&gt;This post started as a rebuttal to Ralf Westphal&amp;rsquo;s &lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin&#34;&gt;blog&lt;/a&gt; and his post, &amp;ldquo;&lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin/archive/2015/07/22/there-is-no-such-thing-as-technical-debt.aspx&#34;&gt;There is no such thing as technical debt&lt;/a&gt;&amp;rdquo;. There are many points of view on the subject covered by various people such as &lt;a href=&#34;https://sites.google.com/site/unclebobconsultingllc/a-mess-is-not-a-technical-debt&#34;&gt;Uncle Bob&lt;/a&gt; and &lt;a href=&#34;http://martinfowler.com/bliki/TechnicalDebt.html&#34;&gt;Martin Fowler&lt;/a&gt;, but I thought it might be insightful to show how my team manages our code base.&lt;/p&gt;
-
-&lt;p&gt;I can see where Ralf is heading in his post, however, I don&amp;rsquo;t believe dissecting the financial analogy provides any benefit to the industry as a whole. As I will cover later, technical debt is a metaphor. Granted, one that can eventually be tracked to a monetary value yet negated quite substantially with proper management.&lt;/p&gt;
-
-&lt;p&gt;To give you an idea of the code base I am currently working with, it primarily consists of large monolithic applications that have patchy test coverage and confused design patterns. All of this code was written by many people before me and added to by many others, all with typical enterprise constraints. I have personally added and fixed various parts of the code base, ensuring that I add tests as I go. As our team expands, we are attempting to modernise our code base by identifying services that we can extract into meso-services (services that are slightly larger than a micro-service) and clear our predecessors misgivings. We also have numerous greenfield projects that have been built from the ground up using modern best practises - TDD, agile, SOLID principals, DI, Composition etc.&lt;/p&gt;
-
-&lt;p&gt;Before I talk about how we get into technical debt, I&amp;rsquo;d like to first remind you that technical debt is a metaphor. One that describes the engineering trade-off’s that software developers and business stakeholders must often make in order to meet schedules and customer expectations (&lt;a href=&#34;https://sites.google.com/site/unclebobconsultingllc/a-mess-is-not-a-technical-debt&#34;&gt;Uncle Bob&lt;/a&gt;). We can mistake the metaphor of technical debt with physical, measurable debt such as financial debt as demonstrated by Ralf.&lt;/p&gt;
-
-&lt;h2 id=&#34;getting-into-debt&#34;&gt;Getting into debt&lt;/h2&gt;
-
-&lt;p&gt;It&amp;rsquo;s frighteningly easy to get yourself into technical debt, but a lot harder to get out of. The most common ways that I have seen so far in my career are:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Lack of knowledge&lt;/li&gt;
-&lt;li&gt;Lack of time or resource (often driven by business)&lt;/li&gt;
-&lt;li&gt;Not following best practises (eg: the SOLID principals)&lt;/li&gt;
-&lt;li&gt;MVP&amp;rsquo;s&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;The lack of knowledge of any developer can be attributed to one of two things: the lack of effective experience (i.e.: not working on the same project for 5 years) and a lazy developer. Personally, I believe that if developers want to write better code, they will first find the time to learn more/read others code. If you&amp;rsquo;re too busy in the evening or feel demotivated after work, then try getting up earlier and doing it before your day becomes hectic - it&amp;rsquo;s about time management. It can be argued that junior developers are exempt from this and the responsibility of progressing them falls on to their technical lead(s)/senior developer(s). &lt;a href=&#34;https://twitter.com/smudge202&#34;&gt;Tommy Long&lt;/a&gt; quite accurately points out: &amp;ldquo;It is for Seniors to regularly, actively propogate knowledge to improve software development as a whole. Uncle Bob reckons we double in number of developers every 5 years right now. There is a tonne of shit mixed in with a few decent resources on the internet, juniors can&amp;rsquo;t go it alone.&amp;rdquo;&lt;/p&gt;
-
-&lt;p&gt;Lack of time or resource is unfortunately bestowed upon us from the business, after all the business is king - without it we would not have a job. This is probably the sole cause for the technical debt that I currently repaying. The trade off&amp;rsquo;s that we have to make often start off small but over time snowball into a huge immovable problem - classic inertia. Therefore the responsibility falls on us as developers accurately estimate our work then let the business decide which work items will not make the deadline.&lt;/p&gt;
-
-&lt;p&gt;Not following best practices is again, mostly the fault of the developer. At the end of the day, we, the developer write the code so it is our responsibility to write it properly. In the cases where business is the blocker, it is time that we as developers began to fight those long hard battles in our favour. This is the exact same thing that the developers at Microsoft have done. Their drive came from the bottom up, not top down.&lt;/p&gt;
-
-&lt;p&gt;Lastly, MVP&amp;rsquo;s or minimally viable products. The concept is absolutely solid when combined with other practises such as TDD/BDD*. One of the key identifiers with this entrant is the question of: &amp;ldquo;Should I do this because of feature x which &lt;strong&gt;should&lt;/strong&gt; be coming in the next 3 weeks, but it will add half a day to the implementation?&amp;ldquo;. Note the emphasis on &lt;strong&gt;should&lt;/strong&gt;. A sprints backlog is volatile and subject to the abuse of the business at any given moment. If you keep the code as is, you run the risk of the feature costing more time in the future. On the contrary, the future feature may never be needed because of a changing requirement therefore saving you time.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;*I believe that all code should be tested, even if it is a prototype/MVP. You never know whether or not it will be used again. This is one major pain point of many that i&amp;rsquo;ve experienced recently as I&amp;rsquo;ve picked up legacy projects.&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;when-technical-debt-is-too-high&#34;&gt;When technical debt is too high&lt;/h2&gt;
-
-&lt;p&gt;There are a few signs of high technical debt, which are:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;It&amp;rsquo;s hard to add new functionality&lt;/li&gt;
-&lt;li&gt;The code resembles a spaghetti junction&lt;/li&gt;
-&lt;li&gt;You cannot test your code effectively&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Typically, my first two points are attributed to developers not having enough knowledge or not following best practices. A prime example is if your class has more than a single responsibility such as it reads data from the database and contains business logic for validating a shopping basket. The example violates multiple principals and should make every developer feel like they&amp;rsquo;ve just jumped into a deep muddy puddle.&lt;/p&gt;
-
-&lt;p&gt;By effectively testing your code, I mean that you should be able to write all types of test against the code you write: Unit, Component and Integration. If you can only write integration tests for the code you have just written, then you likely need to change your code - Unit testing a database layer (specifically the ORM, not physical IO) is usually quite trivial if the code is structured correctly. That said, we are often stopped from unit testing when using certain frameworks such as Microsoft Azure Service Bus due to the lack of abstractions the library provides. In this case, integration tests are often the best that we can do - but at least it is under test.&lt;/p&gt;
-
-&lt;p&gt;The key point to make is that if your future self (or colleague) will have trouble maintaining the code you have just written, then we haven&amp;rsquo;t coded it well enough. If you have to write comments then you are probably doing it wrong - unless there is a concious design decision. &lt;a href=&#34;https://twitter.com/smudge202&#34;&gt;Tommy Long&lt;/a&gt; quite accurately reflects some of my own thoughts on comments in &lt;a href=&#34;http://blog.devbot.net/conventions-comments/#code&#34;&gt;his post about comments&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;strategies-to-avoid-high-levels-of-technical-debt&#34;&gt;Strategies to avoid high levels of technical debt&lt;/h2&gt;
-
-&lt;p&gt;Here at &lt;a href=&#34;http://www.4com.co.uk&#34;&gt;4Com&lt;/a&gt;, we employ the following techniques to help us track how much technical debt we have and to help us mitigate it:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;The rule of 3&lt;/li&gt;
-&lt;li&gt;The hallway test&lt;/li&gt;
-&lt;li&gt;Issue tracking&lt;/li&gt;
-&lt;li&gt;Sprint management&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Our rule of 3 is quite simple, once two out of three developers agree on a certain decision whether it be deciding on uptake of a new framework or naming an api, that decision is usually the one used. Usually one of the 3 is our manager/technical lead who often plays the role of devils advocate in this scenario. Any person of the 3 can play the role of devils advocate. The rule of 3 helps other members of the team understand the thought processes and context for the decision - something that is often missed when developers leave. It also helps to quickly highlight any major problems based on past experiences. If the situation warrants it, a spike can be performed to further evaluate the decision. While the rule of 3 is extremely helpful for larger architectural decisions, often a simpler approach can be used which negates the resource requirements: The hallway test.&lt;/p&gt;
-
-&lt;p&gt;The hallway test is a phrase that I picked up off the folks at Microsoft. The basic premise is that a random developer should be able to understand and logically follow the code/api without documentation. Often the random will not have domain knowledge, which can make them perfect to bounce ideas off of. Sometimes, domain knowledge will be required - but the point is to bounce/review the idea with another developer which often leads to a cleaner/simpler design; thus, lowering the debt raised.&lt;/p&gt;
-
-&lt;p&gt;If we have made a shortcut for an MVP or have identified a piece of legacy code that can be tied up, the first thing we do is raise an issue within JIRA - our issue tracking platform. The reason for this is that we can assign it a priority and discuss whether or not it blocks future functionality/reduce time of implementation. Often the items might be small and can be added to a sprint if the focus of the sprint has already been completed (eg: 2 hours to go before the end of the sprint and the work is all done). Whilst this isn&amp;rsquo;t a way to avoid technical debt, it helps you to keep track of it and realise when you have too much debt that you need to repay.&lt;/p&gt;
-
-&lt;p&gt;Before each sprint, we asses the priorities of the business against our current backlog. Once the main priorities have been assigned work items within the sprint, we fill up the remaining space with technical debt. The order in which technical debt and features are tackled within a sprint depends on the business priorities. For example: feature/improvement A must be completed at all costs. As my colleague HerecyDev points out, you should be completing all work within a sprint and not over-committing. I personally favour tackling features first so the business gains value, unless tackling a piece of technical debt can improve the efficiency of implementing a feature. It might not always be possible to add technical debt every sprint, but so long as that is the minority of cases you should be perfectly fine.&lt;/p&gt;
-
-&lt;p&gt;With legacy projects, the primary focus should be getting unit tests in place (this might start as an integration test). This ensures that you will not break any existing functionality while you make the code better and flag work items for the future.&lt;/p&gt;
-
-&lt;h3 id=&#34;closing-words&#34;&gt;Closing words&lt;/h3&gt;
-
-&lt;p&gt;In his post, Ralf mentions that tackling technical debt is an addiction with the basic argument the business will keep postponing doing the right thing. If left unmanaged this is entirely true until it becomes a point where it is too costly to implement a feature. The key is the business will decide this. At &lt;a href=&#34;http://www.4com.co.uk&#34;&gt;4Com&lt;/a&gt;, we continuously flag items as technical debt for review at every sprint planning meeting. I firmly believe that if we didn&amp;rsquo;t, we wouldn&amp;rsquo;t have the same high standards in our code base as we do today.&lt;/p&gt;
-
-&lt;p&gt;In short, we should always leave the code in a better place than when we found it - never worse and raise an issue if there is something that could be done better. That&amp;rsquo;s what I believe the metaphor is for - something that we can do better within our code.&lt;/p&gt;</description>
     </item>
     
   </channel>

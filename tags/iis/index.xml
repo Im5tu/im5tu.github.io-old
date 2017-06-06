@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Iis on Stuart Blackler&#39;s Blog</title>
+    <link>https://im5tu.io/tags/iis/index.xml</link>
+    <description>Recent content in Iis on Stuart Blackler&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <atom:link href="https://im5tu.io/tags/iis/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Ensuring httpOnly cookies with URL Rewrite</title>
+      <link>https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/</link>
+      <pubDate>Tue, 06 Jun 2017 15:01:04 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/</guid>
+      <description>&lt;p&gt;In this article, I will give a brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite. We will also be creating our first outbound rewrite rule with a pre-condition.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;See my &lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;previous posts&lt;/a&gt; for information on inbound rewrite rules.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-are-cookies&#34;&gt;What are cookies?&lt;/h2&gt;
+
+&lt;p&gt;Unfornately, in this sense they are not a snack. They are, usually, small bits of information continually transferred between the browser and the server in order to do things like session tracking &amp;amp; identification, or maintain informantion pertainent to your browsing session. If not secured in the right way, you can expose details of your browsing session unknowingly. First up, we can make the cookies &lt;code&gt;httpOnly&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-are-httponly-cookies&#34;&gt;What are httpOnly cookies?&lt;/h2&gt;
+
+&lt;p&gt;By adding the modifier to the cookie, we prevent any scripts running from accessing the cookie. The biggest benefit here is protection against Cross-Site Scripting, or XSS. Unless you have very specific requirements for cookies, this flag should always be enabled.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;For more information, checkout &lt;a href=&#34;https://scotthelme.co.uk/tough-cookies/&#34;&gt;Scott Helme&amp;rsquo;s incredible post&lt;/a&gt; on getting tougher cookies.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;how-can-we-ensure-our-cookies-are-httponly-with-url-rewrite&#34;&gt;How can we ensure our cookies are httpOnly with URL Rewrite&lt;/h2&gt;
+
+&lt;p&gt;When a server indicates that it wants to set a cookie, it does so by sending the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header along with the response. There are a few modifiers that this can have to make them more secure in compliant browsers (eg: Chrome, Firefox, Edge, Safari): &lt;code&gt;httpOnly&lt;/code&gt;, &lt;code&gt;secure&lt;/code&gt; and &lt;code&gt;sameSite=(lax|strict)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;This rewrite snippet requires two portions: the rule and a set of precondtions.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;rewrite&amp;gt;
+    &amp;lt;outboundRules&amp;gt;
+        &amp;lt;rule name=&amp;quot;Ensure httpOnly Cookies&amp;quot; preCondition=&amp;quot;Missing httpOnly cookie&amp;quot;&amp;gt;
+            &amp;lt;match serverVariable=&amp;quot;RESPONSE_Set_Cookie&amp;quot; pattern=&amp;quot;.*&amp;quot; negate=&amp;quot;false&amp;quot; /&amp;gt;
+            &amp;lt;action type=&amp;quot;Rewrite&amp;quot; value=&amp;quot;{R:0}; HttpOnly&amp;quot; /&amp;gt;
+        &amp;lt;/rule&amp;gt;
+        &amp;lt;preConditions&amp;gt;
+            &amp;lt;preCondition name=&amp;quot;Missing httpOnly cookie&amp;quot;&amp;gt;
+                &amp;lt;!-- Don&#39;t remove the first line! --&amp;gt;
+                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;.&amp;quot; /&amp;gt;
+                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;; HttpOnly&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
+            &amp;lt;/preCondition&amp;gt;
+        &amp;lt;/preconditions&amp;gt;
+    &amp;lt;/outboundRules&amp;gt;
+&amp;lt;/rewrite&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Within our rule, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt;. In previous posts we have added the attribute to stop processing, but here we want to continue processing rewrite rules because we may want to do additional work to the response. Next, we match the server varible for a &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header (&lt;code&gt;RESPONSE_Set_Cookie&lt;/code&gt;) and ensure that it&amp;rsquo;s present for us to continue. For our action, we rewrite the &lt;code&gt;Set-Cookie&lt;/code&gt; header to be the original value, with the &lt;code&gt;HttpOnly&lt;/code&gt; modifier appended.&lt;/p&gt;
+
+&lt;p&gt;Within the precondition, which is matched by name to the &lt;code&gt;preCondition&lt;/code&gt; attribute in the rule, we do two things:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;(&lt;em&gt;I think, see below&lt;/em&gt;) Make sure that the &lt;code&gt;Set-Cookie&lt;/code&gt; header has been set (via the server variable &lt;code&gt;{RESPONSE_Set_Cookie}&lt;/code&gt;);&lt;/li&gt;
+&lt;li&gt;Make sure that we do not already have the &lt;code&gt;HttpOnly&lt;/code&gt; modifier set&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;For an unknown reason, probably due to a knowledge gap, the first line is required. I have made a guess as to what this could be, but I am unsure. Strange things happen in the dev tools in Chrome if that first line is not there.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;It is worth noting that a precondition is not limited to a single rule, it can be re-used. There is probably scope for making this rule smaller, if there is i&amp;rsquo;ll edit the post to reflect the smaller rule.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s it. If you check your debug tool of choice after implementing this, you should see that all cookies are now sent with the &lt;code&gt;HttpOnly&lt;/code&gt; modifier.&lt;/p&gt;
+
+&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>Removing trailing slashes with URL Rewrite</title>
+      <link>https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/</link>
+      <pubDate>Mon, 05 Jun 2017 15:00:59 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/</guid>
+      <description>&lt;p&gt;In the &lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;previous post&lt;/a&gt;, I explained why canonical urls are important and how to enforce them . In this article, I will show you how to have a canonical host url.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;why-does-adding-or-removing-trailing-slashes-matter&#34;&gt;Why does adding or removing trailing slashes matter?&lt;/h2&gt;
+
+&lt;p&gt;In essence, it matters for the same reasons as I described in &lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;my previous post&lt;/a&gt;. That is, search engines will see &lt;code&gt;site.com/post1&lt;/code&gt; as different content to &lt;code&gt;site.com/post1/&lt;/code&gt; so we need to correct this in order to get a bit of SEO benefit. In this article, I will be redirecting any URL that comes with a slash at the end to one without.&lt;/p&gt;
+
+&lt;h2 id=&#34;adding-or-removing-trailing-slashes-via-url-rewrite&#34;&gt;Adding or removing trailing slashes via URL Rewrite&lt;/h2&gt;
+
+&lt;p&gt;As per the snippet in our previous posts, we are going to create an inbound rule (which lives under &lt;code&gt;system.web &amp;gt; rewrite &amp;gt; rules&lt;/code&gt; in our &lt;code&gt;web.config&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;rule name=&amp;quot;Remove trailing slash&amp;quot; stopProcessing=&amp;quot;true&amp;quot;&amp;gt;
+    &amp;lt;match url=&amp;quot;(.*)/$&amp;quot; /&amp;gt;
+    &amp;lt;conditions logicalGrouping=&amp;quot;MatchAll&amp;quot; trackAllCaptures=&amp;quot;false&amp;quot;&amp;gt;
+        &amp;lt;add input=&amp;quot;{REQUEST_FILENAME}&amp;quot; matchType=&amp;quot;IsFile&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
+        &amp;lt;add input=&amp;quot;{REQUEST_FILENAME}&amp;quot; matchType=&amp;quot;IsDirectory&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
+    &amp;lt;/conditions&amp;gt;
+    &amp;lt;action type=&amp;quot;Redirect&amp;quot; url=&amp;quot;{R:1}&amp;quot; redirectType=&amp;quot;Temporary&amp;quot; /&amp;gt;
+&amp;lt;/rule&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the first line, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt; saying that we want to stop at this rule and return the response to the client. Next up, we give our matching criteria which we have wildcarded to match all requests that end with a &lt;code&gt;/&lt;/code&gt;. Then we have added a condition set which is definted to match all criteria inside. We use the server variable &lt;code&gt;{REQUEST_FILENAME}&lt;/code&gt; to determine whether or not the path requested is a physical file or directory on disk. The last attribute in each condition is a negation, which is equivilent of saying don&amp;rsquo;t match a physical directory or file (we don&amp;rsquo;t want to screw the routing for those!).&lt;/p&gt;
+
+&lt;p&gt;Finally, we define the action that we wish to take if both the &lt;code&gt;match&lt;/code&gt; and all the conditions in the &lt;code&gt;conditions&lt;/code&gt; section have been satisfied. The action that we wish to take is to redirect the user to the page without the slash, so we use the request capture group &lt;code&gt;{R:1}&lt;/code&gt; (more on this in a future article).&lt;/p&gt;
+
+&lt;p&gt;And that&amp;rsquo;s it, you should be redirecting people from say &lt;code&gt;site.com/post1/&lt;/code&gt; to &lt;code&gt;site.com/post1&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>Canonical host urls with URL Rewrite</title>
+      <link>https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/</link>
+      <pubDate>Sun, 04 Jun 2017 15:00:55 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/</guid>
+      <description>
+
+&lt;p&gt;In the &lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;previous post&lt;/a&gt;, I gave a brief intoduction to URL Rewriting and showed you how to get from HTTP to HTTPS. In this article, I will show you how to have a canonical host url.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;h2 id=&#34;what-is-a-canonical-host-url&#34;&gt;What is a canonical host url?&lt;/h2&gt;
+
+&lt;p&gt;It can be incredibly easy to distribute different urls for your website. Lets say that we have &lt;code&gt;www.site.com/post1&lt;/code&gt; and &lt;code&gt;site.com/post1&lt;/code&gt;. If you&amp;rsquo;re a search engine, you think that these are different different pages with the same content. When you have the same content, you ranking decreases because the content is not original. As a human looking at the site, we think that the pages are the same content on the same site, so we don&amp;rsquo;t see the duplication.&lt;/p&gt;
+
+&lt;p&gt;So a canonical url is basically saying to the search engine: hey, &lt;code&gt;www.site.com/post1&lt;/code&gt; and &lt;code&gt;site.com/post1&lt;/code&gt; are the same content and you should access me through this link (&lt;em&gt;which we define to be a single one of the above&lt;/em&gt;).&lt;/p&gt;
+
+&lt;p&gt;We can set this through metadata on our webpages, but this doesn&amp;rsquo;t guarentee that people will distribute the correct link to your site. To fix this, we can rewrite the url to either append or remove the &lt;code&gt;www.&lt;/code&gt;. In this case, because I prefer shorter url&amp;rsquo;s, we will remove the www sub-domain prefix.&lt;/p&gt;
+
+&lt;h2 id=&#34;making-a-canonical-host-url-via-url-rewrite&#34;&gt;Making a canonical host url via URL Rewrite&lt;/h2&gt;
+
+&lt;p&gt;As per the snippet in our previous post, we are going to create an inbound rule (which lives under &lt;code&gt;system.web &amp;gt; rewrite &amp;gt; rules&lt;/code&gt; in our &lt;code&gt;web.config&lt;/code&gt;):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;rule name=&amp;quot;Canonical Hostname&amp;quot; stopProcessing=&amp;quot;true&amp;quot;&amp;gt;
+    &amp;lt;match url=&amp;quot;(.*)&amp;quot; /&amp;gt;
+    &amp;lt;conditions logicalGrouping=&amp;quot;MatchAll&amp;quot; trackAllCaptures=&amp;quot;false&amp;quot;&amp;gt;
+        &amp;lt;add input=&amp;quot;{HTTP_HOST}&amp;quot; pattern=&amp;quot;^www\.([.a-zA-Z0-9]+)$&amp;quot;/&amp;gt;
+    &amp;lt;/conditions&amp;gt;
+    &amp;lt;action type=&amp;quot;Redirect&amp;quot; url=&amp;quot;https://{C:1}/{R:1}&amp;quot; redirectType=&amp;quot;Temporary&amp;quot; /&amp;gt;
+&amp;lt;/rule&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In the first line, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt; saying that we want to stop at this rule and return the response to the client. Next up, we give our matching criteria which we have wildcarded to match all requests. Then we have added a condition which takes a server variable (&lt;code&gt;{HTTP_HOST}&lt;/code&gt; which tells us the DNS name or IP address that has been used to reach this server eg: site.com or www.site.com), and we&amp;rsquo;ve matched it against any request starting with &lt;code&gt;www.&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Finally, we define the action that we wish to take if both the &lt;code&gt;match&lt;/code&gt; and &lt;code&gt;conditions&lt;/code&gt; sections have been satisfied. The action that we wish to take is to redirect the user to a non &lt;code&gt;www.&lt;/code&gt; version of the page. In order to do this, we use one of the capture groups (which comes from the conditions section regex) to redirect to (in this case it&amp;rsquo;s &lt;code&gt;{C:1}&lt;/code&gt;) and combine it with the original path and query.&lt;/p&gt;
+
+&lt;p&gt;And that&amp;rsquo;s it, you should be redirecting people from say &lt;code&gt;www.site.com&lt;/code&gt; to &lt;code&gt;site.com&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Up and running with URL Rewrite - going from HTTP to HTTPS</title>
+      <link>https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/</link>
+      <pubDate>Sat, 03 Jun 2017 15:00:51 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/</guid>
+      <description>&lt;p&gt;In this series, I am going to take you through a few &lt;code&gt;web.config&lt;/code&gt; snippets that have come in handy for me when using URL Rewrite on IIS. Firstly, I am going to introduce the URL Rewrite module then show a sample of going from HTTP to HTTPS.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;what-is-url-rewrite&#34;&gt;What is URL Rewrite?&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.iis.net/downloads/microsoft/url-rewrite&#34;&gt;URL Rewrite&lt;/a&gt;  is a module extensions for IIS which allows administrators to create powerful inbound and outbound rules that alter a HTTP request or response. Scenarios where you might consider using the URL Rewrite module include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Rewrite URLs based on the values of server variables or HTTP headers&lt;/li&gt;
+&lt;li&gt;Provide SEO benefits such as canonical host names&lt;/li&gt;
+&lt;li&gt;Setup redirects from old posts to new&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;em&gt;URL rewrite can be install from the &lt;a href=&#34;http://go.microsoft.com/fwlink/?LinkID=615137&#34;&gt;Web Platform Installer&lt;/a&gt; for IIS 7.5 or above.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;url-rewrite-and-web-config&#34;&gt;URL Rewrite and Web.Config&lt;/h2&gt;
+
+&lt;p&gt;Inside of the &lt;code&gt;web.config&lt;/code&gt; you can define a &lt;code&gt;&amp;lt;rewrite&amp;gt;&lt;/code&gt; section beneath the &lt;code&gt;&amp;lt;system.web&amp;gt;&lt;/code&gt; section:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;system.web&amp;gt;
+    &amp;lt;rewrite&amp;gt;
+        &amp;lt;!-- Your rules here --&amp;gt;
+    &amp;lt;/rewrite&amp;gt;
+&amp;lt;/system.web&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Within the &lt;code&gt;&amp;lt;rewrite&amp;gt;&lt;/code&gt; section you can define either a &lt;code&gt;&amp;lt;rules&amp;gt;&lt;/code&gt; section or an &lt;code&gt;&amp;lt;outbound&amp;gt;&lt;/code&gt; section. The former is for inbound request rewriting and the latter is for response rewriting. I&amp;rsquo;ll expand on each section as we go through the series.&lt;/p&gt;
+
+&lt;p&gt;*&lt;strong&gt;Note:&lt;/strong&gt; if you don&amp;rsquo;t have the URL Rewrite module installed, you&amp;rsquo;ll get a lovely yellow screen of death when you start your application.*&lt;/p&gt;
+
+&lt;h2 id=&#34;redirecting-http-to-https&#34;&gt;Redirecting HTTP to HTTPS&lt;/h2&gt;
+
+&lt;p&gt;The are some obvious benefits to serving pages over a secure connection (HTTPS), which include:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Encryption: The data exchanged between client and server cannot easily be read&lt;/li&gt;
+&lt;li&gt;Authority: Proving that the server you are talking to is who you are expecting to talk to&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;However, there are a few lesser known benefits including:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;SEO: Search engines are preferring websites that are secure by default&lt;/li&gt;
+&lt;li&gt;HTTP2: Major browsers do not support HTTP2 over insecure connections&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Assuming you would like all of the above benefit, here is the rule snippet that you will need:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;system.web&amp;gt;
+  &amp;lt;rewrite&amp;gt;
+      &amp;lt;rules&amp;gt;
+          &amp;lt;rule name=&amp;quot;Redirect to http&amp;quot; patternSyntax=&amp;quot;Wildcard&amp;quot; stopProcessing=&amp;quot;true&amp;quot;&amp;gt;
+            &amp;lt;match url=&amp;quot;*&amp;quot; negate=&amp;quot;false&amp;quot; /&amp;gt;
+            &amp;lt;conditions logicalGrouping=&amp;quot;MatchAny&amp;quot; trackAllCaptures=&amp;quot;false&amp;quot;&amp;gt;
+                  &amp;lt;add input=&amp;quot;{HTTPS}&amp;quot; pattern=&amp;quot;off&amp;quot; /&amp;gt;
+              &amp;lt;/conditions&amp;gt;
+            &amp;lt;action type=&amp;quot;Redirect&amp;quot; url=&amp;quot;https://{HTTP_HOST}/{R:1}&amp;quot; redirectType=&amp;quot;Temporary&amp;quot; /&amp;gt;
+        &amp;lt;/rule&amp;gt;
+      &amp;lt;/rules&amp;gt;
+    &amp;lt;/rewrite&amp;gt;
+&amp;lt;/system.web&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;So what&amp;rsquo;s going on in the snippet above?&lt;/p&gt;
+
+&lt;p&gt;In the first line, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt;; saying which pattern style we are going to use (either regex or wildcard) and saying that we want to stop at this rule and return the response to the client. Next up, we give our matching criteria which we have wildcarded to match all requests. Then we have added a condition which takes a server variable (&lt;code&gt;{HTTPS}&lt;/code&gt; which indicates whether or not this request has been delivered over a secure connection), and made sure we only track insecure requests.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;With conditions inside of a rule, you can match a single entry in the condition set or all the conditions within the set. Use either &lt;code&gt;MatchAny&lt;/code&gt; or &lt;code&gt;MatchAll&lt;/code&gt; depending on your needs.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Finally, we define the action that we wish to take if both the &lt;code&gt;match&lt;/code&gt; and &lt;code&gt;conditions&lt;/code&gt; sections have been satisfied. The action &lt;code&gt;type&lt;/code&gt; can be &lt;code&gt;Redirect&lt;/code&gt; or &lt;code&gt;Rewrite&lt;/code&gt; depending on your needs. We wish to redirect a user to a secure connection, so we define the type as &lt;code&gt;Redirect&lt;/code&gt; and the url equal to a secure connection to the host requested with the original path &amp;amp; query appended. The final attribute is the redirect type which can be one of the following:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Permenant: &lt;a href=&#34;https://httpstatuses.com/301&#34;&gt;A HTTP 301 Response&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Found: &lt;a href=&#34;https://httpstatuses.com/302&#34;&gt;A HTTP 302 Response&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;SeeOther: &lt;a href=&#34;https://httpstatuses.com/303&#34;&gt;A HTTP 303 Response&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Temporary: &lt;a href=&#34;https://httpstatuses.com/307&#34;&gt;A HTTP 307 Response&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That&amp;rsquo;s it! Hopefully this article gives you everything that you need to get HTTP to HTTPS redirects working without&lt;/p&gt;
+
+&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
