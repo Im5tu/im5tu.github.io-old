@@ -6,8 +6,147 @@
     <description>Recent content on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 06 Jun 2017 15:01:04 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 11 Jun 2017 20:50:11 +0100</lastBuildDate>
     <atom:link href="https://im5tu.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Ensuring samesite cookies with URL Rewrite</title>
+      <link>https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/</link>
+      <pubDate>Sun, 11 Jun 2017 20:50:11 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/</guid>
+      <description>&lt;p&gt;In this article, we will increase our websites level of protecting against Cross-Site Request Forgery and Cross-Site Script Inclusion attacks by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;This article extends my &lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;previous article&lt;/a&gt; by using an outbound rewrite rule again.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-are-samesite-cookies&#34;&gt;What are SameSite cookies?&lt;/h2&gt;
+
+&lt;p&gt;In a cross-origin request context, which is when you request resources from a different site, any cookies that you have for that site are also sent. We can restrict this through applying the &lt;code&gt;SameSite&lt;/code&gt; modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;
+
+&lt;p&gt;The goals of SameSite cookies are to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Prevent cross origin timing attacks;&lt;/li&gt;
+&lt;li&gt;Prevent cross origin script inclusion;&lt;/li&gt;
+&lt;li&gt;Prevent cross site request forgery;&lt;/li&gt;
+&lt;li&gt;Increasing privacy protections&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;When the modification is applied to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header, the browser will only send cookies in a first party context (ie: when you are using the website directly).&lt;/p&gt;
+
+&lt;p&gt;There are two possible modes for the attribute: Strict &amp;amp; lax. The difference is which HTTP verbs the security policy should be applied to. In lax mode, cookies are not sent when &lt;code&gt;POST&lt;/code&gt;ing to a third party site. In strict mode, cookies are not sent when &lt;code&gt;GET&lt;/code&gt;ting or &lt;code&gt;POST&lt;/code&gt;ing to a third party site. Strict mode is the default mode if the mode is obmitted.&lt;/p&gt;
+
+&lt;h2 id=&#34;ensuring-our-cookies-are-marked-secure-with-url-rewrite&#34;&gt;Ensuring our cookies are marked secure with URL Rewrite&lt;/h2&gt;
+
+&lt;p&gt;As per the snippet in our previous post, we are going to create an outbound rule (which lives under &lt;code&gt;system.web &amp;gt; rewrite &amp;gt; outboundRules&lt;/code&gt; in our &lt;code&gt;web.config&lt;/code&gt;). This rewrite snippet requires two portions: the rule and a set of preconditions:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;rewrite&amp;gt;
+    &amp;lt;outboundRules&amp;gt; 
+        &amp;lt;rule name=&amp;quot;Ensure samesite Cookies&amp;quot; preCondition=&amp;quot;Missing samesite cookie&amp;quot;&amp;gt;
+        &amp;lt;match serverVariable=&amp;quot;RESPONSE_Set_Cookie&amp;quot; pattern=&amp;quot;.*&amp;quot; negate=&amp;quot;false&amp;quot; /&amp;gt;
+        &amp;lt;action type=&amp;quot;Rewrite&amp;quot; value=&amp;quot;{R:0}; SameSite=strict&amp;quot; /&amp;gt;
+        &amp;lt;/rule&amp;gt;
+        &amp;lt;preConditions&amp;gt;
+            &amp;lt;preCondition name=&amp;quot;Missing samesite cookie&amp;quot;&amp;gt;
+                &amp;lt;!-- Don&#39;t remove the first line here, it does do stuff! --&amp;gt;
+                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;.&amp;quot; /&amp;gt;
+                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;; SameSite=strict&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
+            &amp;lt;/preCondition&amp;gt;
+        &amp;lt;/preconditions&amp;gt;
+    &amp;lt;/outboundRules&amp;gt;
+&amp;lt;/rewrite&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Within our rule, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt;. Next, we match the server varible for a &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header (&lt;code&gt;RESPONSE_Set_Cookie&lt;/code&gt;) and ensure that it&amp;rsquo;s present for us to continue. For our action, we rewrite the &lt;code&gt;Set-Cookie&lt;/code&gt; header to be the original value, with the &lt;code&gt;SameSite&lt;/code&gt; modifier appended with the mode set to strict as detailed above. Alternatively, you can use &lt;code&gt;SameSite=lax&lt;/code&gt; for the lax mode of operation.&lt;/p&gt;
+
+&lt;p&gt;Within the precondition, which is matched by name to the &lt;code&gt;preCondition&lt;/code&gt; attribute in the rule, we do two things:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;(&lt;em&gt;I think, see below&lt;/em&gt;) Make sure that the &lt;code&gt;Set-Cookie&lt;/code&gt; header has been set (via the server variable &lt;code&gt;{RESPONSE_Set_Cookie}&lt;/code&gt;);&lt;/li&gt;
+&lt;li&gt;Make sure that we do not already have the &lt;code&gt;SameSite&lt;/code&gt; modifier set&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;As per my previous post, due to a knowledge gap, the first line is required within the pre-condition or funky things happen.&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s it. If you check your debug tool of choice after implementing this, you should see that all cookies are now sent with the &lt;code&gt;SameSite&lt;/code&gt; modifier.&lt;/p&gt;
+
+&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
+    
+    <item>
+      <title>Ensuring secure cookies with URL Rewrite</title>
+      <link>https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/</link>
+      <pubDate>Sun, 11 Jun 2017 20:38:07 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/</guid>
+      <description>&lt;p&gt;In this article, we will take a look at secure cookies, that is by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;p&gt;This article extends my &lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;previous article&lt;/a&gt; by using an outbound rewrite rule again.&lt;/p&gt;
+
+&lt;h2 id=&#34;what-are-secure-cookies&#34;&gt;What are secure cookies?&lt;/h2&gt;
+
+&lt;p&gt;As the name suggests, by appending &lt;code&gt;secure&lt;/code&gt; to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header, we instruct a browser to only send the cookie when the connection to the web server is secure. This helps protect against any information leakage or eves-dropping.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;For more information, checkout &lt;a href=&#34;https://scotthelme.co.uk/tough-cookies/&#34;&gt;Scott Helme&amp;rsquo;s incredible post&lt;/a&gt; on getting tougher cookies.&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ensuring-our-cookies-are-marked-secure-with-url-rewrite&#34;&gt;Ensuring our cookies are marked secure with URL Rewrite&lt;/h2&gt;
+
+&lt;p&gt;As per the snippet in our previous post, we are going to create an outbound rule (which lives under &lt;code&gt;system.web &amp;gt; rewrite &amp;gt; outboundRules&lt;/code&gt; in our &lt;code&gt;web.config&lt;/code&gt;). This rewrite snippet requires two portions, the rule and a set of preconditions:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;rewrite&amp;gt;
+    &amp;lt;outboundRules&amp;gt; 
+        &amp;lt;rule name=&amp;quot;Ensure secure Cookies&amp;quot; preCondition=&amp;quot;Missing secure cookie&amp;quot;&amp;gt;
+            &amp;lt;match serverVariable=&amp;quot;RESPONSE_Set_Cookie&amp;quot; pattern=&amp;quot;.*&amp;quot; negate=&amp;quot;false&amp;quot; /&amp;gt;
+            &amp;lt;action type=&amp;quot;Rewrite&amp;quot; value=&amp;quot;{R:0}; secure&amp;quot; /&amp;gt;
+        &amp;lt;/rule&amp;gt;
+        &amp;lt;preConditions&amp;gt;
+            &amp;lt;preCondition name=&amp;quot;Missing secure cookie&amp;quot;&amp;gt;
+                &amp;lt;!-- Don&#39;t remove the first line here, it does do stuff! --&amp;gt;
+                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;.&amp;quot; /&amp;gt;
+                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;; secure&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
+            &amp;lt;/preCondition&amp;gt;
+        &amp;lt;/preconditions&amp;gt;
+    &amp;lt;/outboundRules&amp;gt;
+&amp;lt;/rewrite&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Within our rule, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt;. Next, we match the server varible for a &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header (&lt;code&gt;RESPONSE_Set_Cookie&lt;/code&gt;) and ensure that it&amp;rsquo;s present for us to continue. For our action, we rewrite the &lt;code&gt;Set-Cookie&lt;/code&gt; header to be the original value, with the &lt;code&gt;secure&lt;/code&gt; modifier appended.&lt;/p&gt;
+
+&lt;p&gt;Within the precondition, which is matched by name to the &lt;code&gt;preCondition&lt;/code&gt; attribute in the rule, we do two things:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;(&lt;em&gt;I think, see below&lt;/em&gt;) Make sure that the &lt;code&gt;Set-Cookie&lt;/code&gt; header has been set (via the server variable &lt;code&gt;{RESPONSE_Set_Cookie}&lt;/code&gt;);&lt;/li&gt;
+&lt;li&gt;Make sure that we do not already have the &lt;code&gt;secure&lt;/code&gt; modifier set&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;As per my previous post, due to a knowledge gap, the first line is required within the pre-condition or funky things happen.&lt;/p&gt;
+
+&lt;p&gt;That&amp;rsquo;s it. If you check your debug tool of choice after implementing this, you should see that all cookies are now sent with the &lt;code&gt;secure&lt;/code&gt; modifier.&lt;/p&gt;
+
+&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</description>
+    </item>
     
     <item>
       <title>Ensuring httpOnly cookies with URL Rewrite</title>
@@ -814,372 +953,6 @@
 &lt;p&gt;The scrutineers amongst you will have noticed that the sub-text to this article is all about preventing technical debt. Technical debt is a monster that accrues interest over time. One of the key ways to prevent that debt, is by writing clean code. We should be writing code as clean as we can. The more you write clean code, the quicker you will be at writing it.&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;Your code is your legacy&lt;/em&gt;&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Blog Building - Part 4 - Frontend</title>
-      <link>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</link>
-      <pubDate>Sat, 19 Nov 2016 08:01:38 +0000</pubDate>
-      
-      <guid>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</guid>
-      <description>&lt;p&gt;So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;yarn&#34;&gt;Yarn&lt;/h2&gt;
-
-&lt;p&gt;Yarn is a frontend package manager. It replaces the traditional workflow of npm whilst remaining compatible with the npm registry. This means that we can get all of the speed and security improvements whilst having all the packages that are currently available on the npm registry.&lt;/p&gt;
-
-&lt;h3 id=&#34;installing-node-js&#34;&gt;Installing node.js&lt;/h3&gt;
-
-&lt;p&gt;Unfortunately, it still runs on node, so we need to get that setup first. Head to [the node website]() and install the correct version for your environment. You can verify node is setup correctly post-installation by running the following command:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;C:\&amp;gt;node --version
-v7.1.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;installing-yarn&#34;&gt;Installing yarn&lt;/h3&gt;
-
-&lt;p&gt;Once node is setup, we can install yarn:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;C:\&amp;gt;npm install yarn -g
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will install yarn so that it is available for all projects, not just our new blog. Once the installation is complete, we can verify yarn is installed by running the following command:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;C:\&amp;gt;yarn --version
-0.17.6
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;yarn-ing-our-project&#34;&gt;Yarn&amp;rsquo;ing our project&lt;/h2&gt;
-
-&lt;p&gt;Before we begin installing packages inside of our project, I am going to add a &lt;code&gt;.gitignore&lt;/code&gt; file as we will generate a lot of files that we don&amp;rsquo;t want inside of our git respository. Here is what I added to start off with:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;node_modules/
-data/**/hash.*
-static/css/*.css
-static/js/*.js
-public/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now we can setup our project to use yarn:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;E:\im5tu-hugo&amp;gt;yarn init
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will ask you a series of questions such as:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;E:\im5tu-hugo&amp;gt;yarn init
-yarn init v0.17.6
-question name (im5tu-hugo): im5tu
-question version (1.0.0): 0.0.1
-question description: Stuart Blackler&#39;s Tech Blog
-question entry point (index.js):
-question git repository (https://github.com/Im5tu/im5tu-hugo.git):
-question author (Stuart Blackler (@im5tu) &amp;lt;im5tu@users.noreply.github.com&amp;gt;):
-question license (MIT):
-success Saved package.json
-Done in 42.93s.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Once this is completed, we will have a &lt;code&gt;package.json&lt;/code&gt; file in our root and we can start adding the dependencies that we need. If you don&amp;rsquo;t specify an answer, the default will be taken for you (the default is shown in brackets).&lt;/p&gt;
-
-&lt;h2 id=&#34;gulp&#34;&gt;gulp&lt;/h2&gt;
-
-&lt;p&gt;At this point, I assume that you are fairly familiar with &lt;code&gt;gulp&lt;/code&gt; or at least know what it is. We are going to setup gulp and our initial set of dependencies to do things like minification of files etc. We will add these files as development dependencies:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;yarn add gulp -D
-yarn add gulp-sass -D
-yarn add gulp-autoprefixer -D
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now we need to tell gulp what to do by adding a &lt;code&gt;gulpfile.js&lt;/code&gt;. Create this in the website root:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;E:\im5tu-hugo&amp;gt;echo &amp;quot;&amp;quot; &amp;gt; gulpfile.js
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;As you may remember from my previous post, anything that gets placed inside of static folder will get copied across to the main website. As I have chosen to use a css preprocessor (scss), we only want the output from the preprocessor to be in the static folder. Inside of the &lt;code&gt;.gitignore&lt;/code&gt; file, I have already put the main css/js files as these should be generated and not a part of main source code.&lt;/p&gt;
-
-&lt;p&gt;Now we can configure &lt;code&gt;gulp&lt;/code&gt; to watch our source directory, process the files and copy the output into the static folder. At the very top of the file we need to require our dependencies, followed by a few configuration variables:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var gulp         = require(&amp;quot;gulp&amp;quot;),
-    sass         = require(&amp;quot;gulp-sass&amp;quot;),
-    autoprefixer = require(&amp;quot;gulp-autoprefixer&amp;quot;),
-    srcRootDir   = &amp;quot;src/&amp;quot;,
-    destRootDir  = &amp;quot;static/&amp;quot;,
-    srcCssDir    = srcRootDir + &amp;quot;css/&amp;quot;,
-    srcJsDir     = srcRootDir + &amp;quot;js/&amp;quot;,
-    srcCss       = srcCssDir + &amp;quot;**/*.scss&amp;quot;,
-    srcJs        = srcJsDir + &amp;quot;**/*.js&amp;quot;,
-    destCssDir   = destRootDir + &amp;quot;css&amp;quot;,
-    destJsDir    = destRootDir + &amp;quot;js&amp;quot;;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;I have choosen to have a folder structure like the following:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;/root
-    /static
-        /css
-        /js
-    /src
-        /css
-        /js
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Next inside of our gulp file, we can configure two tasks. One to process any javascript files that we have and another for any scss files that we have:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;gulp.task(&amp;quot;js&amp;quot;, function() {
-    gulp
-        .src(srcJs)
-        .pipe(gulp.dest(destJsDir))
-});
-
-gulp.task(&amp;quot;css&amp;quot;, function() {
-    gulp
-        .src(srcCss)
-        .pipe(sass({
-            outputStyle: &amp;quot;compressed&amp;quot;
-        }))
-        .pipe(autoprefixer({
-            browsers: [&amp;quot;last 20 versions&amp;quot;]
-        }))
-        .pipe(gulp.dest(destCssDir))
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Lastly, we need to setup a watch task so that as files are changed they are copied to the static folder. When we combine this with hugo&amp;rsquo;s watch ability we have a dynamically changing site that reloads with the changes as we hit save. We also want to setup a default task, so that we can just run &lt;code&gt;gulp&lt;/code&gt; from inside of the root directory on the command line. The watch/default tasks look like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;gulp.task(&amp;quot;watch&amp;quot;, [&amp;quot;css&amp;quot;, &amp;quot;js&amp;quot;], function() {
-    gulp.watch([srcCss, srcJs], [&amp;quot;css&amp;quot;, &amp;quot;js&amp;quot;]);
-});
-
-gulp.task(&amp;quot;default&amp;quot;, [&amp;quot;watch&amp;quot;]);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In terms of our gulpfile we are all setup and ready to go. At the time of writing there are problems running gulp directly from the command line. In order to work around this, I needed to add the following to the package.json file in our root directory:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;&amp;quot;scripts&amp;quot;: {
-    &amp;quot;gulp&amp;quot;: &amp;quot;gulp&amp;quot;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And then I can run gulp as follows:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-cmd&#34;&gt;yarn gulp
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;setting-up-our-site-for-css-js&#34;&gt;Setting up our site for css/js&lt;/h2&gt;
-
-&lt;p&gt;Now that we have our frontend pipeline setup and both the watch commands running, we can begin to change our site to include the files that we want. If you are using the bones theme, you need to create the following two files:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;/root
-    /layouts
-        /partials
-            /body
-                scripts.html
-            /header
-                styles.html
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Inside of the scripts file add:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;script src=&amp;quot;/js/site.js&amp;quot; async&amp;gt;&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Inside of the styles file add:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;/css/site.css&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now you should be able to add the file &lt;code&gt;/root/src/css/site.scss&lt;/code&gt; with the following content:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;body { background: #ababab }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;All being well you should have both files renderd as part of your output.&lt;/p&gt;
-
-&lt;h2 id=&#34;cache-busting&#34;&gt;Cache busting&lt;/h2&gt;
-
-&lt;h3 id=&#34;creating-the-hash&#34;&gt;Creating the hash&lt;/h3&gt;
-
-&lt;p&gt;For our cache busting mechanism, we are going to append the hash of the file to the file. As a new file will be created everytime that our file changes, we will need to clear out the destination css folder. To start, we need to add two more packages, using yarn:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;yarn add gulp-hash -D
-yarn add del -D
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And then add them to our gulpfile:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;var gulp         = require(&amp;quot;gulp&amp;quot;),
-    sass         = require(&amp;quot;gulp-sass&amp;quot;),
-    autoprefixer = require(&amp;quot;gulp-autoprefixer&amp;quot;),
-    hash         = require(&amp;quot;gulp-hash&amp;quot;),
-    del          = require(&amp;quot;del&amp;quot;),
-    ...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now lets create a task to clean out some directories that we are using:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;gulp.task(&amp;quot;clean&amp;quot;, function() {
-    del([destCssDir, destJsDir, &amp;quot;data&amp;quot;]);
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now we can easily clean the directories that we need to at will. This could come in handy at a later date. Next we can change our task definitions to clean up their respective directories:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;gulp.task(&amp;quot;js&amp;quot;, function() {
-    del.sync([destJsDir]);
-...
-gulp.task(&amp;quot;css&amp;quot;, function() {
-    del.sync([destCssDir]);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Finally, we can add the hash of the file prior to writing it to its destination in each task:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;...
-.pipe(hash())
-.pipe(gulp.dest(...)); // change ... to the relevant destination eg: destCssDir
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;using-the-hashed-file&#34;&gt;Using the hashed file&lt;/h3&gt;
-
-&lt;p&gt;In hugo, the &lt;code&gt;/root/data&lt;/code&gt; directory is used to store any data that we might need. Anything placed in here is accessible through the variable &lt;code&gt;.Site.Data&lt;/code&gt;. So using some more gulp magic, we can store the hahes of the files in here and update our template accordingly.&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;gulp-hash&lt;/code&gt; has a built in manifest method that will generate a json file containing the hash for us. We can change our gulp tasks to leverage this functionality and place it inside of the &lt;code&gt;/root/data&lt;/code&gt; directory:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-js&#34;&gt;// js gulp task
-...
-.pipe(gulp.dest(destJsDir))
-.pipe(hash.manifest(&amp;quot;hash.json&amp;quot;))
-.pipe(gulp.dest(&amp;quot;data/&amp;quot;));
-
-// css gulp task
-...
-.pipe(gulp.dest(destCssDir))
-.pipe(hash.manifest(&amp;quot;hash.json&amp;quot;))
-.pipe(gulp.dest(&amp;quot;data/&amp;quot;));
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Restart our gulp task and now you should see the hash files being generated. If we open up the hash files, you should see something along the lines of:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;{&amp;quot;site.css&amp;quot;:&amp;quot;site-da39a3ee.css&amp;quot;,&amp;quot;site.js&amp;quot;:&amp;quot;site-da39a3ee.js&amp;quot;}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;All that&amp;rsquo;s left to do is to use these hashes inside of our layouts. Luckily, GO has a built in function called &lt;code&gt;index&lt;/code&gt; which accepts a map and an index and returns the value of the map with the given index. So in our templates, we simply need to ask for the right files. Let&amp;rsquo;s first change our stylesheet in &lt;code&gt;/layouts/partials/styles.html&lt;/code&gt; to:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;link rel=&amp;quot;stylesheet&amp;quot; href=&amp;quot;/css/{{ index .Site.Data.hash &amp;quot;site.css&amp;quot; }}&amp;quot; /&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Finally, let&amp;rsquo;s change our script template to do the same (&lt;code&gt;/layouts/partials/body/scripts&lt;/code&gt;):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;script src=&amp;quot;/js/{{ index .Site.Data.hash &amp;quot;site.js&amp;quot;}}&amp;quot; async&amp;gt;&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now we have a fully functional pipeline for frontend work. To start up the pipeline, you need to run two commands from different command line windows:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;yarn gulp
-hugo server -D
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And then you can make changes to your files at will. Happy FED&amp;rsquo;ing.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Blog Building - Part 3 - Theming</title>
-      <link>https://im5tu.io/article/2016/11/blog-building---part-3---theming/</link>
-      <pubDate>Fri, 18 Nov 2016 19:01:38 +0000</pubDate>
-      
-      <guid>https://im5tu.io/article/2016/11/blog-building---part-3---theming/</guid>
-      <description>&lt;p&gt;In this article, I will show you how the theme has been constructed and show you how the overrides work. So far we have created a site, setup most of our workflow and posted our first article.
-&lt;/p&gt;
-
-&lt;p&gt;When we installed the theme in the previous post, a series of conventions took over and began the process of rending our pages for us. Because hugo is convention based, we can override the defaults by placing files in the correct place, but first we need to understand the layout. Below you can see the parts of the website that we care about the most:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;/root
-    /archetypes
-    /content
-    /layouts
-    /static
-    /themes
-        /themeA
-            /archetypes
-            /layouts
-                /_default
-                /indexes
-                /partials
-                /taxonomy
-            index.html
-        /themeB
-            &amp;lt;as above&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;defaults&#34;&gt;Defaults&lt;/h2&gt;
-
-&lt;p&gt;When hugo begins to render a site, the configuration is checked to see if there is a theme configured. If a theme is configured, it looks for that theme under the &lt;code&gt;themes&lt;/code&gt; directory by checking for a &lt;code&gt;theme.toml&lt;/code&gt; file under each sub-directory. If one of the &lt;code&gt;theme.toml&lt;/code&gt; files contains the correct theme name, that theme is loaded and the used as the default for the rest of the rending.&lt;/p&gt;
-
-&lt;p&gt;From the directory listing above, you will notice that there are two &lt;code&gt;layouts&lt;/code&gt; folders. One under the site root and one under themeA. As far as I am aware, the layout of each &lt;code&gt;layouts&lt;/code&gt; folder is identical. This means that if your theme defines something under &lt;code&gt;/root/themes/themeA/layouts/_default/list.html&lt;/code&gt; we can override it by placing a file in &lt;code&gt;/root/layouts/_default/list.html&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Now that we know this, we can customise the theme how we see fit.&lt;/p&gt;
-
-&lt;h2 id=&#34;rendering&#34;&gt;Rendering&lt;/h2&gt;
-
-&lt;p&gt;Before continuing, I strongly recommend that you read the &lt;a href=&#34;http://gohugo.io/templates/go-templates/&#34;&gt;Go Template Primer&lt;/a&gt; created by the hugo team. Don&amp;rsquo;t worry, i&amp;rsquo;ll wait.&lt;/p&gt;
-
-&lt;h3 id=&#34;baseof&#34;&gt;baseOf&lt;/h3&gt;
-
-&lt;p&gt;A theme creator may decide, like I have for bones, to create a &lt;code&gt;baseOf&lt;/code&gt; file under the &lt;code&gt;/root/themes/&amp;lt;theme name&amp;gt;/_default/&lt;/code&gt; folder. This special file allows you to create a master layout, keeping your theme nice and clean. Inside of file, you can define blocks which another page can also define and implement. What happens here is that the &lt;code&gt;baseOf&lt;/code&gt; file says &amp;ldquo;You can configure this section called ABC&amp;rdquo;. Then inside of another file, eg: article/full.html, we can say &amp;ldquo;I want to configure section called ABC and here is what it should contain&amp;rdquo;. In hugo speak, this is called &lt;a href=&#34;http://gohugo.io/templates/blocks/&#34;&gt;Block Templates&lt;/a&gt; and is how the whole of the bones theme is configured.&lt;/p&gt;
-
-&lt;p&gt;You can see an example of this &lt;a href=&#34;https://github.com/Im5tu/hugo-bones/blob/master/layouts/_default/baseof.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;render&#34;&gt;.Render&lt;/h3&gt;
-
-&lt;p&gt;The &lt;a href=&#34;http://gohugo.io/templates/functions/#render&#34;&gt;.Render&lt;/a&gt; function is a special kind of function that you can call when rendering a list. It&amp;rsquo;s like rendering a partial view but for the current item in an enumeration.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;{{ range .Data.Pages }}
-    {{ .Render &amp;quot;summary&amp;quot;}}
-{{ end }}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The above sample will inspect the page data and enumerate all the available pages associated with the current page before calling render on each item. C#/Java would look something like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c#&#34;&gt;foreach(var page in this.Data.Pages)
-    Render(&amp;quot;summary&amp;quot;, currentItem);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can see an example of this &lt;a href=&#34;https://github.com/Im5tu/hugo-bones/blob/master/layouts/article/list.html#L4&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;partial&#34;&gt;partial&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://gohugo.io/templates/partials/&#34;&gt;Partial templates&lt;/a&gt; are often used to separate out sections of a site into reusable components. The main difference between &lt;code&gt;partial&lt;/code&gt; and &lt;code&gt;.Render&lt;/code&gt; is that partial can be used to render whole sections of a site with a specific context where is &lt;code&gt;.Render&lt;/code&gt; is limited to the current item in an enumeration.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;&amp;lt;body&amp;gt;
-{{ block &amp;quot;content&amp;quot; . -}} {{- end }}
-{{- partial &amp;quot;header/scripts&amp;quot; . -}}
-&amp;lt;/body&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The above &lt;a href=&#34;https://github.com/Im5tu/hugo-bones/blob/master/layouts/_default/baseof.html&#34;&gt;example from the baseOf file from bones&lt;/a&gt; does the following:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Says to the theming engine that it wants to declare an overridable section content, passing in the current page context&lt;/li&gt;
-&lt;li&gt;Render the partial called &lt;code&gt;scripts&lt;/code&gt;, located under the &lt;code&gt;header&lt;/code&gt; folder, inside of the &lt;code&gt;partials&lt;/code&gt; folder, supplying the current page context&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;All partials are located under &lt;code&gt;&amp;lt;root/theme&amp;gt;/layouts/partials/&amp;lt;path&amp;gt;&lt;/code&gt;. Where &lt;code&gt;&amp;lt;path&amp;gt;&lt;/code&gt; is the folder structure to the file.&lt;/p&gt;
-
-&lt;p&gt;You can see an example of this &lt;a href=&#34;https://github.com/Im5tu/hugo-bones/blob/master/layouts/_default/baseof.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;archetypes&#34;&gt;Archetypes&lt;/h2&gt;
-
-&lt;p&gt;Archetypes are really just a fancy way of saying content types. A theme can define them for you, or you can define your own like I have for the bones theme.&lt;/p&gt;
-
-&lt;p&gt;You can see an example of that &lt;a href=&#34;https://github.com/Im5tu/hugo-bones/blob/master/archetypes/article.md&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;the-static&#34;&gt;The Static&lt;/h2&gt;
-
-&lt;p&gt;Anything under the static folder, will get copied across to the main site when it gets rendered. This behaved slightly differently than I expected when I first tried this out. I had a file located under &lt;code&gt;/root/static/img/img1.jpg&lt;/code&gt;. When I attempted to render an image tag on the page with the src set to &lt;code&gt;/static/img/img1.jpg&lt;/code&gt; it didn&amp;rsquo;t work. When I rendered the files to disk by calling &lt;code&gt;hugo&lt;/code&gt; and checking the public folder, I could see that it rendered the image under &lt;code&gt;/img/img1.jpg&lt;/code&gt;. Slightly different that what I was expecting, but it still worked nevertheless.&lt;/p&gt;
-
-&lt;p&gt;Hopefully you will now have a basic understanding of how a theme is constructed so that you can roll your own and override portions of the theme you have selecting. Next up, I will setup my frontend pipeline of choice so that I can start applying styling to my site.&lt;/p&gt;</description>
     </item>
     
   </channel>

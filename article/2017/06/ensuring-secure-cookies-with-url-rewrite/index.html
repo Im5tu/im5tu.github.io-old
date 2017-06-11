@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/tags/iis/">
+    <title>Ensuring secure cookies with URL Rewrite - Stuart Blackler&#39;s Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="A handy URL Rewrite snippet to mark cookies as secure.">
     
     
-    
-    <meta property="og:title" content="Iis - Stuart Blackler&#39;s Blog" />
+    <meta property="og:title" content="Ensuring secure cookies with URL Rewrite - Stuart Blackler&#39;s Blog" />
 <meta property="og:type" content="website" />
 
-<meta property="og:description" content="A little place for all my thoughts on all things cyber.">
+<meta property="og:description" content="A handy URL Rewrite snippet to mark cookies as secure.">
 
-<meta property="og:url" content="https://im5tu.io/tags/iis/" />
+<meta property="og:url" content="https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/" />
 <meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
 <meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
 <meta name="twitter:card" content="summary" />
@@ -48,97 +48,72 @@
     </section>
 </header>
     <section class="pageContainer-content pageWrap">
-        
-
-<article class="tagpage">
-    <header class="tagpage-header">
-        <h1>Pages tagged: Iis</p>
-    </header>
-    <section class="tagpage-content">
-        
-            <article class="article" itemscope itemtype="http://schema.org/blog">
+        <article class="article" itemscope itemtype="http://schema.org/blog">
     <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/" itemprop="name">Ensuring samesite cookies with URL Rewrite</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-06-11T20:50:11">2017-06-11 20:50:11 &#43;0100 BST</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>In this article, we will increase our websites level of protecting against Cross-Site Request Forgery and Cross-Site Script Inclusion attacks by appending an additional modifier to the <code>Set-Cookie</code> HTTP header.</p>
-
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/iis/">IIS</a></li><li><a class="article-tag" href="/tags/url-rewrite/">Url Rewrite</a></li><li><a class="article-tag" href="/tags/cookies/">Cookies</a></li>
-</ul></footer>
-</article>
-        
-            <article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/" itemprop="name">Ensuring secure cookies with URL Rewrite</a></h2>
+        <h1><a href="https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/" itemprop="name">Ensuring secure cookies with URL Rewrite</a></h1>
         <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-06-11T20:38:07">2017-06-11 20:38:07 &#43;0100 BST</time></p>
     </header>
-    <section class="article-summary" itemprop="about"><p>In this article, we will take a look at secure cookies, that is by appending an additional modifier to the <code>Set-Cookie</code> HTTP header.</p>
+    <section class="article-content" itemprop="text"><p>In this article, we will take a look at secure cookies, that is by appending an additional modifier to the <code>Set-Cookie</code> HTTP header.</p>
 
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
+<p></p>
+
+<p>This article extends my <a href="/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/">previous article</a> by using an outbound rewrite rule again.</p>
+
+<h2 id="what-are-secure-cookies">What are secure cookies?</h2>
+
+<p>As the name suggests, by appending <code>secure</code> to the <code>Set-Cookie</code> HTTP header, we instruct a browser to only send the cookie when the connection to the web server is secure. This helps protect against any information leakage or eves-dropping.</p>
+
+<p><em>For more information, checkout <a href="https://scotthelme.co.uk/tough-cookies/">Scott Helme&rsquo;s incredible post</a> on getting tougher cookies.</em></p>
+
+<h2 id="ensuring-our-cookies-are-marked-secure-with-url-rewrite">Ensuring our cookies are marked secure with URL Rewrite</h2>
+
+<p>As per the snippet in our previous post, we are going to create an outbound rule (which lives under <code>system.web &gt; rewrite &gt; outboundRules</code> in our <code>web.config</code>). This rewrite snippet requires two portions, the rule and a set of preconditions:</p>
+
+<pre><code>&lt;rewrite&gt;
+    &lt;outboundRules&gt; 
+        &lt;rule name=&quot;Ensure secure Cookies&quot; preCondition=&quot;Missing secure cookie&quot;&gt;
+            &lt;match serverVariable=&quot;RESPONSE_Set_Cookie&quot; pattern=&quot;.*&quot; negate=&quot;false&quot; /&gt;
+            &lt;action type=&quot;Rewrite&quot; value=&quot;{R:0}; secure&quot; /&gt;
+        &lt;/rule&gt;
+        &lt;preConditions&gt;
+            &lt;preCondition name=&quot;Missing secure cookie&quot;&gt;
+                &lt;!-- Don't remove the first line here, it does do stuff! --&gt;
+                &lt;add input=&quot;{RESPONSE_Set_Cookie}&quot; pattern=&quot;.&quot; /&gt;
+                &lt;add input=&quot;{RESPONSE_Set_Cookie}&quot; pattern=&quot;; secure&quot; negate=&quot;true&quot; /&gt;
+            &lt;/preCondition&gt;
+        &lt;/preconditions&gt;
+    &lt;/outboundRules&gt;
+&lt;/rewrite&gt;
+</code></pre>
+
+<p>Within our rule, we are defining the name of the rule which can be viewed inside of <code>inetmgr (IIS Manager)</code>. Next, we match the server varible for a <code>Set-Cookie</code> HTTP header (<code>RESPONSE_Set_Cookie</code>) and ensure that it&rsquo;s present for us to continue. For our action, we rewrite the <code>Set-Cookie</code> header to be the original value, with the <code>secure</code> modifier appended.</p>
+
+<p>Within the precondition, which is matched by name to the <code>preCondition</code> attribute in the rule, we do two things:</p>
+
+<ul>
+<li>(<em>I think, see below</em>) Make sure that the <code>Set-Cookie</code> header has been set (via the server variable <code>{RESPONSE_Set_Cookie}</code>);</li>
+<li>Make sure that we do not already have the <code>secure</code> modifier set</li>
+</ul>
+
+<p>As per my previous post, due to a knowledge gap, the first line is required within the pre-condition or funky things happen.</p>
+
+<p>That&rsquo;s it. If you check your debug tool of choice after implementing this, you should see that all cookies are now sent with the <code>secure</code> modifier.</p>
+
+<h2 id="other-posts-in-this-series">Other Posts In This Series</h2>
+
+<ol>
+<li><a href="/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/">Up and running with URL Rewrite - going from HTTP to HTTPS</a></li>
+<li><a href="/article/2017/06/canonical-host-urls-with-url-rewrite/">Canonical host urls with URL Rewrite</a></li>
+<li><a href="/article/2017/06/removing-trailing-slashes-with-url-rewrite/">Removing trailing slashes with URL Rewrite</a></li>
+<li><a href="/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/">Ensuring httpOnly cookies with URL Rewrite</a></li>
+<li><a href="/article/2017/06/ensuring-secure-cookies-with-url-rewrite/">Ensuring secure cookies with URL Rewrite</a> <em>(This Post)</em></li>
+<li><a href="/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/">Ensuring samesite cookies with URL Rewrite</a></li>
+</ol></section>
+    <footer class="article-footer">
+        <hr />Tags: <ul class="article-tags">
     <li><a class="article-tag" href="/tags/iis/">IIS</a></li><li><a class="article-tag" href="/tags/url-rewrite/">Url Rewrite</a></li><li><a class="article-tag" href="/tags/cookies/">Cookies</a></li>
 </ul></footer>
 </article>
-        
-            <article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/" itemprop="name">Ensuring httpOnly cookies with URL Rewrite</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-06-06T15:01:04">2017-06-06 15:01:04 &#43;0100 BST</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>In this article, I will give a brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite. We will also be creating our first outbound rewrite rule with a pre-condition.</p>
-
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/iis/">IIS</a></li><li><a class="article-tag" href="/tags/url-rewrite/">Url Rewrite</a></li><li><a class="article-tag" href="/tags/cookies/">Cookies</a></li>
-</ul></footer>
-</article>
-        
-            <article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/" itemprop="name">Removing trailing slashes with URL Rewrite</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-06-05T15:00:59">2017-06-05 15:00:59 &#43;0100 BST</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>In the <a href="/article/2017/06/canonical-host-urls-with-url-rewrite/">previous post</a>, I explained why canonical urls are important and how to enforce them . In this article, I will show you how to have a canonical host url.</p>
-
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/iis/">IIS</a></li><li><a class="article-tag" href="/tags/url-rewrite/">Url Rewrite</a></li><li><a class="article-tag" href="/tags/seo/">SEO</a></li>
-</ul></footer>
-</article>
-        
-            <article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/" itemprop="name">Canonical host urls with URL Rewrite</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-06-04T15:00:55">2017-06-04 15:00:55 &#43;0100 BST</time></p>
-    </header>
-    <section class="article-summary" itemprop="about">In the previous post, I gave a brief intoduction to URL Rewriting and showed you how to get from HTTP to HTTPS. In this article, I will show you how to have a canonical host url.
-What is a canonical host url? It can be incredibly easy to distribute different urls for your website. Lets say that we have www.site.com/post1 and site.com/post1. If you&rsquo;re a search engine, you think that these are different different pages with the same content.</section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/iis/">IIS</a></li><li><a class="article-tag" href="/tags/url-rewrite/">Url Rewrite</a></li><li><a class="article-tag" href="/tags/seo/">SEO</a></li>
-</ul></footer>
-</article>
-        
-            <article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/" itemprop="name">Up and running with URL Rewrite - going from HTTP to HTTPS</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-06-03T15:00:51">2017-06-03 15:00:51 &#43;0100 BST</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>In this series, I am going to take you through a few <code>web.config</code> snippets that have come in handy for me when using URL Rewrite on IIS. Firstly, I am going to introduce the URL Rewrite module then show a sample of going from HTTP to HTTPS.</p>
-
-<p></p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/iis/">IIS</a></li><li><a class="article-tag" href="/tags/url-rewrite/">Url Rewrite</a></li>
-</ul></footer>
-</article>
-        
-    </section>
-    <footer class="tagpage-footer">
-    </footer>
-</article>
-
-
     </section>
     <footer id="pageFooter">
     <section id="pageFooter-copyright" class="pageFooter-section">
