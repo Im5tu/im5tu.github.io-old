@@ -2,12 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Articles on Stuart Blackler&#39;s Blog</title>
-    <link>https://im5tu.io/article/index.xml</link>
+    <link>https://im5tu.io/article/</link>
     <description>Recent content in Articles on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 11 Jun 2017 20:50:11 +0100</lastBuildDate>
-    <atom:link href="https://im5tu.io/article/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="https://im5tu.io/article/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Ensuring samesite cookies with URL Rewrite</title>
@@ -17,71 +19,7 @@
       <guid>https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/</guid>
       <description>&lt;p&gt;In this article, we will increase our websites level of protecting against Cross-Site Request Forgery and Cross-Site Script Inclusion attacks by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;
 
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;This article extends my &lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;previous article&lt;/a&gt; by using an outbound rewrite rule again.&lt;/p&gt;
-
-&lt;h2 id=&#34;what-are-samesite-cookies&#34;&gt;What are SameSite cookies?&lt;/h2&gt;
-
-&lt;p&gt;In a cross-origin request context, which is when you request resources from a different site, any cookies that you have for that site are also sent. We can restrict this through applying the &lt;code&gt;SameSite&lt;/code&gt; modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;
-
-&lt;p&gt;The goals of SameSite cookies are to:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Prevent cross origin timing attacks;&lt;/li&gt;
-&lt;li&gt;Prevent cross origin script inclusion;&lt;/li&gt;
-&lt;li&gt;Prevent cross site request forgery;&lt;/li&gt;
-&lt;li&gt;Increasing privacy protections&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;When the modification is applied to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header, the browser will only send cookies in a first party context (ie: when you are using the website directly).&lt;/p&gt;
-
-&lt;p&gt;There are two possible modes for the attribute: Strict &amp;amp; lax. The difference is which HTTP verbs the security policy should be applied to. In lax mode, cookies are not sent when &lt;code&gt;POST&lt;/code&gt;ing to a third party site. In strict mode, cookies are not sent when &lt;code&gt;GET&lt;/code&gt;ting or &lt;code&gt;POST&lt;/code&gt;ing to a third party site. Strict mode is the default mode if the mode is obmitted.&lt;/p&gt;
-
-&lt;h2 id=&#34;ensuring-our-cookies-are-marked-secure-with-url-rewrite&#34;&gt;Ensuring our cookies are marked secure with URL Rewrite&lt;/h2&gt;
-
-&lt;p&gt;As per the snippet in our previous post, we are going to create an outbound rule (which lives under &lt;code&gt;system.web &amp;gt; rewrite &amp;gt; outboundRules&lt;/code&gt; in our &lt;code&gt;web.config&lt;/code&gt;). This rewrite snippet requires two portions: the rule and a set of preconditions:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;rewrite&amp;gt;
-    &amp;lt;outboundRules&amp;gt; 
-        &amp;lt;rule name=&amp;quot;Ensure samesite Cookies&amp;quot; preCondition=&amp;quot;Missing samesite cookie&amp;quot;&amp;gt;
-        &amp;lt;match serverVariable=&amp;quot;RESPONSE_Set_Cookie&amp;quot; pattern=&amp;quot;.*&amp;quot; negate=&amp;quot;false&amp;quot; /&amp;gt;
-        &amp;lt;action type=&amp;quot;Rewrite&amp;quot; value=&amp;quot;{R:0}; SameSite=strict&amp;quot; /&amp;gt;
-        &amp;lt;/rule&amp;gt;
-        &amp;lt;preConditions&amp;gt;
-            &amp;lt;preCondition name=&amp;quot;Missing samesite cookie&amp;quot;&amp;gt;
-                &amp;lt;!-- Don&#39;t remove the first line here, it does do stuff! --&amp;gt;
-                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;.&amp;quot; /&amp;gt;
-                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;; SameSite=strict&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
-            &amp;lt;/preCondition&amp;gt;
-        &amp;lt;/preconditions&amp;gt;
-    &amp;lt;/outboundRules&amp;gt;
-&amp;lt;/rewrite&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Within our rule, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt;. Next, we match the server varible for a &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header (&lt;code&gt;RESPONSE_Set_Cookie&lt;/code&gt;) and ensure that it&amp;rsquo;s present for us to continue. For our action, we rewrite the &lt;code&gt;Set-Cookie&lt;/code&gt; header to be the original value, with the &lt;code&gt;SameSite&lt;/code&gt; modifier appended with the mode set to strict as detailed above. Alternatively, you can use &lt;code&gt;SameSite=lax&lt;/code&gt; for the lax mode of operation.&lt;/p&gt;
-
-&lt;p&gt;Within the precondition, which is matched by name to the &lt;code&gt;preCondition&lt;/code&gt; attribute in the rule, we do two things:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;(&lt;em&gt;I think, see below&lt;/em&gt;) Make sure that the &lt;code&gt;Set-Cookie&lt;/code&gt; header has been set (via the server variable &lt;code&gt;{RESPONSE_Set_Cookie}&lt;/code&gt;);&lt;/li&gt;
-&lt;li&gt;Make sure that we do not already have the &lt;code&gt;SameSite&lt;/code&gt; modifier set&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;As per my previous post, due to a knowledge gap, the first line is required within the pre-condition or funky things happen.&lt;/p&gt;
-
-&lt;p&gt;That&amp;rsquo;s it. If you check your debug tool of choice after implementing this, you should see that all cookies are now sent with the &lt;code&gt;SameSite&lt;/code&gt; modifier.&lt;/p&gt;
-
-&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
-&lt;/ol&gt;</description>
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -92,60 +30,7 @@
       <guid>https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/</guid>
       <description>&lt;p&gt;In this article, we will take a look at secure cookies, that is by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;
 
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;This article extends my &lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;previous article&lt;/a&gt; by using an outbound rewrite rule again.&lt;/p&gt;
-
-&lt;h2 id=&#34;what-are-secure-cookies&#34;&gt;What are secure cookies?&lt;/h2&gt;
-
-&lt;p&gt;As the name suggests, by appending &lt;code&gt;secure&lt;/code&gt; to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header, we instruct a browser to only send the cookie when the connection to the web server is secure. This helps protect against any information leakage or eves-dropping.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;For more information, checkout &lt;a href=&#34;https://scotthelme.co.uk/tough-cookies/&#34;&gt;Scott Helme&amp;rsquo;s incredible post&lt;/a&gt; on getting tougher cookies.&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;ensuring-our-cookies-are-marked-secure-with-url-rewrite&#34;&gt;Ensuring our cookies are marked secure with URL Rewrite&lt;/h2&gt;
-
-&lt;p&gt;As per the snippet in our previous post, we are going to create an outbound rule (which lives under &lt;code&gt;system.web &amp;gt; rewrite &amp;gt; outboundRules&lt;/code&gt; in our &lt;code&gt;web.config&lt;/code&gt;). This rewrite snippet requires two portions, the rule and a set of preconditions:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;rewrite&amp;gt;
-    &amp;lt;outboundRules&amp;gt; 
-        &amp;lt;rule name=&amp;quot;Ensure secure Cookies&amp;quot; preCondition=&amp;quot;Missing secure cookie&amp;quot;&amp;gt;
-            &amp;lt;match serverVariable=&amp;quot;RESPONSE_Set_Cookie&amp;quot; pattern=&amp;quot;.*&amp;quot; negate=&amp;quot;false&amp;quot; /&amp;gt;
-            &amp;lt;action type=&amp;quot;Rewrite&amp;quot; value=&amp;quot;{R:0}; secure&amp;quot; /&amp;gt;
-        &amp;lt;/rule&amp;gt;
-        &amp;lt;preConditions&amp;gt;
-            &amp;lt;preCondition name=&amp;quot;Missing secure cookie&amp;quot;&amp;gt;
-                &amp;lt;!-- Don&#39;t remove the first line here, it does do stuff! --&amp;gt;
-                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;.&amp;quot; /&amp;gt;
-                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;; secure&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
-            &amp;lt;/preCondition&amp;gt;
-        &amp;lt;/preconditions&amp;gt;
-    &amp;lt;/outboundRules&amp;gt;
-&amp;lt;/rewrite&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Within our rule, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt;. Next, we match the server varible for a &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header (&lt;code&gt;RESPONSE_Set_Cookie&lt;/code&gt;) and ensure that it&amp;rsquo;s present for us to continue. For our action, we rewrite the &lt;code&gt;Set-Cookie&lt;/code&gt; header to be the original value, with the &lt;code&gt;secure&lt;/code&gt; modifier appended.&lt;/p&gt;
-
-&lt;p&gt;Within the precondition, which is matched by name to the &lt;code&gt;preCondition&lt;/code&gt; attribute in the rule, we do two things:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;(&lt;em&gt;I think, see below&lt;/em&gt;) Make sure that the &lt;code&gt;Set-Cookie&lt;/code&gt; header has been set (via the server variable &lt;code&gt;{RESPONSE_Set_Cookie}&lt;/code&gt;);&lt;/li&gt;
-&lt;li&gt;Make sure that we do not already have the &lt;code&gt;secure&lt;/code&gt; modifier set&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;As per my previous post, due to a knowledge gap, the first line is required within the pre-condition or funky things happen.&lt;/p&gt;
-
-&lt;p&gt;That&amp;rsquo;s it. If you check your debug tool of choice after implementing this, you should see that all cookies are now sent with the &lt;code&gt;secure&lt;/code&gt; modifier.&lt;/p&gt;
-
-&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description>
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -156,68 +41,7 @@
       <guid>https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/</guid>
       <description>&lt;p&gt;In this article, I will give a brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite. We will also be creating our first outbound rewrite rule with a pre-condition.&lt;/p&gt;
 
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;See my &lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;previous posts&lt;/a&gt; for information on inbound rewrite rules.&lt;/p&gt;
-
-&lt;h2 id=&#34;what-are-cookies&#34;&gt;What are cookies?&lt;/h2&gt;
-
-&lt;p&gt;Unfornately, in this sense they are not a snack. They are, usually, small bits of information continually transferred between the browser and the server in order to do things like session tracking &amp;amp; identification, or maintain informantion pertainent to your browsing session. If not secured in the right way, you can expose details of your browsing session unknowingly. First up, we can make the cookies &lt;code&gt;httpOnly&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;what-are-httponly-cookies&#34;&gt;What are httpOnly cookies?&lt;/h2&gt;
-
-&lt;p&gt;By adding the modifier to the cookie, we prevent any scripts running from accessing the cookie. The biggest benefit here is protection against Cross-Site Scripting, or XSS. Unless you have very specific requirements for cookies, this flag should always be enabled.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;For more information, checkout &lt;a href=&#34;https://scotthelme.co.uk/tough-cookies/&#34;&gt;Scott Helme&amp;rsquo;s incredible post&lt;/a&gt; on getting tougher cookies.&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;how-can-we-ensure-our-cookies-are-httponly-with-url-rewrite&#34;&gt;How can we ensure our cookies are httpOnly with URL Rewrite&lt;/h2&gt;
-
-&lt;p&gt;When a server indicates that it wants to set a cookie, it does so by sending the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header along with the response. There are a few modifiers that this can have to make them more secure in compliant browsers (eg: Chrome, Firefox, Edge, Safari): &lt;code&gt;httpOnly&lt;/code&gt;, &lt;code&gt;secure&lt;/code&gt; and &lt;code&gt;sameSite=(lax|strict)&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;This rewrite snippet requires two portions: the rule and a set of precondtions.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;rewrite&amp;gt;
-    &amp;lt;outboundRules&amp;gt;
-        &amp;lt;rule name=&amp;quot;Ensure httpOnly Cookies&amp;quot; preCondition=&amp;quot;Missing httpOnly cookie&amp;quot;&amp;gt;
-            &amp;lt;match serverVariable=&amp;quot;RESPONSE_Set_Cookie&amp;quot; pattern=&amp;quot;.*&amp;quot; negate=&amp;quot;false&amp;quot; /&amp;gt;
-            &amp;lt;action type=&amp;quot;Rewrite&amp;quot; value=&amp;quot;{R:0}; HttpOnly&amp;quot; /&amp;gt;
-        &amp;lt;/rule&amp;gt;
-        &amp;lt;preConditions&amp;gt;
-            &amp;lt;preCondition name=&amp;quot;Missing httpOnly cookie&amp;quot;&amp;gt;
-                &amp;lt;!-- Don&#39;t remove the first line! --&amp;gt;
-                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;.&amp;quot; /&amp;gt;
-                &amp;lt;add input=&amp;quot;{RESPONSE_Set_Cookie}&amp;quot; pattern=&amp;quot;; HttpOnly&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
-            &amp;lt;/preCondition&amp;gt;
-        &amp;lt;/preconditions&amp;gt;
-    &amp;lt;/outboundRules&amp;gt;
-&amp;lt;/rewrite&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Within our rule, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt;. In previous posts we have added the attribute to stop processing, but here we want to continue processing rewrite rules because we may want to do additional work to the response. Next, we match the server varible for a &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header (&lt;code&gt;RESPONSE_Set_Cookie&lt;/code&gt;) and ensure that it&amp;rsquo;s present for us to continue. For our action, we rewrite the &lt;code&gt;Set-Cookie&lt;/code&gt; header to be the original value, with the &lt;code&gt;HttpOnly&lt;/code&gt; modifier appended.&lt;/p&gt;
-
-&lt;p&gt;Within the precondition, which is matched by name to the &lt;code&gt;preCondition&lt;/code&gt; attribute in the rule, we do two things:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;(&lt;em&gt;I think, see below&lt;/em&gt;) Make sure that the &lt;code&gt;Set-Cookie&lt;/code&gt; header has been set (via the server variable &lt;code&gt;{RESPONSE_Set_Cookie}&lt;/code&gt;);&lt;/li&gt;
-&lt;li&gt;Make sure that we do not already have the &lt;code&gt;HttpOnly&lt;/code&gt; modifier set&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;For an unknown reason, probably due to a knowledge gap, the first line is required. I have made a guess as to what this could be, but I am unsure. Strange things happen in the dev tools in Chrome if that first line is not there.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;It is worth noting that a precondition is not limited to a single rule, it can be re-used. There is probably scope for making this rule smaller, if there is i&amp;rsquo;ll edit the post to reflect the smaller rule.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;That&amp;rsquo;s it. If you check your debug tool of choice after implementing this, you should see that all cookies are now sent with the &lt;code&gt;HttpOnly&lt;/code&gt; modifier.&lt;/p&gt;
-
-&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description>
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -228,42 +52,7 @@
       <guid>https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/</guid>
       <description>&lt;p&gt;In the &lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;previous post&lt;/a&gt;, I explained why canonical urls are important and how to enforce them . In this article, I will show you how to have a canonical host url.&lt;/p&gt;
 
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;why-does-adding-or-removing-trailing-slashes-matter&#34;&gt;Why does adding or removing trailing slashes matter?&lt;/h2&gt;
-
-&lt;p&gt;In essence, it matters for the same reasons as I described in &lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;my previous post&lt;/a&gt;. That is, search engines will see &lt;code&gt;site.com/post1&lt;/code&gt; as different content to &lt;code&gt;site.com/post1/&lt;/code&gt; so we need to correct this in order to get a bit of SEO benefit. In this article, I will be redirecting any URL that comes with a slash at the end to one without.&lt;/p&gt;
-
-&lt;h2 id=&#34;adding-or-removing-trailing-slashes-via-url-rewrite&#34;&gt;Adding or removing trailing slashes via URL Rewrite&lt;/h2&gt;
-
-&lt;p&gt;As per the snippet in our previous posts, we are going to create an inbound rule (which lives under &lt;code&gt;system.web &amp;gt; rewrite &amp;gt; rules&lt;/code&gt; in our &lt;code&gt;web.config&lt;/code&gt;):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;rule name=&amp;quot;Remove trailing slash&amp;quot; stopProcessing=&amp;quot;true&amp;quot;&amp;gt;
-    &amp;lt;match url=&amp;quot;(.*)/$&amp;quot; /&amp;gt;
-    &amp;lt;conditions logicalGrouping=&amp;quot;MatchAll&amp;quot; trackAllCaptures=&amp;quot;false&amp;quot;&amp;gt;
-        &amp;lt;add input=&amp;quot;{REQUEST_FILENAME}&amp;quot; matchType=&amp;quot;IsFile&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
-        &amp;lt;add input=&amp;quot;{REQUEST_FILENAME}&amp;quot; matchType=&amp;quot;IsDirectory&amp;quot; negate=&amp;quot;true&amp;quot; /&amp;gt;
-    &amp;lt;/conditions&amp;gt;
-    &amp;lt;action type=&amp;quot;Redirect&amp;quot; url=&amp;quot;{R:1}&amp;quot; redirectType=&amp;quot;Temporary&amp;quot; /&amp;gt;
-&amp;lt;/rule&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In the first line, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt; saying that we want to stop at this rule and return the response to the client. Next up, we give our matching criteria which we have wildcarded to match all requests that end with a &lt;code&gt;/&lt;/code&gt;. Then we have added a condition set which is definted to match all criteria inside. We use the server variable &lt;code&gt;{REQUEST_FILENAME}&lt;/code&gt; to determine whether or not the path requested is a physical file or directory on disk. The last attribute in each condition is a negation, which is equivilent of saying don&amp;rsquo;t match a physical directory or file (we don&amp;rsquo;t want to screw the routing for those!).&lt;/p&gt;
-
-&lt;p&gt;Finally, we define the action that we wish to take if both the &lt;code&gt;match&lt;/code&gt; and all the conditions in the &lt;code&gt;conditions&lt;/code&gt; section have been satisfied. The action that we wish to take is to redirect the user to the page without the slash, so we use the request capture group &lt;code&gt;{R:1}&lt;/code&gt; (more on this in a future article).&lt;/p&gt;
-
-&lt;p&gt;And that&amp;rsquo;s it, you should be redirecting people from say &lt;code&gt;site.com/post1/&lt;/code&gt; to &lt;code&gt;site.com/post1&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description>
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -272,50 +61,8 @@
       <pubDate>Sun, 04 Jun 2017 15:00:55 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/</guid>
-      <description>
-
-&lt;p&gt;In the &lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;previous post&lt;/a&gt;, I gave a brief intoduction to URL Rewriting and showed you how to get from HTTP to HTTPS. In this article, I will show you how to have a canonical host url.&lt;/p&gt;
-
-&lt;!-- more --&gt;
-
-&lt;h2 id=&#34;what-is-a-canonical-host-url&#34;&gt;What is a canonical host url?&lt;/h2&gt;
-
-&lt;p&gt;It can be incredibly easy to distribute different urls for your website. Lets say that we have &lt;code&gt;www.site.com/post1&lt;/code&gt; and &lt;code&gt;site.com/post1&lt;/code&gt;. If you&amp;rsquo;re a search engine, you think that these are different different pages with the same content. When you have the same content, you ranking decreases because the content is not original. As a human looking at the site, we think that the pages are the same content on the same site, so we don&amp;rsquo;t see the duplication.&lt;/p&gt;
-
-&lt;p&gt;So a canonical url is basically saying to the search engine: hey, &lt;code&gt;www.site.com/post1&lt;/code&gt; and &lt;code&gt;site.com/post1&lt;/code&gt; are the same content and you should access me through this link (&lt;em&gt;which we define to be a single one of the above&lt;/em&gt;).&lt;/p&gt;
-
-&lt;p&gt;We can set this through metadata on our webpages, but this doesn&amp;rsquo;t guarentee that people will distribute the correct link to your site. To fix this, we can rewrite the url to either append or remove the &lt;code&gt;www.&lt;/code&gt;. In this case, because I prefer shorter url&amp;rsquo;s, we will remove the www sub-domain prefix.&lt;/p&gt;
-
-&lt;h2 id=&#34;making-a-canonical-host-url-via-url-rewrite&#34;&gt;Making a canonical host url via URL Rewrite&lt;/h2&gt;
-
-&lt;p&gt;As per the snippet in our previous post, we are going to create an inbound rule (which lives under &lt;code&gt;system.web &amp;gt; rewrite &amp;gt; rules&lt;/code&gt; in our &lt;code&gt;web.config&lt;/code&gt;):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;rule name=&amp;quot;Canonical Hostname&amp;quot; stopProcessing=&amp;quot;true&amp;quot;&amp;gt;
-    &amp;lt;match url=&amp;quot;(.*)&amp;quot; /&amp;gt;
-    &amp;lt;conditions logicalGrouping=&amp;quot;MatchAll&amp;quot; trackAllCaptures=&amp;quot;false&amp;quot;&amp;gt;
-        &amp;lt;add input=&amp;quot;{HTTP_HOST}&amp;quot; pattern=&amp;quot;^www\.([.a-zA-Z0-9]+)$&amp;quot;/&amp;gt;
-    &amp;lt;/conditions&amp;gt;
-    &amp;lt;action type=&amp;quot;Redirect&amp;quot; url=&amp;quot;https://{C:1}/{R:1}&amp;quot; redirectType=&amp;quot;Temporary&amp;quot; /&amp;gt;
-&amp;lt;/rule&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In the first line, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt; saying that we want to stop at this rule and return the response to the client. Next up, we give our matching criteria which we have wildcarded to match all requests. Then we have added a condition which takes a server variable (&lt;code&gt;{HTTP_HOST}&lt;/code&gt; which tells us the DNS name or IP address that has been used to reach this server eg: site.com or www.site.com), and we&amp;rsquo;ve matched it against any request starting with &lt;code&gt;www.&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Finally, we define the action that we wish to take if both the &lt;code&gt;match&lt;/code&gt; and &lt;code&gt;conditions&lt;/code&gt; sections have been satisfied. The action that we wish to take is to redirect the user to a non &lt;code&gt;www.&lt;/code&gt; version of the page. In order to do this, we use one of the capture groups (which comes from the conditions section regex) to redirect to (in this case it&amp;rsquo;s &lt;code&gt;{C:1}&lt;/code&gt;) and combine it with the original path and query.&lt;/p&gt;
-
-&lt;p&gt;And that&amp;rsquo;s it, you should be redirecting people from say &lt;code&gt;www.site.com&lt;/code&gt; to &lt;code&gt;site.com&lt;/code&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-</description>
+      <description>In the previous post, I gave a brief intoduction to URL Rewriting and showed you how to get from HTTP to HTTPS. In this article, I will show you how to have a canonical host url.
+What is a canonical host url? It can be incredibly easy to distribute different urls for your website. Lets say that we have www.site.com/post1 and site.com/post1. If you&amp;rsquo;re a search engine, you think that these are different different pages with the same content.</description>
     </item>
     
     <item>
@@ -326,95 +73,7 @@
       <guid>https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/</guid>
       <description>&lt;p&gt;In this series, I am going to take you through a few &lt;code&gt;web.config&lt;/code&gt; snippets that have come in handy for me when using URL Rewrite on IIS. Firstly, I am going to introduce the URL Rewrite module then show a sample of going from HTTP to HTTPS.&lt;/p&gt;
 
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;what-is-url-rewrite&#34;&gt;What is URL Rewrite?&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://www.iis.net/downloads/microsoft/url-rewrite&#34;&gt;URL Rewrite&lt;/a&gt;  is a module extensions for IIS which allows administrators to create powerful inbound and outbound rules that alter a HTTP request or response. Scenarios where you might consider using the URL Rewrite module include:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Rewrite URLs based on the values of server variables or HTTP headers&lt;/li&gt;
-&lt;li&gt;Provide SEO benefits such as canonical host names&lt;/li&gt;
-&lt;li&gt;Setup redirects from old posts to new&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;em&gt;URL rewrite can be install from the &lt;a href=&#34;http://go.microsoft.com/fwlink/?LinkID=615137&#34;&gt;Web Platform Installer&lt;/a&gt; for IIS 7.5 or above.&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;url-rewrite-and-web-config&#34;&gt;URL Rewrite and Web.Config&lt;/h2&gt;
-
-&lt;p&gt;Inside of the &lt;code&gt;web.config&lt;/code&gt; you can define a &lt;code&gt;&amp;lt;rewrite&amp;gt;&lt;/code&gt; section beneath the &lt;code&gt;&amp;lt;system.web&amp;gt;&lt;/code&gt; section:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;system.web&amp;gt;
-    &amp;lt;rewrite&amp;gt;
-        &amp;lt;!-- Your rules here --&amp;gt;
-    &amp;lt;/rewrite&amp;gt;
-&amp;lt;/system.web&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Within the &lt;code&gt;&amp;lt;rewrite&amp;gt;&lt;/code&gt; section you can define either a &lt;code&gt;&amp;lt;rules&amp;gt;&lt;/code&gt; section or an &lt;code&gt;&amp;lt;outbound&amp;gt;&lt;/code&gt; section. The former is for inbound request rewriting and the latter is for response rewriting. I&amp;rsquo;ll expand on each section as we go through the series.&lt;/p&gt;
-
-&lt;p&gt;*&lt;strong&gt;Note:&lt;/strong&gt; if you don&amp;rsquo;t have the URL Rewrite module installed, you&amp;rsquo;ll get a lovely yellow screen of death when you start your application.*&lt;/p&gt;
-
-&lt;h2 id=&#34;redirecting-http-to-https&#34;&gt;Redirecting HTTP to HTTPS&lt;/h2&gt;
-
-&lt;p&gt;The are some obvious benefits to serving pages over a secure connection (HTTPS), which include:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Encryption: The data exchanged between client and server cannot easily be read&lt;/li&gt;
-&lt;li&gt;Authority: Proving that the server you are talking to is who you are expecting to talk to&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;However, there are a few lesser known benefits including:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;SEO: Search engines are preferring websites that are secure by default&lt;/li&gt;
-&lt;li&gt;HTTP2: Major browsers do not support HTTP2 over insecure connections&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Assuming you would like all of the above benefit, here is the rule snippet that you will need:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;system.web&amp;gt;
-  &amp;lt;rewrite&amp;gt;
-      &amp;lt;rules&amp;gt;
-          &amp;lt;rule name=&amp;quot;Redirect to http&amp;quot; patternSyntax=&amp;quot;Wildcard&amp;quot; stopProcessing=&amp;quot;true&amp;quot;&amp;gt;
-            &amp;lt;match url=&amp;quot;*&amp;quot; negate=&amp;quot;false&amp;quot; /&amp;gt;
-            &amp;lt;conditions logicalGrouping=&amp;quot;MatchAny&amp;quot; trackAllCaptures=&amp;quot;false&amp;quot;&amp;gt;
-                  &amp;lt;add input=&amp;quot;{HTTPS}&amp;quot; pattern=&amp;quot;off&amp;quot; /&amp;gt;
-              &amp;lt;/conditions&amp;gt;
-            &amp;lt;action type=&amp;quot;Redirect&amp;quot; url=&amp;quot;https://{HTTP_HOST}/{R:1}&amp;quot; redirectType=&amp;quot;Temporary&amp;quot; /&amp;gt;
-        &amp;lt;/rule&amp;gt;
-      &amp;lt;/rules&amp;gt;
-    &amp;lt;/rewrite&amp;gt;
-&amp;lt;/system.web&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;So what&amp;rsquo;s going on in the snippet above?&lt;/p&gt;
-
-&lt;p&gt;In the first line, we are defining the name of the rule which can be viewed inside of &lt;code&gt;inetmgr (IIS Manager)&lt;/code&gt;; saying which pattern style we are going to use (either regex or wildcard) and saying that we want to stop at this rule and return the response to the client. Next up, we give our matching criteria which we have wildcarded to match all requests. Then we have added a condition which takes a server variable (&lt;code&gt;{HTTPS}&lt;/code&gt; which indicates whether or not this request has been delivered over a secure connection), and made sure we only track insecure requests.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;With conditions inside of a rule, you can match a single entry in the condition set or all the conditions within the set. Use either &lt;code&gt;MatchAny&lt;/code&gt; or &lt;code&gt;MatchAll&lt;/code&gt; depending on your needs.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Finally, we define the action that we wish to take if both the &lt;code&gt;match&lt;/code&gt; and &lt;code&gt;conditions&lt;/code&gt; sections have been satisfied. The action &lt;code&gt;type&lt;/code&gt; can be &lt;code&gt;Redirect&lt;/code&gt; or &lt;code&gt;Rewrite&lt;/code&gt; depending on your needs. We wish to redirect a user to a secure connection, so we define the type as &lt;code&gt;Redirect&lt;/code&gt; and the url equal to a secure connection to the host requested with the original path &amp;amp; query appended. The final attribute is the redirect type which can be one of the following:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Permenant: &lt;a href=&#34;https://httpstatuses.com/301&#34;&gt;A HTTP 301 Response&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Found: &lt;a href=&#34;https://httpstatuses.com/302&#34;&gt;A HTTP 302 Response&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;SeeOther: &lt;a href=&#34;https://httpstatuses.com/303&#34;&gt;A HTTP 303 Response&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Temporary: &lt;a href=&#34;https://httpstatuses.com/307&#34;&gt;A HTTP 307 Response&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;That&amp;rsquo;s it! Hopefully this article gives you everything that you need to get HTTP to HTTPS redirects working without&lt;/p&gt;
-
-&lt;h2 id=&#34;other-posts-in-this-series&#34;&gt;Other Posts In This Series&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/&#34;&gt;Up and running with URL Rewrite - going from HTTP to HTTPS&lt;/a&gt; &lt;em&gt;(This Post)&lt;/em&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;Canonical host urls with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/&#34;&gt;Removing trailing slashes with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/&#34;&gt;Ensuring httpOnly cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/&#34;&gt;Ensuring secure cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/&#34;&gt;Ensuring samesite cookies with URL Rewrite&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;</description>
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -423,117 +82,8 @@
       <pubDate>Wed, 24 May 2017 16:25:48 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/05/domain-driven-design-notes/</guid>
-      <description>
-
-&lt;p&gt;&lt;em&gt;These are my notes on domain driven design whilst watching the course by Dino Esposito on &lt;a href=&#34;https://app.pluralsight.com/library/courses/modern-software-architecture-domain-models-cqrs-event-sourcing/table-of-contents&#34;&gt;Pluralsight&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Domain Driven Design (or DDD), is the process of discovering both data and behavioural requirements for a given problem domain where traditional approaches usually focus purely on data collection aspects. The aim is to provide better tools to tackle the complexity at the heart of software. &lt;!-- more --&gt;&lt;/p&gt;
-
-&lt;p&gt;Within DDD, there are two distinct parts: an analytical one and a strategical one. To use a DDD centric approach, the analytical aspects are required while the strategical aspects can take one of many forms depending on the requirements gained from analytical insight.&lt;/p&gt;
-
-&lt;h2 id=&#34;analytical&#34;&gt;Analytical&lt;/h2&gt;
-
-&lt;p&gt;The analytical aspect of DDD is useful for everyone and every project undertaken because it describes the domain in which you are working, using a common set of language. The common set of language used is called ubiquitous language within DDD jargon. These aspects of DDD are key in a couple of main areas:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;When there is a lot of domain logic that can be tricky to digest:
-
-&lt;ul&gt;
-&lt;li&gt;No synonyms for same/similar concepts;&lt;/li&gt;
-&lt;li&gt;Ensures all terms are understood&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Or, the business logic is not completely defined:
-
-&lt;ul&gt;
-&lt;li&gt;Business is young (eg: startup);&lt;/li&gt;
-&lt;li&gt;Logic is discovered on the way&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;ubiquitous-language&#34;&gt;Ubiquitous Language&lt;/h3&gt;
-
-&lt;p&gt;The aim of ubiquitous language is to avoid misunderstandings and assumptions by creating business centric terminology shared by all members of a project, both technical and non-technical. Once defined, the language should used universally in spoken and written communication, avoiding synonym creation which breeds ambiguity and misunderstanding.&lt;/p&gt;
-
-&lt;p&gt;Ubiquitous language is itteratively composed throughout interviews and brainstorming sessions using the natural language of the business, not creating new expressions for pre-existing concepts. The language will continually evolve over time, so it is important that updates are communicated across the business to reflect the understanding of the domain. It should neither be purely from domain experts nor technical experts. However, the ubiquitous language may contain some technical language to ensure clarity and consistency.&lt;/p&gt;
-
-&lt;p&gt;Acronyms are widely used across many business sectors that are hard to remember and understand. Where possible, acronyms should be avoided, being replaced by words that retain the same meaning of the acronym. This makes the language easier to use and understand for all parties involved. The language, although continually evolving, should not be continuly stretched as this will create a bloated, less regirous language than intended.&lt;/p&gt;
-
-&lt;p&gt;Lastly, the language used should be agnostic to all technology and paradigms. Moreover, when naming elements of code, the names should be reflective of the language used ensuring that concepts above are adhered to (eg: no acronyms/no synonyms).&lt;/p&gt;
-
-&lt;h3 id=&#34;bounded-contexts&#34;&gt;Bounded Contexts&lt;/h3&gt;
-
-&lt;p&gt;Bounded contexts are areas of the domain in which an element has a unique, unambiguous, well-defined meaning. Outside the boundries of a given bounded context, the ubiquitous language changes. If the meaning behind the language is same, the context should be the same. Each bounded context may have it&amp;rsquo;s own unique architecture and implementation. Moreover, each bounded context should have a well defined external interface so that it can be consumed from other bounded contexts.&lt;/p&gt;
-
-&lt;p&gt;This concept was introduced into DDD to help with the following problems:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Remove ambiguity and duplication from within ubiquitous language;&lt;/li&gt;
-&lt;li&gt;Simplify design of software modules;&lt;/li&gt;
-&lt;li&gt;Help to integrate legacy software tools and components.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Within a given business domain, you may often find that the same term is used but with different meanings. When this occurs, it is a signal that the business domain should be split into multiple bounded contexts. However, these new contexts are not completely isolated as they are often connected through the way they communicate and interact with one another. Typically, the number of bounded contexts often reflects the physical organisation/department structure of the business.&lt;/p&gt;
-
-&lt;h3 id=&#34;context-maps&#34;&gt;Context Maps&lt;/h3&gt;
-
-&lt;p&gt;The overall layout of bounded contexts within a business domain can be represented on a context map, as shown below (credit: &lt;a href=&#34;https://infoq.com&#34;&gt;InfoQ&lt;/a&gt;):&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://www.infoq.com/resource/articles/ddd-contextmapping/en/resources/ddd-contextmapping-figure11.jpg&#34; alt=&#34;Example DDD Context Map&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;On the image above, there are a few new terms to understand:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;U &amp;amp; D or Upstream/Downstream:
-
-&lt;ul&gt;
-&lt;li&gt;Upstream/Downstream shows the direction of the relationship between bounded contexts&lt;/li&gt;
-&lt;li&gt;Upstream influences downstreams context and is available as a reference to the downstream context&lt;/li&gt;
-&lt;li&gt;Downstream is simply a consumer of the upstream context but cannot influence it&amp;rsquo;s work directly (eg: change composition)&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Conformist:
-
-&lt;ul&gt;
-&lt;li&gt;Indicates that the downstream context completely depends on the upstream context (eg: when the upstream context is a legacy system/external service)&lt;/li&gt;
-&lt;li&gt;Typically no neogation of changes is possible&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Customer/Supplier:
-
-&lt;ul&gt;
-&lt;li&gt;Indicates that the downstream context is dependent on the upstream context&lt;/li&gt;
-&lt;li&gt;Negotiation of changes between the customer/supplier is possible and the customer can usually expect the changes to be made in some way&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Partner:
-
-&lt;ul&gt;
-&lt;li&gt;Indicates a mutual dependency between two bounded contexts&lt;/li&gt;
-&lt;li&gt;Changes are negotiated between both teams&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;ACL or Anti-Corruption Layer:
-
-&lt;ul&gt;
-&lt;li&gt;Fixed contract at the boundry of the bounded context&lt;/li&gt;
-&lt;li&gt;Allows for internal changes without affecting consumers; so is most helpful when dealing with external API&amp;rsquo;s&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;event-storming&#34;&gt;Event Storming&lt;/h3&gt;
-
-&lt;p&gt;Event Storming, originally developed by Alberto Brandolini, is an emerging practise to explore the business domain and identify key events and commands. The practise involves getting technical and domain experts together in a room to build a timeline of events and commands, draw sketches and make notes which helps to result in the following:
-    - Comprehensive vision of the business domain
-    - Identification of bounded contexts and aggregates in each context
-    - Types of users in the system (who runs commands and why)
-    - Identification of where UX is critical&lt;/p&gt;
-
-&lt;p&gt;Usually, a long whiteboard is used to note down the observable events on the time line, ideally with colour identification (eg: sticky notes). With coloured sticky notes, you would typically have a single colour for events and a different colour for commands (etc). This aids in the visual representation of the domain and the flows throughout.&lt;/p&gt;
-
-&lt;p&gt;The number of people in the meeting, should ideally not break the two pizza rule. The meeting should be kept on track through the presence of a facilitator, whos job it is to prevent long running discussions and guides the modeling effort. The facilitator doesn&amp;rsquo;t necessarily have to be a domain expert but this might be useful to get the meeting started.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Two pizza rule&lt;/strong&gt;: Never have a meeting where two pizzas couldn&amp;rsquo;t feed the entire group&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;em&gt;In a future post I will go through various architectural patterns and their usages.&lt;/em&gt;&lt;/p&gt;
-</description>
+      <description>These are my notes on domain driven design whilst watching the course by Dino Esposito on Pluralsight.
+Domain Driven Design (or DDD), is the process of discovering both data and behavioural requirements for a given problem domain where traditional approaches usually focus purely on data collection aspects. The aim is to provide better tools to tackle the complexity at the heart of software. Within DDD, there are two distinct parts: an analytical one and a strategical one.</description>
     </item>
     
     <item>
@@ -542,85 +92,7 @@
       <pubDate>Wed, 12 Apr 2017 16:25:48 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/04/5-tips-for-getting-what-you-want/</guid>
-      <description>&lt;p&gt;Over recent months, some close friends and I have found ourselves in a bit of a rut and woken up to the fact that we aren&amp;rsquo;t getting any younger and don&amp;rsquo;t really have a plan. Naturally, this can be upsetting to a person and it&amp;rsquo;s something that can be easily rectified. &lt;/p&gt;
-
-&lt;p&gt;In this post, I want to focus on 5 things which can help you get out of the place you are in and to the place that you want to be. These are based on my own personal experience and the experiences of people close to me. We will cover: Nutrition, Dreaming, Goal Setting, Gratification and Daily Affirmations. What I describe has worked for me, you might want all of the information or just some of it. Either way, I&amp;rsquo;d be happy to help you on your journey.&lt;/p&gt;
-
-&lt;h2 id=&#34;nutrition&#34;&gt;Nutrition&lt;/h2&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;A man too busy to take care of his health is like a mechanic too busy to take care of his tools&lt;/strong&gt; - Spanish Proverb&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Have you ever heard the phrase, positive things happen to positive people? Well it&amp;rsquo;s true, the persona you project directly affects the relationship you have with those around you. So what does this have to do with nutrition you might be asking? It&amp;rsquo;s simple, it&amp;rsquo;s hard to be positive when you feel like rubbish. By eating correctly, you will feel better. When you feel better, you will have a better outlook on life.&lt;/p&gt;
-
-&lt;p&gt;So how do we go about correcting ourselves? For starters, take a look at the amount of sugar and caffine that you consume each day. Refined sugar and caffine are widely known to cause quite a large variation in both your mood and blood sugar levels. The more that we minimise that variation, the better we will feel throughout the day.&lt;/p&gt;
-
-&lt;p&gt;Prior to starting my last position, I consumed 2-4 cans of Monster/Redbull a day under the illusion that it was helping me work. What was actually happening, which I didn&amp;rsquo;t realise at the time, was that I ended up being really lathargic towards the end of the day and leaning towards the foods that weren&amp;rsquo;t exactly great for me (eg: pizza, chocolate). One day, I decided that I was going to give up all of the caffinated drinks I consumed to see how it affected me. I won&amp;rsquo;t lie, day one was absolutely fine, days 3-5 though were a nightmare with the headaches. Nevertheless, I powered through and consume no more than 100mg of caffine in a typical month these days. The net effect is a substantial improvement in my ability to wake up in the mornings, exercise and think clearly.&lt;/p&gt;
-
-&lt;p&gt;When I began to substantially reduce my intake of refined sugar, I noticed that I also experienced headaches probably to a greater extent than when I gave up caffine. I didn&amp;rsquo;t give it up completely, but really watched the amount that was going into my body. I experienced similar results to those I received when giving up caffine but also found that I began to loose a substantial amount of weight.&lt;/p&gt;
-
-&lt;p&gt;Whilst caffine &amp;amp; sugar are some of most common offenders I see, especially amongst office workers, other areas of nutrition are just as important. I really focused on what was going into my body and trying out what worked for me. Different things are going to work for different people. I knew that I needed to eat more veg and less pizza/pasta as my carb intake was too high. It wasn&amp;rsquo;t too difficult for me to make the change because I felt better in the evenings after making the changes above.&lt;/p&gt;
-
-&lt;p&gt;One major tip is preparation. Preparation is paramount to success when it comes to nutrition. If you&amp;rsquo;re going on a roadtrip, pre-plan your snacks to take with you. Think along the lines of carrot sticks and hummus. You can also plan your meals for the week, ensuring that you have the right balance for the week which also minimises the amount that you spend in the shops on things you don&amp;rsquo;t need.&lt;/p&gt;
-
-&lt;p&gt;I started my nutritional changes around October 2016, along with a slight increase in the amount of exercise that I was doing, and by the end of January 2017, I had lost almost 16kg. I looked better, my skin was better and I felt more confident in myself. With this better outlook on life, I was then able to dream big&amp;hellip;&lt;/p&gt;
-
-&lt;h2 id=&#34;dreaming&#34;&gt;Dreaming&lt;/h2&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;What you think, you become. What you feel, you attract. What you imagine, you create&lt;/strong&gt; - Buddha&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Remember when we were kids, we used to want the seemingly impossible. Our dreams were big, they were wild, they were ours. Over time, something seems to happen to each and everyone one of us where we loose the ability to dream. Dreaming is a skill that needs semi-regular attention so that you keep focused on what you truly want.&lt;/p&gt;
-
-&lt;p&gt;About ten years ago, my equation for life was pretty simple: Get a good job -&amp;gt; Get paid well -&amp;gt; Success &amp;amp; Happiness. Recently, I have been figuring out what would make me happy in the long term, not the short term. In fact, I have just turned a job offer for £50,000 a year. Why? There are other things that I dream of doing and that role doesn&amp;rsquo;t quite align with those dreams. I figured out what would make me happy by grabbing a piece of paper and writing in the middle &amp;ldquo;Happy&amp;rdquo;. From there, I used a mind map style to note down everything that I associated with happiness.&lt;/p&gt;
-
-&lt;p&gt;I spent a good couple of hours reflecting, thinking and dreaming. Some of them were known happiness triggers, others are things that I have wanted to do for a long time but have never managed to be able accomplish thus far. During the exercise, I let my mind wonder as much as it wanted whilst staying away from my current life. Some of the things that you will write down will seem far-fetched, some may even seem impossible, but they are all relevant to you in some way, for your journey.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Note: I have purposely refrained from sharing my dreams as examples here. I want you to go through the exercise and discover yours for yourself and not be influenced by mine.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Once we have rediscovered our dreams, we can work towards them with the help of goal setting&amp;hellip;&lt;/p&gt;
-
-&lt;h2 id=&#34;goal-setting&#34;&gt;Goal Setting&lt;/h2&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;A journey of a thousand miles must begin with a single step&lt;/strong&gt; - Lao Tzu&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Lao Tzu&amp;rsquo;s quote above is one that we should always remember when embarking on our new journey to our dreams. After selecting a dream from the exercise above, begin to write down a high level journey to achieving that goal making sure that you are sticking to the S.M.A.R.T principals: Specific, Measurable, Achievable, Relevant, Time-Bound. It&amp;rsquo;s okay if you don&amp;rsquo;t know where to start on this plan, because that&amp;rsquo;s the initial plan: research what you need to do to achieve X, where X is your dream.&lt;/p&gt;
-
-&lt;p&gt;Once you have a high level plan, continually itterate through the plan making each stage smaller and smaller until you can fit each stage into a single day. I set myself daily, weekly and monthly goals using this approach which works fantasically for me. In fact, this blog post is one of the goals that I had set myself.&lt;/p&gt;
-
-&lt;p&gt;Having the plan ready to action is all well and good, but how are you going to ensure that you stay on task. It&amp;rsquo;s natural to let things get in our way and our goals slip. One approach is to make yourself accountable to someone close to you, someone that you are scared of letting down. Increased accountability will alter decision-making strategies. When expecting evaluation from an audience, people will think more carefully about their decisions than they normally would. They will consider the outcomes of their judgments and process the relevant information more deliberatively &lt;em&gt;(&lt;a href=&#34;https://psychology.iresearchnet.com/social-psychology/social-cognition/accountability/&#34;&gt;Source&lt;/a&gt;)&lt;/em&gt;. Ultimately, accountability helps prevent us letting life get in our way and remain on task.&lt;/p&gt;
-
-&lt;p&gt;If you miss hitting your goal, evaluate with your accountability partner and see what you can do to prevent missing the goal again, if anything. It is important to re-visit your goals on a regular basis to ensure that you are on-track, re-evaluate where necessary and to replan due to external influences/missed goals.&lt;/p&gt;
-
-&lt;h2 id=&#34;gratification&#34;&gt;Gratification&lt;/h2&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;Feeling gratitude and not expressing it is like wrapping a present and not giving it&lt;/strong&gt; - William Arthur Ward&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;A part of getting what you want, is being grateful for the things that you already have. For me, this takes the form of a daily gratification, where I tell my accountability partner the 3 things that I am grateful for the current day. You could be grateful for the simple things such as clean running water, or the more complex things in life such as internet connectivity. We usually take the form &amp;ldquo;&lt;strong&gt;Today I am grateful for&lt;/strong&gt; &lt;em&gt;insert gratification&lt;/em&gt; &lt;strong&gt;because&lt;/strong&gt; &lt;em&gt;reason&lt;/em&gt;&amp;rdquo;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://greatergood.berkeley.edu/article/item/tips_for_keeping_a_gratitude_journal&#34;&gt;Studies&lt;/a&gt; have traced a range of impressive benefits to the simple act of writing down the things for which we’re grateful—benefits including better sleep, fewer symptoms of illness, and more happiness. If you don&amp;rsquo;t have a accountability partner just yet, don&amp;rsquo;t worry, you can still practise this activity by using a physical journal instead. In fact, my accountability partner does both. She writes it down in her journal first and then repeats them to me when we talk each day.&lt;/p&gt;
-
-&lt;h2 id=&#34;daily-affirmations&#34;&gt;Daily Affirmations&lt;/h2&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;I am the architect of my life; I build its foundation and choose its contents&lt;/strong&gt; - Dr. Carmen Harra&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;We&amp;rsquo;ve all heard of the phrase &amp;ldquo;&lt;em&gt;you are what you eat&lt;/em&gt;&amp;rdquo; - so if you eat rubbish then you&amp;rsquo;ll feel rubbish. Well the same is true for your thought processes - &lt;em&gt;you are what you think&lt;/em&gt;. Daily affirmations are proven methods of self-improvement because of their ability to rewire our brains. They have exercise like effects in that they raise the level of feel-good hormones and help to put us into a positive frame of mind for the day ahead.&lt;/p&gt;
-
-&lt;p&gt;An affirmation can be created from a self-limiting belief, and turning that belief into one that empowers you. Let&amp;rsquo;s take the example of you believe you have a lack of energy. We can rewire our brain with empowering belief that we have more energy than the day before, eg: &lt;strong&gt;Each day I wake up with more energy than the day before&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;One the back of the door to my flat, I have 4 pieces of paper on there, each with a different affirmation. I say these affirmations a minimum of once a day, sometimes everytime that I leave the flat depending on how I am feeling on that day. I would recommend on no more than 5 affirmations for each day but that is something that is completely up to you. I change the affirmations every &lt;sup&gt;3&lt;/sup&gt;&amp;frasl;&lt;sub&gt;4&lt;/sub&gt; weeks depending on how much progress that I feel that i&amp;rsquo;ve made in the choosen affirmation area of my life.&lt;/p&gt;
-
-&lt;h2 id=&#34;fin&#34;&gt;Fin&lt;/h2&gt;
-
-&lt;p&gt;I hope that you have found this article useful. I strongly recommend that you try the approaches that I&amp;rsquo;ve mentioned as they&amp;rsquo;ve massively helped me. I would be more than happy to help you or answer any questions you might have through my social channels (&lt;em&gt;&lt;a href=&#34;https://facebook.com/im5tu&#34;&gt;Facebook&lt;/a&gt;&lt;/em&gt; / &lt;em&gt;&lt;a href=&#34;https://twitter.com/im5tu&#34;&gt;Twitter&lt;/a&gt;&lt;/em&gt;).&lt;/p&gt;</description>
+      <description>&lt;p&gt;Over recent months, some close friends and I have found ourselves in a bit of a rut and woken up to the fact that we aren&amp;rsquo;t getting any younger and don&amp;rsquo;t really have a plan. Naturally, this can be upsetting to a person and it&amp;rsquo;s something that can be easily rectified. &lt;/p&gt;</description>
     </item>
     
     <item>
@@ -630,19 +102,7 @@
       
       <guid>https://im5tu.io/article/2017/04/talks-episerver-content-providers--lightening-talk/</guid>
       <description>&lt;p&gt;On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&amp;rsquo;s London offices. I ended up giving two talks: Episerver Content Providers &amp;amp; a 5 minute lightening talk.
-&lt;/p&gt;
-
-&lt;p&gt;The Episerver Content Providers talk was around the use of custom content providers within Episerver, their benefits, implementation and the pitfalls and nuances of using them. You can find the slides over at &lt;a href=&#34;http://slides.com/im5tu/epi-content-providers#/&#34;&gt;slid.es&lt;/a&gt;. On the slides you can find the speaker notes that I used, so I won&amp;rsquo;t duplicate them here.&lt;/p&gt;
-
-&lt;p&gt;For the lightening talk, I decided to cover three libraries that I think will play a big part in Episerver&amp;rsquo;s future. These are:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/aspnet/dependencyinjection&#34;&gt;Dependency Injection&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/aspnet/logging&#34;&gt;Logging&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/aspnet/options&#34;&gt;Options&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;These frameworks are well worth checking out and are used as part of my &lt;a href=&#34;https://github.com/im5tu/openmessage&#34;&gt;OpenMessage&lt;/a&gt; project.&lt;/p&gt;</description>
+&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -653,79 +113,7 @@
       <guid>https://im5tu.io/article/2017/03/news-roundup-march-2017/</guid>
       <description>&lt;p&gt;In this the first of many &lt;a href=&#34;https://im5tu.io/categories/news&#34;&gt;news roundups&lt;/a&gt;, I am going to look back through the news that you may have missed and the stories/blogs that have interested me over the previous month(s). In this round up I will be taking a look at content from arround mid January, through to the 1st March 2017.&lt;/p&gt;
 
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;announcing-open-source-guides&#34;&gt;Announcing Open Source Guides&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://github.com/nayafia&#34;&gt;Nadia Eghbal&lt;/a&gt; on the Github Blog - &lt;a href=&#34;https://github.com/blog/2318-announcing-open-source-guides&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Have you ever wanted to get started in open source? Github have made your journey easier by building some excellent guides. Take a look at one for yourself: &lt;a href=&#34;https://opensource.guide/how-to-contribute/&#34;&gt;How To Contribute - Open Source Guides&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;azure-app-service-secrets-and-web-site-hidden-gems&#34;&gt;Azure App Service Secrets and Web Site Hidden Gems&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://www.hanselman.com&#34;&gt;Scott Hanselman&lt;/a&gt; - &lt;a href=&#34;https://www.hanselman.com/blog/AzureAppServiceSecretsAndWebSiteHiddenGems.aspx&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;In this article, Scott shows many cool features that you may not necessarily know about, all of which you get for free as part of Azure. I can personally attest to the console and diagnostic features of Azure as Scott highlights. They have been invaluable for me when debugging certain issues.&lt;/p&gt;
-
-&lt;h3 id=&#34;cloudbleed&#34;&gt;Cloudbleed&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://www.cloudflare.com/&#34;&gt;Cloudflare&lt;/a&gt;, &lt;a href=&#34;https://bugs.chromium.org/p/project-zero&#34;&gt;Project Zero&lt;/a&gt;, &lt;a href=&#34;https://www.troyhunt.com/&#34;&gt;Troy Hunt&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;It&amp;rsquo;s not been a particularly good time for &lt;a href=&#34;https://www.cloudflare.com/&#34;&gt;Cloudflare&lt;/a&gt; with the revelation of this bug. I&amp;rsquo;m a huge proponent of their services, they are truely amazing. Start off by reading the &lt;a href=&#34;https://bugs.chromium.org/p/project-zero/issues/detail?id=1139&#34;&gt;Project Zero outline of the bug&lt;/a&gt;, followed by the Cloudflare posts on &lt;a href=&#34;https://blog.cloudflare.com/quantifying-the-impact-of-cloudbleed/&#34;&gt;Quantifying The Impact of Cloudbleed&lt;/a&gt; and the &lt;a href=&#34;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&#34;&gt;Official Cloudbleed Incident Report&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://www.troyhunt.com/&#34;&gt;Troy Hunt&lt;/a&gt; also has a good, &lt;a href=&#34;https://www.troyhunt.com/pragmatic-thoughts-on-cloudbleed/&#34;&gt;pragmatic post on #Cloudbleed&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;google-cloud-security-toolbox&#34;&gt;Google Cloud Security Toolbox&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://labs.spotify.com/author/gianlucaspotify/&#34;&gt;Gianluca Brindisi&lt;/a&gt; on the Spotify Labs blog - &lt;a href=&#34;https://labs.spotify.com/2017/02/22/google-cloud-security-toolbox/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Spotify actively manage 800 Google Cloud platform projects. They&amp;rsquo;ve just released two of their internal tools &lt;a href=&#34;https://github.com/spotify/gcp-audit&#34;&gt;GCP Audit&lt;/a&gt; &amp;amp; &lt;a href=&#34;https://github.com/spotify/gcp-firewall-enforcer&#34;&gt;GCP-Firewall-Enforcer&lt;/a&gt;. Both projects are designed to help Spotify maintain a proper security posture as they develop more services.&lt;/p&gt;
-
-&lt;h3 id=&#34;grafana-plugin-for-dns-analytics&#34;&gt;Grafana plugin for DNS analytics&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://blog.cloudflare.com/author/marek/&#34;&gt;Marek Vavruša&lt;/a&gt; on the Cloudflare blog - &lt;a href=&#34;https://blog.cloudflare.com/grafana-plugin/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;In better news for Cloudflare, they have released a plugin for &lt;a href=&#34;http://grafana.org/&#34;&gt;Granfana&lt;/a&gt; allowing you to see various details about the DNS traffic on your domain. Read how to &lt;a href=&#34;https://support.cloudflare.com/hc/en-us/articles/115002722267&#34;&gt;get started&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;netflix-introduce-hubcommander-stethoscope&#34;&gt;Netflix introduce HubCommander &amp;amp; Stethoscope&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;http://techblog.netflix.com&#34;&gt;Netflix Tech Blog&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/Netflix/hubcommander&#34;&gt;HubCommander&lt;/a&gt; is another chatops bot for &lt;a href=&#34;https://github.com&#34;&gt;Github&lt;/a&gt; built for slack. It aims to solve their issues surround organizational management including: enabling travis CI, docker image support and granting outside collaborators specific permissions to repositories. &lt;a href=&#34;http://techblog.netflix.com/2017/02/introducing-hubcommander.html&#34;&gt;Article Link&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/Netflix/Stethoscope&#34;&gt;Stethoscope&lt;/a&gt; is an interesting project following a &amp;ldquo;User Focused Security&amp;rdquo; approach which essentially recognisies that employees are the easiest way for an attacker into a company. The project collects information for a given user’s devices and gives them clear and specific recommendations for securing their systems. &lt;a href=&#34;http://techblog.netflix.com/2017/02/introducing-netflix-stethoscope.html&#34;&gt;Article Link&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;practical-nosql-resilience-design-pattern-for-the-enterprise&#34;&gt;Practical NoSQL resilience design pattern for the enterprise&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;http://www.ebaytechblog.com&#34;&gt;Ebay&lt;/a&gt; - &lt;a href=&#34;http://www.ebaytechblog.com/2017/02/14/practical-nosql-resilience-design-pattern-for-the-enterprise/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Personally, I&amp;rsquo;m a big fan of companies that open up to problems/solutions and EBay is no exception to that. In this post they offer a wealth of information on a resiliency design pattern for NoSql databases. It&amp;rsquo;s a good read, but pretty long at the same time.&lt;/p&gt;
-
-&lt;h3 id=&#34;tls-1-3-explained&#34;&gt;TLS 1.3 Explained&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://blog.cloudflare.com/author/filippo/&#34;&gt;Filippo Valsorda&lt;/a&gt; on the Cloudflare blog - &lt;a href=&#34;https://blog.cloudflare.com/tls-1-3-explained-by-the-cloudflare-crypto-team-at-33c3/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;This is a recording of a talk from Filippo &amp;amp; Nick Sullivan about TLS 1.3 - the next itteration of TLS. They explain how it works in technical detail, why it is faster and more secure, and touches on its history and current status In fact, Cloudflare have had their implementation of TLS 1.3 &lt;a href=&#34;https://blog.cloudflare.com/ncc-groups-cryptography-services-audit-of-tls-1-3/&#34;&gt;audited recently&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;tumblr-swift-networking-deep-dive&#34;&gt;Tumblr Swift Networking Deep Dive&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://engineering.tumblr.com&#34;&gt;Tumblr Engineering&lt;/a&gt; - &lt;a href=&#34;https://engineering.tumblr.com/post/157614049236/deep-dive-into-networking-in-swift-swift-has-a&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;In this video, &lt;a href=&#34;https://twitter.com/pearapps&#34;&gt;Kenny Ackerson&lt;/a&gt; shows that the &lt;a href=&#34;https://developer.apple.com/swift/&#34;&gt;Swift programming language&lt;/a&gt; has some interesting features that make networking alot easier and more expressive. It&amp;rsquo;s always interesting to see how other languages solve various problems, so worth a watch.&lt;/p&gt;
-
-&lt;h3 id=&#34;you-ve-studied-up-on-ddd-cqrs-and-event-sourcing-now-what&#34;&gt;You&amp;rsquo;ve studied up on DDD, CQRS, and Event Sourcing&amp;hellip; now what?&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://buildplease.com/&#34;&gt;Nick Chamberlin&lt;/a&gt; - &lt;a href=&#34;https://buildplease.com/pages/now-what/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Nick&amp;rsquo;s blog is an exceptional resource for all things DDD, CQRS and Event Sourcing. In this article, he tackles some of the questions/thoughts that people have when starting to apply these concepts.&lt;/p&gt;
-
-&lt;h3 id=&#34;visual-studio-2017-launch-date&#34;&gt;Visual Studio 2017 Launch Date&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via Julia Liuson on the Visual Studio Blog - &lt;a href=&#34;https://blogs.msdn.microsoft.com/visualstudio/2017/02/09/visual-studio-2017-launch-event-and-20th-anniversary/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;On March 7th, a mere 6 days from now, the latest itteration of Visual Studio will be released. As with every release, this one is packed with new features including: a brand new modular installer, new extensibility features/optimizations, smarter intellisense and much, much more. Be sure to tune in via &lt;a href=&#34;https://launch.visualstudio.com/&#34;&gt;launch.visualstudio.com&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;That&amp;rsquo;s all that I have for this round up. Let me know what you think on &lt;a href=&#34;https://twitter.com/im5tu&#34;&gt;Twitter (@im5tu)&lt;/a&gt;.&lt;/p&gt;</description>
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -736,39 +124,7 @@
       <guid>https://im5tu.io/article/2017/02/openmessage-2017-roadmap/</guid>
       <description>&lt;p&gt;&lt;a href=&#34;https://github.com/im5tu/openmessage&#34;&gt;OpenMessage&lt;/a&gt; originally started out as a replacement for an internal library that was used across teams. At the time, the team I was apart of needed the latest version of dotnet core for the library where as the other team were stuck on RC1. They were also developing features for that version of the framework and a few pre-existing details that we were unhappy with (eg: the request/response implementation). With that in mind, I created a minimal wrapper for what we needed. Looking forward, I plan to dedicate a bit more time to the project and improve it.&lt;/p&gt;
 
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;support-for-web-hook-scenarios&#34;&gt;Support for web hook scenarios&lt;/h2&gt;
-
-&lt;p&gt;This is probably one of the bigger ideas that I have had in mind for the last month or so purely for the power that it could bring to applications. One of the core parts of our infrastructure was taking a web request generated by an external system and translating this into a message to be placed on Azure Service Bus. I see two main parts to this functionality:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Support for incomming web hooks&lt;/li&gt;
-&lt;li&gt;Support for sending web hooks&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;For each portion, the framework will need to consider whether or not to send/receive to/from unique endpoints or an endpoint per message. Initially, this will be decided at composition, but may be extended to dynamic re-configuration at a later stage (which will need to be considered throughout the framework). I intend to use some lightweight routing to do this, probably using the routing module from ASP.Net core, at least, initialy.&lt;/p&gt;
-
-&lt;h2 id=&#34;support-for-additional-providers&#34;&gt;Support for additional providers&lt;/h2&gt;
-
-&lt;p&gt;The more providers that the project has, the more flexibility you can have inside of your applications. The main providers that I have in mind are as follows:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Azure Event Hubs&lt;/li&gt;
-&lt;li&gt;Service Fabric Reliable Queues&lt;/li&gt;
-&lt;li&gt;Rabbit MQ&lt;/li&gt;
-&lt;li&gt;In Memory&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;There isn&amp;rsquo;t really too much to say about each of the above, except that the project will have support for each framework using the native providers. I did toy with the idea of building a complete AMQP library as part of this, but that seems a little overkill for the time being. I&amp;rsquo;ll see how the progression of libraries moving to dotnet core takes shape as another full library is quiet the undertaking.&lt;/p&gt;
-
-&lt;h2 id=&#34;sample-creation-tutorial-series&#34;&gt;Sample creation/tutorial series&lt;/h2&gt;
-
-&lt;p&gt;One of the big pieces that is missing at the moment are public samples of how to use the project in your application. This will help ease the onboarding process for new users/developers.&lt;/p&gt;
-
-&lt;p&gt;Naturally, as part of all of this work, the dependencies will be kept up-to-date &amp;amp; bugs fixed. If there is something that you&amp;rsquo;d like to see, create an issue on &lt;a href=&#34;https://github.com/im5tu/openmessage&#34;&gt;github&lt;/a&gt; or &lt;a href=&#34;https://twitter.com/im5tu&#34;&gt;tweet me&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;Happy Messaging!&lt;/p&gt;</description>
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -779,11 +135,7 @@
       <guid>https://im5tu.io/article/2017/02/openmessage-1.1-released/</guid>
       <description>&lt;p&gt;Just a quick update to say that the Azure provider for &lt;a href=&#34;https://github.com/Im5tu/OpenMessage&#34;&gt;OpenMessage&lt;/a&gt; has been released. This update fixes an issue with scheduling messages on topics.&lt;/p&gt;
 
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;As part of this update, the entire solution has been converted to the new (old) csproj system as part of Visual Studio 2017. Over the next few days i&amp;rsquo;ll be posting the roadmap for the project and where I plan to take it next. Feedback and ideas are welcome.&lt;/p&gt;
-
-&lt;p&gt;If you experience any problems, let me know.&lt;/p&gt;</description>
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -793,37 +145,7 @@
       
       <guid>https://im5tu.io/article/2017/01/my-2017/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve been thinking about writing this post for a little while now, but never seem to get around to it. I know that I&amp;rsquo;m massively late to the 2017 blog post party, but I didn&amp;rsquo;t really think about it for quite a while. I wanted to refocus and find out what I really wanted to achieve rather than a token guesture that would likely fail like previously. I&amp;rsquo;ve split this out into two main categories below: Personal and Professional Development.
-&lt;/p&gt;
-
-&lt;h2 id=&#34;personal-development&#34;&gt;Personal Development&lt;/h2&gt;
-
-&lt;h3 id=&#34;health-fitness&#34;&gt;Health &amp;amp; Fitness&lt;/h3&gt;
-
-&lt;p&gt;This is my primary goal for 2017. I&amp;rsquo;ll be honest and say that 2015 &amp;amp; 2016 wasn&amp;rsquo;t exactly the greatest for me. So much so, I acquired the name &amp;ldquo;the feeder&amp;rdquo; at my previous job. I was always eating. As we all know, eating &amp;amp; a sedentary job means weight gain. I topped out at 106kg approximately. For me, as a former athlete, this was massive.&lt;/p&gt;
-
-&lt;p&gt;Starting off just after Christmas, I purchased both a Fitbit Charge 2 and the Fitbit Aria to begin my transformation (I&amp;rsquo;ll post my thoughts on these products soon). I am tracking as much data as I can including water/food consumption, weight/body fat and mood. With all the data, I hope to make small adjustments (heklo agile!) rather than big shocking changes that i&amp;rsquo;ve previously made. Exercise is not the biggest part of this, it&amp;rsquo;s the nutrional side. So far this month, I have seen a big change. I haven&amp;rsquo;t been as on plan as I would have liked, but I am correcting this day by day and trying to make healthier choices.&lt;/p&gt;
-
-&lt;h3 id=&#34;linguistics&#34;&gt;Linguistics&lt;/h3&gt;
-
-&lt;p&gt;For me, the goal of linguistics falls into two parts: writing and foreign languages. As I blog more throughout the year, I know that my writing will naturally improve as and when I get feedback on posts. As I begin to read more books, i&amp;rsquo;ll learn new and exciting words/phrases that will aid with this also.&lt;/p&gt;
-
-&lt;p&gt;As a British person, I am always amazed everytime that I travel to a different country. Nearly everyone seems to be able to speak English, but we (myself included) cannot return the pleasantaries. So for this aim, i&amp;rsquo;ve downloaded and began using an app called Duolingo to begin learning Dutch. Why Dutch? I seem to be there every year now for dance events so it would be nice to speak the language as to not be so ignorant when I travel. I&amp;rsquo;m off there again next month, so I highly doubt i&amp;rsquo;ll be able to say anything useful, but i&amp;rsquo;m putting in a solid shift with the aim of being able to order some food in Dutch.&lt;/p&gt;
-
-&lt;h3 id=&#34;mentality&#34;&gt;Mentality&lt;/h3&gt;
-
-&lt;p&gt;The above two goals require a strong mindset as there will be the enevitible ups and downs. For this, I have taken inspiration from the likes of &lt;a href=&#34;https://twitter.com/jockowillink&#34;&gt;Jocko Willink&lt;/a&gt;. Jocko is co-author of a book called Extreme Ownership and hosts his own podcast. The podcast is what has been the primary driver behind the changes that I am making. One particular aspect that I liked is when Jocko was talking about a person failing in a situation when he was in the seal teams, to which he responded with &amp;ldquo;Good!&amp;rdquo;. Why good? Well, out of every bad situation comes a chance to learn and progress not only yourselves, but potentially others. Taking a positive spin on everything can only be a good thing!&lt;/p&gt;
-
-&lt;h2 id=&#34;professional-development&#34;&gt;Professional Development&lt;/h2&gt;
-
-&lt;h3 id=&#34;social&#34;&gt;Social&lt;/h3&gt;
-
-&lt;p&gt;I fail at this level in so many ways. If I can just be consistent with getting back to people on LinkedIn, writing more consistently and posting relevant, interesting content then I would be happy. I used to think that blogging was only about writing long technical articles, but there is so much more than that. I hope to open up about what i&amp;rsquo;m doing both technical and non-technical in the coming months.&lt;/p&gt;
-
-&lt;h3 id=&#34;work&#34;&gt;Work&lt;/h3&gt;
-
-&lt;p&gt;After changing my job role towards the back end of last year, I will be looking at consolidating my position and growing within the role. It&amp;rsquo;s my first senior role, so I am getting used to the additional responsibilities that it brings. Moreover, I have transferred from the telecommunications industry to creative. Personally, I think getting a broad set of industry experience is crucial for developers as each industry will present different challenges. It&amp;rsquo;s also my first time working with a CMS system. Coming from a non-CMS background, some quirks have definitely caught me by surprise!&lt;/p&gt;
-
-&lt;p&gt;So that wraps up what I imagine 2017 to be like for me. I&amp;rsquo;ll keep myself accountable by posting regular updates on social media and here on the blog every few months. Thanks for reading, see you again soon!&lt;/p&gt;</description>
+&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -833,60 +155,7 @@
       
       <guid>https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/</guid>
       <description>&lt;p&gt;Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&amp;rsquo;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.
-&lt;/p&gt;
-
-&lt;h2 id=&#34;the-readfile-function&#34;&gt;The &lt;code&gt;readFile&lt;/code&gt; function&lt;/h2&gt;
-
-&lt;p&gt;In Hugo, the &lt;code&gt;readFile&lt;/code&gt; function looks for a file relative to the current project working directory and returns it as a string. If we had a file located at: &lt;code&gt;&amp;lt;root&amp;gt;/static/css/site.css&lt;/code&gt;, then we could render the file out like so:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;style&amp;gt;{ {- renderFile &amp;quot;/static/css/site.css&amp;quot; -} }&amp;lt;/style&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;strong&gt;NB:&lt;/strong&gt; &lt;em&gt;Remember to close the squiggly brackets so that Hugo renders it correctly.&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;There is a gotcha with this approach so far. Hugo will try and do its thing with the resultant string and what you will end up with is something along the lines of:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;script&amp;gt;ZgotmplZ&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;as opposed to your intented css contents. Luckily, there is a piped method that we can use to sort this out for us:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;style&amp;gt;{ {- renderFile &amp;quot;css/site.css&amp;quot; | safeCss -} }&amp;lt;/style&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;reading-a-hashed-file&#34;&gt;Reading a hashed file&lt;/h2&gt;
-
-&lt;p&gt;As you may recall in &lt;a href=&#34;https://im5tu.io/article/2016/11/blog-building---part-4---frontend/&#34;&gt;my previous Hugo post&lt;/a&gt;, I setup my css files with cache busting capabilites by appending the hash onto the filename. In order to render this as part of the HTML, we need a few things:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Find the name of the hashed file&lt;/li&gt;
-&lt;li&gt;Build the file path&lt;/li&gt;
-&lt;li&gt;Call readFile&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;In order to get the hashed file name, we can inspect the site&amp;rsquo;s data sources, looking for the file name (requires post mentioned above):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;{{ $siteCssHash := (index .Site.Data.hash &amp;quot;site.css&amp;quot;)}}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Next, we need to build up the correct file path. Note, this is the file path prior to rendering:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;{{ $siteCssPath := (printf &amp;quot;/static/css/%s&amp;quot; $siteCssHash) }}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Finally, we need to call &lt;code&gt;readFile&lt;/code&gt; and ensure that it is marked as a safe css string:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;style&amp;gt;{{- readFile $siteCssPath | safeCSS -}}&amp;lt;/style&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;So putting the three together:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;{{ $siteCssHash := (index .Site.Data.hash &amp;quot;site.css&amp;quot;)}}
-{{ $siteCssPath := (printf &amp;quot;/static/css/%s&amp;quot; $siteCssHash) }}
-&amp;lt;style&amp;gt;{{- readFile $siteCssPath | safeCSS -}}&amp;lt;/style&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And that&amp;rsquo;s it. When the page reloads/is rebuilt, your pages should now contain inlined css. You can view this &lt;a href=&#34;https://github.com/Im5tu/im5tu-hugo/blob/84ee887616acbe6cfef7e37b0dc9b4779aad31fd/layouts/partials/header/styles.html&#34;&gt;exact commit here&lt;/a&gt;.&lt;/p&gt;</description>
+&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -896,63 +165,228 @@
       
       <guid>https://im5tu.io/article/2016/12/write-good-code-not-code-hastily/</guid>
       <description>&lt;p&gt;This article is a rework of a draft that I&amp;rsquo;ve had sitting in my drafts folder for a long while now. Over the last six months or so, I&amp;rsquo;ve been reviewing a lot more code than I had previously thanks in part to a promotion and in part, code reviewing applicants coding entries. Some of the code has been good, with some code, really not so good!
-&lt;/p&gt;
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Blog Building - Part 4 - Frontend</title>
+      <link>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</link>
+      <pubDate>Sat, 19 Nov 2016 08:01:38 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</guid>
+      <description>&lt;p&gt;So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.&lt;/p&gt;
 
-&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;TL;DR:&lt;/strong&gt; &lt;em&gt;Do everything in your power to not take the shortcut when writing code. It will bite you in the future.&lt;/em&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Blog Building - Part 3 - Theming</title>
+      <link>https://im5tu.io/article/2016/11/blog-building---part-3---theming/</link>
+      <pubDate>Fri, 18 Nov 2016 19:01:38 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2016/11/blog-building---part-3---theming/</guid>
+      <description>&lt;p&gt;In this article, I will show you how the theme has been constructed and show you how the overrides work. So far we have created a site, setup most of our workflow and posted our first article.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Blog Building - Part 2 - My First Post</title>
+      <link>https://im5tu.io/article/2016/11/blog-building---part-2---my-first-post/</link>
+      <pubDate>Thu, 17 Nov 2016 23:01:38 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2016/11/blog-building---part-2---my-first-post/</guid>
+      <description>&lt;p&gt;In &lt;a href=&#34;https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/&#34;&gt;the last article&lt;/a&gt;, we setup our workflow and all the pieces that you will need to create a new site. Now we need to install a theme and begin publishing. Prior to writing this series, I began evaluating the extensibility of hugo themes and started work on something I call bones - a no thrills template with no styling, just structure. As I improve the template it will become more useful, maybe. It will remain the template behind mysite as I continue to improve it.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Blog Building - Part 1 - Hello Hugo</title>
+      <link>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</link>
+      <pubDate>Thu, 17 Nov 2016 20:23:00 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</guid>
+      <description>&lt;p&gt;As promised in this first mini-series, I am going to guide you through the steps that I have taken to get my blog up and running on Github pages and Cloudflare with SSL. As these the steps that I have taken to get this blog up and running, your milage may vary with this as different versions get released. That said, you should be fine.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Hello World</title>
+      <link>https://im5tu.io/article/2016/11/hello-world/</link>
+      <pubDate>Thu, 17 Nov 2016 19:34:17 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2016/11/hello-world/</guid>
+      <description>&lt;p&gt;Hello World. Safe to say it&amp;rsquo;s been a little while since I have blogged or even had a website come to think of it. Alas, I am back with some fresh ideas and recharged to help you dear reader.&lt;/p&gt;
 
-&lt;p&gt;I am much the same as everybody else, there is room for improvement in my code - of that I&amp;rsquo;m sure. We are all limited by knowledge: not knowing what we don&amp;rsquo;t know. That&amp;rsquo;s one of the things I enjoy the most about what I do, learning how to do new things to make my life, and others lives, easier in the long run.&lt;/p&gt;
-
-&lt;p&gt;One of the areas that I think 95% of developers can be better at doing is writing clean code. We&amp;rsquo;ve all heard of &lt;a href=&#34;https://cleancoders.com/&#34;&gt;Uncle Bob&lt;/a&gt;, so I won&amp;rsquo;t re-itterate him here. I&amp;rsquo;ve found that senior developers asking for £45,000 cannot recite the SOLID principals correctly (if at all), let alone use them in practise. I use the SOLID principals as one example, but in reality we are talking about clean and reusable code. Code anyone of any level can pickup and understand.&lt;/p&gt;
-
-&lt;h2 id=&#34;on-haste&#34;&gt;On Haste&lt;/h2&gt;
-
-&lt;p&gt;There comes a time in every project where you&amp;rsquo;re up against the clock for one reason or another. Deadline&amp;rsquo;s are coming up quickly and you still haven&amp;rsquo;t finished that module. What do you do? Do you write those unit tests later? Do you take that &amp;ldquo;quick and easy&amp;rdquo; shortcut.&lt;/p&gt;
-
-&lt;p&gt;It&amp;rsquo;s very easy to take the shortcut and get the work out on time. When you do this, you are deferring that effort until later. Except:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Later equals never&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;So what happens when you keep deffering that effort until never? You and your team start to use the phrases like: &amp;ldquo;this needs a complete rewrite&amp;rdquo; or &amp;ldquo;we can&amp;rsquo;t do feature x because it wasn&amp;rsquo;t written in an extensible way&amp;rdquo;. These phrases should be massive red flags. They are a sign that too many shortcuts have been taken in the past which have now come to fruition.&lt;/p&gt;
-
-&lt;p&gt;Back to the example, what should you do? There are a number of things that you can do, including:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Ask for more time to do it properly,&lt;/li&gt;
-&lt;li&gt;Attempt to descope some of the work,&lt;/li&gt;
-&lt;li&gt;Stay late and put extra effort it&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Typically, the first two options are likely your best approach before considering a shortcut or working late. I used often work later as a last resort, though it is something that I am not fond of in any shape or form. This typically means bad quoting/estimating/requirements gathering which is a little outside of scope for this article, so I&amp;rsquo;ll cover this topic in a future post.&lt;/p&gt;
-
-&lt;p&gt;Clean coding can help in preventing us from reaching the situation described above. I gave some advice today, on this very subject, to a junior developer which I don&amp;rsquo;t think is repeated enough, in any form. I&amp;rsquo;ve given it before and i&amp;rsquo;ll give it countless times more:&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;Take the time and learn how to do it correctly. Practise doing it correctly until it&amp;rsquo;s second nature, even on current projects. You will become faster at it with time and be a better developer for it.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Studying by itself is seldom enough. Learning is always best in context. The first few times you try something new, you will inevitably make mistakes. It&amp;rsquo;s natural to make mistakes when learning, we are human afterall. Think of learning like its an agile piece of work. Iterrate and improve (with the help of code reviews).&lt;/p&gt;
-
-&lt;p&gt;Learning the core patterns &amp;amp; principals (eg: SOLID) may slow you down in the early stages of learning as you refer to learning material. However, don&amp;rsquo;t be put off by this. As your knowledege increases, you will be spending less time fighting your way through unreadable code whilst writing code that can be read by all skill levels. Code that is not readable slows everyone down. Yourself included, though you may not realise it at first.&lt;/p&gt;
-
-&lt;h2 id=&#34;on-code-reviews&#34;&gt;On Code Reviews&lt;/h2&gt;
-
-&lt;p&gt;One of the quickest ways to improve the code you&amp;rsquo;re writing is to have it reviewed. Reviews need to be a conscious effort by everyone in a team. How you do the review is up to you. A review can be two people sitting at a desk, or it can be an isolated review. Pick which strategy is best for you. It&amp;rsquo;s just important that it happens.&lt;/p&gt;
-
-&lt;p&gt;Can a junior review a seniors code? Certainly, in my opinion. Juniors should be asking questions about the code and how it works. This forces a greater understanding in what has been written (on both sides) and the core  principals behind the code.&lt;/p&gt;
-
-&lt;p&gt;One of the most common blockers to adopting code reviews is that they take too much time. If you are attempting to review a 3000 file changeset, then of course it will take time. But we must also be asking the question: why has it grown to a 3000 file changeset in the first place? The chances of missing an obvious mistake in a changeset grows exponentially with the size of the changeset. Reviewers get fatigued with large changesets. Where possible, try and keep the changeset small and have it reviewed more frequently by different people. The more eyes on the code, the better, generally.&lt;/p&gt;
-
-&lt;p&gt;Code reviews exist for two primary reasons: to help people learn and catch the obvious mistakes. They should also be &lt;a href=&#34;https://slack.engineering/on-empathy-pull-requests-979e4257d158&#34;&gt;empathetic in nature&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;final-thoughts&#34;&gt;Final Thoughts&lt;/h2&gt;
-
-&lt;p&gt;The scrutineers amongst you will have noticed that the sub-text to this article is all about preventing technical debt. Technical debt is a monster that accrues interest over time. One of the key ways to prevent that debt, is by writing clean code. We should be writing code as clean as we can. The more you write clean code, the quicker you will be at writing it.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Your code is your legacy&lt;/em&gt;&lt;/p&gt;</description>
+&lt;p&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Technical Debt: How We Get It And How To Avoid It</title>
+      <link>https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/</link>
+      <pubDate>Wed, 05 Aug 2015 18:37:26 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/</guid>
+      <description>&lt;p&gt;This post started as a rebuttal to Ralf Westphal&amp;rsquo;s &lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin&#34;&gt;blog&lt;/a&gt; and his post, &amp;ldquo;&lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin/archive/2015/07/22/there-is-no-such-thing-as-technical-debt.aspx&#34;&gt;There is no such thing as technical debt&lt;/a&gt;&amp;rdquo;. There are many points of view on the subject covered by various people such as &lt;a href=&#34;https://sites.google.com/site/unclebobconsultingllc/a-mess-is-not-a-technical-debt&#34;&gt;Uncle Bob&lt;/a&gt; and &lt;a href=&#34;http://martinfowler.com/bliki/TechnicalDebt.html&#34;&gt;Martin Fowler&lt;/a&gt;, but I thought it might be insightful to show how my team manages our code base.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Up And Running With Git And Powershell</title>
+      <link>https://im5tu.io/article/2015/02/up-and-running-with-git-and-powershell/</link>
+      <pubDate>Mon, 23 Feb 2015 18:37:14 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2015/02/up-and-running-with-git-and-powershell/</guid>
+      <description>&lt;p&gt;We&amp;rsquo;ve all experienced a time where we use our pc&amp;rsquo;s for a prolonged period of time, accumulating a ton of crap along the way as we try out various technologies and fads. After a while, the pc begins to do funny things like crash for no apparent reason. This week, I needed to rebuild my dev machine and decided to change from Atlassian&amp;rsquo;s Source Tree over to Powershell and raw git.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>3 Easy Steps To Configuring Azure With Powershell</title>
+      <link>https://im5tu.io/article/2015/02/3-easy-steps-to-configuring-azure-with-powershell/</link>
+      <pubDate>Tue, 17 Feb 2015 18:37:00 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2015/02/3-easy-steps-to-configuring-azure-with-powershell/</guid>
+      <description>&lt;p&gt;Recently, I had to automate some tasks in Azure. This is the easiest way I could get started.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>DevOps</title>
+      <link>https://im5tu.io/article/2015/01/devops/</link>
+      <pubDate>Sat, 24 Jan 2015 18:36:29 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2015/01/devops/</guid>
+      <description>&lt;p&gt;As part of my role as a .Net Developer, I have recently been getting to grips with the build and deployment features of both Teamcity and Octopus Deploy. This has been making me think about the industry buzz word &amp;ldquo;DevOps&amp;rdquo; and exactly what that means.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Dev Lunches: What, Why, How</title>
+      <link>https://im5tu.io/article/2014/12/dev-lunches-what-why-how/</link>
+      <pubDate>Wed, 17 Dec 2014 18:36:09 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/12/dev-lunches-what-why-how/</guid>
+      <description>&lt;p&gt;If you&amp;rsquo;re not up-to-date, you fall behind. You fall behind in your work, which leads you to fall behind at home. If continued, it&amp;rsquo;s a never ending circle that can seem like climbing Everest in order to overcome. I propose that we, as developers, start doing is utilizing our free time to help not only ourselves but our co-workers too. We can do this via dev lunches.  &lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Message Queue Fundementals: MSMQ</title>
+      <link>https://im5tu.io/article/2014/09/message-queue-fundementals-msmq/</link>
+      <pubDate>Sun, 28 Sep 2014 18:35:57 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/09/message-queue-fundementals-msmq/</guid>
+      <description>&lt;p&gt;MSMQ is Microsoft&amp;rsquo;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API. &lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Message Queue Fundementals: Introduction</title>
+      <link>https://im5tu.io/article/2014/09/message-queue-fundementals-introduction/</link>
+      <pubDate>Sun, 07 Sep 2014 18:35:37 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/09/message-queue-fundementals-introduction/</guid>
+      <description>&lt;p&gt;Message queues are a substantial part of modern day enterprise architectures and a vital part of providing scalable solutions. They are designed for asynchronous communication between different parts of the system. They help scale individual components of a system and increase reliability with the optional addition of the persistence of messages to a storage system.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Finding Reducible Expressions</title>
+      <link>https://im5tu.io/article/2014/06/finding-reducible-expressions/</link>
+      <pubDate>Tue, 24 Jun 2014 09:21:19 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/06/finding-reducible-expressions/</guid>
+      <description>&lt;p&gt;Today I just wanted to share a quick note regarding &lt;a href=&#34;http://stackoverflow.com/a/2040097/315711&#34;&gt;a Stack Overflow answer&lt;/a&gt; that I recently came across. In the answer the author explains that a call to &lt;code&gt;Expression.CanReduce&lt;/code&gt; will typically return false, while &lt;code&gt;Expression.Reduce()&lt;/code&gt; will return the current expression. The author continues to state that one of the types that overrides &lt;code&gt;Expression.Reduce()&lt;/code&gt; and &lt;code&gt;Expression.CanReduce&lt;/code&gt; is &lt;code&gt;MemberInitExpression&lt;/code&gt;.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>How your binary search implementation is broken and how to fix it</title>
+      <link>https://im5tu.io/article/2014/06/how-your-binary-search-implementation-is-broken-and-how-to-fix-it/</link>
+      <pubDate>Fri, 20 Jun 2014 18:21:04 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/06/how-your-binary-search-implementation-is-broken-and-how-to-fix-it/</guid>
+      <description>&lt;p&gt;I have recently begun studying the theory and implementations of algorithms. During this study, I came across &lt;a href=&#34;http://googleresearch.blogspot.co.uk/2006/06/extra-extra-read-all-about-it-nearly.html&#34;&gt;this post&lt;/a&gt; which describes how a bug exists in most implementations of a binary search algorithm. &lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Unit Testing Equals The Forgotten Tests</title>
+      <link>https://im5tu.io/article/2014/06/unit-testing-equals-the-forgotten-tests/</link>
+      <pubDate>Wed, 18 Jun 2014 18:20:25 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/06/unit-testing-equals-the-forgotten-tests/</guid>
+      <description>&lt;p&gt;Today I wanted to cover something that is not often covered when unit testing an object. If an object has the &lt;code&gt;Equals&lt;/code&gt; method overridden, then there are a number of tests that we should be running as a minimum, these are:&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Enabling HTTP Strict Transport Security HSTS via Web Config</title>
+      <link>https://im5tu.io/article/2014/06/enabling-http-strict-transport-security-hsts-via-web-config/</link>
+      <pubDate>Tue, 10 Jun 2014 18:19:47 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/06/enabling-http-strict-transport-security-hsts-via-web-config/</guid>
+      <description>&lt;p&gt;In my previous post, I discussed how to &lt;a href=&#34;https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/&#34;&gt;enable HSTS via MVC Action Filters&lt;/a&gt;. I thought that I would just do a follow up post showing you how to enable it via the web.config. &lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Enabling HTTP Strict Transport Security HSTS via ASP Net MVC ActionFilters</title>
+      <link>https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/</link>
+      <pubDate>Mon, 21 Apr 2014 18:19:47 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/</guid>
+      <description>&lt;p&gt;After reading &lt;a href=&#34;http://www.troyhunt.com/&#34;&gt;Troy Hunt&amp;rsquo;s&lt;/a&gt; free ebook on the &lt;a href=&#34;http://www.troyhunt.com/2011/12/free-ebook-owasp-top-10-for-net.html&#34;&gt;OWASP Top 10 for .Net Developers&lt;/a&gt;, I discovered an additional mechanism to help developers secure their websites. That mechanism is HTTP Strict Transport Security.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>SAP Business One V9 Version Strings</title>
+      <link>https://im5tu.io/article/2014/03/sap-business-one-v9-version-strings/</link>
+      <pubDate>Sat, 15 Mar 2014 13:18:01 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2014/03/sap-business-one-v9-version-strings/</guid>
+      <description>&lt;p&gt;Today I had to figure out what the current version of SAP Business One is. In order to do this, I looked at the table SFMD inside of SBO-Common and found the following results:&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Becoming An MCP</title>
+      <link>https://im5tu.io/article/2013/06/becoming-an-mcp/</link>
+      <pubDate>Mon, 10 Jun 2013 20:14:39 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2013/06/becoming-an-mcp/</guid>
+      <description>&lt;p&gt;As the title suggests, today I passed the 70-483 Programming in C# exam to offically become a Microsoft Certifed Professional.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Using IDisposible correctly</title>
+      <link>https://im5tu.io/article/2013/05/using-idisposible-correctly/</link>
+      <pubDate>Mon, 06 May 2013 18:09:25 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2013/05/using-idisposible-correctly/</guid>
+      <description>&lt;p&gt;In this article, I am going to show you how to use the &lt;code&gt;IDisposable&lt;/code&gt; interface correctly in your code. When I read others code, it is easy to pick up on subtle bugs. We need to begin to train ourselves to see the bugs and we do this by understanding what we are using. Before we begin, we need to make sure that we understand a core piece of computer science theory: Destructors.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Semaphore vs SeamphoreSlim Micro Benchmark</title>
+      <link>https://im5tu.io/article/2013/03/semaphore-vs-seamphoreslim-micro-benchmark/</link>
+      <pubDate>Mon, 11 Mar 2013 18:06:28 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2013/03/semaphore-vs-seamphoreslim-micro-benchmark/</guid>
+      <description>&lt;p&gt;In this post, I am going to show a small micro-benchmark to demonstrate the performance difference between the &lt;code&gt;Semaphore&lt;/code&gt; and &lt;code&gt;SemaphoreSlim&lt;/code&gt; classes in C#. A &lt;code&gt;Semaphore&lt;/code&gt; is often used to restrict the number of threads than can access some (physical or logical) resource. In this case, we want the restriction to be as little as possible.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Flicker free forms and listview in .Net</title>
+      <link>https://im5tu.io/article/2012/12/flicker-free-forms-and-listview-in-.net/</link>
+      <pubDate>Sun, 30 Dec 2012 14:51:38 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2012/12/flicker-free-forms-and-listview-in-.net/</guid>
+      <description>&lt;p&gt;On a project I have been working on recently, I came across a problem where under Windows an Mdi Child form would flicker when it loads. Trying to find information on what was the cause of this was near impossible. I ended up trying a lot of code snippets that I found when googling the problem and this is what I have come up with.
+&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Extension methods in dotnet</title>
+      <link>https://im5tu.io/article/2012/12/extension-methods-in-dotnet/</link>
+      <pubDate>Sat, 01 Dec 2012 17:51:38 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2012/12/extension-methods-in-dotnet/</guid>
+      <description>&lt;p&gt;In this article we will take a look at what extension methods are and how to use them in .Net. Personally, they are one of the best things that has been introduced into the .Net framework in terms of readability. I will take you through what extension methods are, how to create them (in c# and vb) then I will show you some of the extension methods that I have created (in c# only, conversion is for you to try).
+&lt;/p&gt;</description>
     </item>
     
   </channel>

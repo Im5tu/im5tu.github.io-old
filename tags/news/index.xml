@@ -2,11 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>News on Stuart Blackler&#39;s Blog</title>
-    <link>https://im5tu.io/tags/news/index.xml</link>
+    <link>https://im5tu.io/tags/news/</link>
     <description>Recent content in News on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://im5tu.io/tags/news/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Mar 2017 19:32:24 +0000</lastBuildDate>
+    
+	<atom:link href="https://im5tu.io/tags/news/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>News Roundup March 2017</title>
@@ -16,79 +19,7 @@
       <guid>https://im5tu.io/article/2017/03/news-roundup-march-2017/</guid>
       <description>&lt;p&gt;In this the first of many &lt;a href=&#34;https://im5tu.io/categories/news&#34;&gt;news roundups&lt;/a&gt;, I am going to look back through the news that you may have missed and the stories/blogs that have interested me over the previous month(s). In this round up I will be taking a look at content from arround mid January, through to the 1st March 2017.&lt;/p&gt;
 
-&lt;p&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;announcing-open-source-guides&#34;&gt;Announcing Open Source Guides&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://github.com/nayafia&#34;&gt;Nadia Eghbal&lt;/a&gt; on the Github Blog - &lt;a href=&#34;https://github.com/blog/2318-announcing-open-source-guides&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Have you ever wanted to get started in open source? Github have made your journey easier by building some excellent guides. Take a look at one for yourself: &lt;a href=&#34;https://opensource.guide/how-to-contribute/&#34;&gt;How To Contribute - Open Source Guides&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;azure-app-service-secrets-and-web-site-hidden-gems&#34;&gt;Azure App Service Secrets and Web Site Hidden Gems&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://www.hanselman.com&#34;&gt;Scott Hanselman&lt;/a&gt; - &lt;a href=&#34;https://www.hanselman.com/blog/AzureAppServiceSecretsAndWebSiteHiddenGems.aspx&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;In this article, Scott shows many cool features that you may not necessarily know about, all of which you get for free as part of Azure. I can personally attest to the console and diagnostic features of Azure as Scott highlights. They have been invaluable for me when debugging certain issues.&lt;/p&gt;
-
-&lt;h3 id=&#34;cloudbleed&#34;&gt;Cloudbleed&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://www.cloudflare.com/&#34;&gt;Cloudflare&lt;/a&gt;, &lt;a href=&#34;https://bugs.chromium.org/p/project-zero&#34;&gt;Project Zero&lt;/a&gt;, &lt;a href=&#34;https://www.troyhunt.com/&#34;&gt;Troy Hunt&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;It&amp;rsquo;s not been a particularly good time for &lt;a href=&#34;https://www.cloudflare.com/&#34;&gt;Cloudflare&lt;/a&gt; with the revelation of this bug. I&amp;rsquo;m a huge proponent of their services, they are truely amazing. Start off by reading the &lt;a href=&#34;https://bugs.chromium.org/p/project-zero/issues/detail?id=1139&#34;&gt;Project Zero outline of the bug&lt;/a&gt;, followed by the Cloudflare posts on &lt;a href=&#34;https://blog.cloudflare.com/quantifying-the-impact-of-cloudbleed/&#34;&gt;Quantifying The Impact of Cloudbleed&lt;/a&gt; and the &lt;a href=&#34;https://blog.cloudflare.com/incident-report-on-memory-leak-caused-by-cloudflare-parser-bug/&#34;&gt;Official Cloudbleed Incident Report&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://www.troyhunt.com/&#34;&gt;Troy Hunt&lt;/a&gt; also has a good, &lt;a href=&#34;https://www.troyhunt.com/pragmatic-thoughts-on-cloudbleed/&#34;&gt;pragmatic post on #Cloudbleed&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;google-cloud-security-toolbox&#34;&gt;Google Cloud Security Toolbox&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://labs.spotify.com/author/gianlucaspotify/&#34;&gt;Gianluca Brindisi&lt;/a&gt; on the Spotify Labs blog - &lt;a href=&#34;https://labs.spotify.com/2017/02/22/google-cloud-security-toolbox/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Spotify actively manage 800 Google Cloud platform projects. They&amp;rsquo;ve just released two of their internal tools &lt;a href=&#34;https://github.com/spotify/gcp-audit&#34;&gt;GCP Audit&lt;/a&gt; &amp;amp; &lt;a href=&#34;https://github.com/spotify/gcp-firewall-enforcer&#34;&gt;GCP-Firewall-Enforcer&lt;/a&gt;. Both projects are designed to help Spotify maintain a proper security posture as they develop more services.&lt;/p&gt;
-
-&lt;h3 id=&#34;grafana-plugin-for-dns-analytics&#34;&gt;Grafana plugin for DNS analytics&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://blog.cloudflare.com/author/marek/&#34;&gt;Marek Vavruša&lt;/a&gt; on the Cloudflare blog - &lt;a href=&#34;https://blog.cloudflare.com/grafana-plugin/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;In better news for Cloudflare, they have released a plugin for &lt;a href=&#34;http://grafana.org/&#34;&gt;Granfana&lt;/a&gt; allowing you to see various details about the DNS traffic on your domain. Read how to &lt;a href=&#34;https://support.cloudflare.com/hc/en-us/articles/115002722267&#34;&gt;get started&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;netflix-introduce-hubcommander-stethoscope&#34;&gt;Netflix introduce HubCommander &amp;amp; Stethoscope&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;http://techblog.netflix.com&#34;&gt;Netflix Tech Blog&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/Netflix/hubcommander&#34;&gt;HubCommander&lt;/a&gt; is another chatops bot for &lt;a href=&#34;https://github.com&#34;&gt;Github&lt;/a&gt; built for slack. It aims to solve their issues surround organizational management including: enabling travis CI, docker image support and granting outside collaborators specific permissions to repositories. &lt;a href=&#34;http://techblog.netflix.com/2017/02/introducing-hubcommander.html&#34;&gt;Article Link&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/Netflix/Stethoscope&#34;&gt;Stethoscope&lt;/a&gt; is an interesting project following a &amp;ldquo;User Focused Security&amp;rdquo; approach which essentially recognisies that employees are the easiest way for an attacker into a company. The project collects information for a given user’s devices and gives them clear and specific recommendations for securing their systems. &lt;a href=&#34;http://techblog.netflix.com/2017/02/introducing-netflix-stethoscope.html&#34;&gt;Article Link&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;practical-nosql-resilience-design-pattern-for-the-enterprise&#34;&gt;Practical NoSQL resilience design pattern for the enterprise&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;http://www.ebaytechblog.com&#34;&gt;Ebay&lt;/a&gt; - &lt;a href=&#34;http://www.ebaytechblog.com/2017/02/14/practical-nosql-resilience-design-pattern-for-the-enterprise/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Personally, I&amp;rsquo;m a big fan of companies that open up to problems/solutions and EBay is no exception to that. In this post they offer a wealth of information on a resiliency design pattern for NoSql databases. It&amp;rsquo;s a good read, but pretty long at the same time.&lt;/p&gt;
-
-&lt;h3 id=&#34;tls-1-3-explained&#34;&gt;TLS 1.3 Explained&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://blog.cloudflare.com/author/filippo/&#34;&gt;Filippo Valsorda&lt;/a&gt; on the Cloudflare blog - &lt;a href=&#34;https://blog.cloudflare.com/tls-1-3-explained-by-the-cloudflare-crypto-team-at-33c3/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;This is a recording of a talk from Filippo &amp;amp; Nick Sullivan about TLS 1.3 - the next itteration of TLS. They explain how it works in technical detail, why it is faster and more secure, and touches on its history and current status In fact, Cloudflare have had their implementation of TLS 1.3 &lt;a href=&#34;https://blog.cloudflare.com/ncc-groups-cryptography-services-audit-of-tls-1-3/&#34;&gt;audited recently&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;tumblr-swift-networking-deep-dive&#34;&gt;Tumblr Swift Networking Deep Dive&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://engineering.tumblr.com&#34;&gt;Tumblr Engineering&lt;/a&gt; - &lt;a href=&#34;https://engineering.tumblr.com/post/157614049236/deep-dive-into-networking-in-swift-swift-has-a&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;In this video, &lt;a href=&#34;https://twitter.com/pearapps&#34;&gt;Kenny Ackerson&lt;/a&gt; shows that the &lt;a href=&#34;https://developer.apple.com/swift/&#34;&gt;Swift programming language&lt;/a&gt; has some interesting features that make networking alot easier and more expressive. It&amp;rsquo;s always interesting to see how other languages solve various problems, so worth a watch.&lt;/p&gt;
-
-&lt;h3 id=&#34;you-ve-studied-up-on-ddd-cqrs-and-event-sourcing-now-what&#34;&gt;You&amp;rsquo;ve studied up on DDD, CQRS, and Event Sourcing&amp;hellip; now what?&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via &lt;a href=&#34;https://buildplease.com/&#34;&gt;Nick Chamberlin&lt;/a&gt; - &lt;a href=&#34;https://buildplease.com/pages/now-what/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;Nick&amp;rsquo;s blog is an exceptional resource for all things DDD, CQRS and Event Sourcing. In this article, he tackles some of the questions/thoughts that people have when starting to apply these concepts.&lt;/p&gt;
-
-&lt;h3 id=&#34;visual-studio-2017-launch-date&#34;&gt;Visual Studio 2017 Launch Date&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Via Julia Liuson on the Visual Studio Blog - &lt;a href=&#34;https://blogs.msdn.microsoft.com/visualstudio/2017/02/09/visual-studio-2017-launch-event-and-20th-anniversary/&#34;&gt;Link&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;On March 7th, a mere 6 days from now, the latest itteration of Visual Studio will be released. As with every release, this one is packed with new features including: a brand new modular installer, new extensibility features/optimizations, smarter intellisense and much, much more. Be sure to tune in via &lt;a href=&#34;https://launch.visualstudio.com/&#34;&gt;launch.visualstudio.com&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;That&amp;rsquo;s all that I have for this round up. Let me know what you think on &lt;a href=&#34;https://twitter.com/im5tu&#34;&gt;Twitter (@im5tu)&lt;/a&gt;.&lt;/p&gt;</description>
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -98,15 +29,7 @@
       
       <guid>https://im5tu.io/article/2013/06/becoming-an-mcp/</guid>
       <description>&lt;p&gt;As the title suggests, today I passed the 70-483 Programming in C# exam to offically become a Microsoft Certifed Professional.
-&lt;/p&gt;
-
-&lt;p&gt;This is one of the things that has been in my sights for a very long time now, so I am extremly happy to have passed. I throughly recommend doing it for yourself if you haven&amp;rsquo;t done so already. I know exams aren&amp;rsquo;t everyones cup of tea, but even if you decide not to take the exam, I believe that the knownledge you gain during the study phase will prove invaluable to your day to day work.&lt;/p&gt;
-
-&lt;p&gt;Since I already had 5 years programming experience with the .Net environment, the exam was mainly a tick in the box. That said, I would throughly recommend you read the &lt;a href=&#34;http://www.amazon.co.uk/CLR-via-Developer-Reference-ebook/dp/B00AA36R4U/ref=tmm_kin_title_0/277-8084778-0056569&#34;&gt;CLR via C# Forth Edition&lt;/a&gt;. The book gives a fantasic insight into the inner workings of the CLR and why some features are not supported by C#.&lt;/p&gt;
-
-&lt;p&gt;I wish you all the best of luck if you decide to take this exam.&lt;/p&gt;
-
-&lt;p&gt;Stu&lt;/p&gt;</description>
+&lt;/p&gt;</description>
     </item>
     
   </channel>

@@ -2,11 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Git on Stuart Blackler&#39;s Blog</title>
-    <link>https://im5tu.io/tags/git/index.xml</link>
+    <link>https://im5tu.io/tags/git/</link>
     <description>Recent content in Git on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://im5tu.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 17 Nov 2016 20:23:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://im5tu.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Blog Building - Part 1 - Hello Hugo</title>
@@ -15,105 +18,7 @@
       
       <guid>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</guid>
       <description>&lt;p&gt;As promised in this first mini-series, I am going to guide you through the steps that I have taken to get my blog up and running on Github pages and Cloudflare with SSL. As these the steps that I have taken to get this blog up and running, your milage may vary with this as different versions get released. That said, you should be fine.
-&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;NB: I had already pushed a hello world up into my hosted repository with an index file containing hello world before I decided to write this guide.&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;prerequisite-installing-git&#34;&gt;Prerequisite: Installing Git&lt;/h2&gt;
-
-&lt;p&gt;The likelyhood is that you&amp;rsquo;ve already installed git, but if you haven&amp;rsquo;t download and install the latest version of git from &lt;a href=&#34;https://git-scm.com/&#34;&gt;the git website&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;installing-hugo&#34;&gt;Installing Hugo&lt;/h2&gt;
-
-&lt;p&gt;Now that we have git installed, we are ready and raring to go. I&amp;rsquo;m going to make the assumption that you are on Windows with the instructions. We are going to install go, then use go to install hugo from source, installing all the updates as we go.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Navigate in your favourite browser to: &lt;a href=&#34;https://golang.org/dl/&#34;&gt;https://golang.org/dl/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Download the installer of choice and follow the instructions in the installer, making a note of installation directory (eg: &lt;code&gt;E:\GoLang\&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;Open a new command prompt and enter: &lt;code&gt;echo %GOROOT%&lt;/code&gt;. You should see the installation directory echo&amp;rsquo;d out to the console window. Close the command prompt for the next step&lt;/li&gt;
-&lt;li&gt;Next, we need to ensure that &lt;code&gt;GOPATH&lt;/code&gt; is set on your path
-
-&lt;ul&gt;
-&lt;li&gt;Right click on the start button&lt;/li&gt;
-&lt;li&gt;Click on System&lt;/li&gt;
-&lt;li&gt;Click on Advanced System Settings on the left&lt;/li&gt;
-&lt;li&gt;Click on the Environment Variables� button on the bottom&lt;/li&gt;
-&lt;li&gt;In the User variables section, click the New� button&lt;/li&gt;
-&lt;li&gt;Type the name &lt;code&gt;GOPATH&lt;/code&gt; for the variable name&lt;/li&gt;
-&lt;li&gt;In the value textbox, type in the folder where you wish to extract hugo to. Eg: &lt;code&gt;E:\GoLang\&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;With the Environment Variables window open still, edit the PATH variable under user to include `%GOPATH%\bin&lt;/li&gt;
-&lt;li&gt;Re-open any command prompt windows so that the variables take effect&lt;/li&gt;
-&lt;li&gt;Now we are ready to install hugo by running the following command: &lt;code&gt;go get -u -v github.com/spf13/hugo&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;This will download hugo, update its dependencies and build hugo. Expect this process to take 5 minutes or so.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Verify that hugo has downloaded successfully by running &lt;code&gt;hugo --help&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;configuring-git&#34;&gt;Configuring Git&lt;/h2&gt;
-
-&lt;p&gt;Typically you can host on Github pages for two scenarios: Project pages or User/Organisation pages. When you are hosting the former, you will have a branch named &lt;code&gt;gh-pages&lt;/code&gt; which hosts the site within the project. The latter is what we are going to setup which requires the site to be present on the master branch. For this, we are going to use git submodules. This will mean that we actually have two repositories created, one for the hosted site and one for the structure code. This is actually quiet a nice way around an otherwise awkward branching model.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create repository &lt;code&gt;&amp;lt;github-handle&amp;gt;.github.io&lt;/code&gt;, eg: &lt;code&gt;im5tu.github.io&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;This repository will contain the finished site&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Create repository &lt;code&gt;&amp;lt;github-handle&amp;gt;-hugo&lt;/code&gt;, eg: &lt;code&gt;im5tu-hugo&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;This repository will contain all of the generation code and templates etc&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Create a location on disk where you will store the generation files and navigate to that directory on the command line
-
-&lt;ul&gt;
-&lt;li&gt;Eg: &lt;code&gt;mkdir E:\im5tu-hugo &amp;amp;&amp;amp; cd E:\im5tu-hugo&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Next run the following command to make a new site in the new directory: &lt;code&gt;hugo new site .&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;It&amp;rsquo;s probably a good time to create the git respository and commit the code we have currently
-
-&lt;ul&gt;
-&lt;li&gt;To initialize the git repository: &lt;code&gt;git init&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Add all the current files: &lt;code&gt;git add -A&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Commit all of the files: &lt;code&gt;git commit -am &amp;quot;Initial Commit&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Add the remote url of your Github repository: &lt;code&gt;git remote add origin https://github.com/Im5tu/im5tu-hugo.git&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Push the code to your new repository: &lt;code&gt;git push -u origin master&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Next we are going to create a sub-module in the public directory. This folder is where the generated output goes.
-
-&lt;ul&gt;
-&lt;li&gt;I used GitKraken to do this, but you could do it from the command line also:&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;git submodule add -b master git@github.com:&amp;lt;github-handle&amp;gt;/&amp;lt;github-handle&amp;gt;.github.io.git public&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Now we have that setup, commit everything again
-
-&lt;ul&gt;
-&lt;li&gt;Commit all of the files: &lt;code&gt;git commit -am &amp;quot;Initialized submodules&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Push the code to Github: &lt;code&gt;git push&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;From now on, when we generate our site with &lt;code&gt;hugo&lt;/code&gt; (the way we will generate our site) the files will be generated inside of the public directory. Then its a case of either committing the files in the main repository or changing to the public folder and committing the changes in that repository to push it to our live site.&lt;/p&gt;
-
-&lt;p&gt;Out of curiosity, I tested to make sure that they have different git histories:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;E:\im5tu-hugo&amp;gt;git log --oneline
-f3c2595 Initialized submodules
-e60426b Initial commit
-
-E:\im5tu-hugo&amp;gt;cd public &amp;amp;&amp;amp; git log --oneline
-ef81fbc Create CNAME
-3043605 Hello World
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This can be verified on both repositories &lt;a href=&#34;https://github.com/Im5tu/im5tu-hugo/commits/master&#34;&gt;here&lt;/a&gt; and &lt;a href=&#34;https://github.com/Im5tu/im5tu.github.io/commits/master&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
-
-&lt;p&gt;So far we have created our git repositories, installed both Go Lang and hugo and setup our workflow ready to begin work on our site. In the next article, I will begin adding a theme so that we can start publishing the posts that we are writing.&lt;/p&gt;</description>
+&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -122,173 +27,7 @@ ef81fbc Create CNAME
       <pubDate>Mon, 23 Feb 2015 18:37:14 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2015/02/up-and-running-with-git-and-powershell/</guid>
-      <description>&lt;p&gt;We&amp;rsquo;ve all experienced a time where we use our pc&amp;rsquo;s for a prolonged period of time, accumulating a ton of crap along the way as we try out various technologies and fads. After a while, the pc begins to do funny things like crash for no apparent reason. This week, I needed to rebuild my dev machine and decided to change from Atlassian&amp;rsquo;s Source Tree over to Powershell and raw git.&lt;/p&gt;
-
-&lt;p&gt;If i&amp;rsquo;m honest, i wish I made the change earlier. I no longer have a confusing UI to deal with, just me, my memory and when that fails, Google. So in this post, I will show you what I&amp;rsquo;ve done in hopes that it will help someone else. We will run through:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Setting up git for the first time&lt;/li&gt;
-&lt;li&gt;Setting up Powershell so we can use git&lt;/li&gt;
-&lt;li&gt;Creating better diffs with &lt;code&gt;Out-Diff&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Creating helper functions and setting up a powershell profile&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;setting-up-git-for-the-first-time&#34;&gt;Setting up git for the first time&lt;/h2&gt;
-
-&lt;p&gt;First of all, you need to download the latest version of git from &lt;a href=&#34;http://git-scm.com/download/win&#34;&gt;here&lt;/a&gt;. At the time of writing, the version is: 1.9.5 released 2 months ago. When you start the setup program, everything is down to personal preference (eg: where you install, windows explorer integration) until you see the following screen:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/up-and-running-with-git/Git-install-command-prompt.png&#34; alt=&#34;Select the middle option&#34; title=&#34;Select the middle option&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;It is important that you do not pick the top option here unless you are comfortable editing environment variables. The second option is the best for most windows users as this does the environment variables for you.&lt;/p&gt;
-
-&lt;p&gt;Following this, it is another case of common sense rules with choosing the style of line endings you need, typically checkin as-is suits (the last option).&lt;/p&gt;
-
-&lt;p&gt;When this is done, verify by heading into powershell/command prompt and typing:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This should produce something similar to the following output:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;usage: git [--version] [--help] [-C &amp;lt;path&amp;gt;] [-c name=value]
-           [--exec-path[=&amp;lt;path&amp;gt;]] [--html-path] [--man-path] [--info-path]
-           [-p|--paginate|--no-pager] [--no-replace-objects] [--bare]
-           [--git-dir=&amp;lt;path&amp;gt;] [--work-tree=&amp;lt;path&amp;gt;] [--namespace=&amp;lt;name&amp;gt;]
-           &amp;lt;command&amp;gt; [&amp;lt;args&amp;gt;]
-
-The most commonly used git commands are:
-   add        Add file contents to the index
-   bisect     Find by binary search the change that introduced a bug
-   branch     List, create, or delete branches
-   checkout   Checkout a branch or paths to the working tree
-   clone      Clone a repository into a new directory
-   commit     Record changes to the repository
-   diff       Show changes between commits, commit and working tree, etc
-   fetch      Download objects and refs from another repository
-   grep       Print lines matching a pattern
-   init       Create an empty Git repository or reinitialize an existing one
-   log        Show commit logs
-   merge      Join two or more development histories together
-   mv         Move or rename a file, a directory, or a symlink
-   pull       Fetch from and integrate with another repository or a local branch
-   push       Update remote refs along with associated objects
-   rebase     Forward-port local commits to the updated upstream head
-   reset      Reset current HEAD to the specified state
-   rm         Remove files from the working tree and from the index
-   show       Show various types of objects
-   status     Show the working tree status
-   tag        Create, list, delete or verify a tag object signed with GPG
-
-&#39;git help -a&#39; and &#39;git help -g&#39; lists available subcommands and some
-concept guides. See &#39;git help &amp;lt;command&amp;gt;&#39; or &#39;git help &amp;lt;concept&amp;gt;&#39;
-to read about a specific subcommand or concept.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you get that, you&amp;rsquo;re ready for the next step. Otherwise, you will need to add the path to your git installation to the environment variables.&lt;/p&gt;
-
-&lt;h2 id=&#34;setting-up-powershell-so-we-can-use-git&#34;&gt;Setting up Powershell so we can use git&lt;/h2&gt;
-
-&lt;p&gt;Before you being, verify execution of scripts is allowed with &lt;code&gt;Get-ExecutionPolicy&lt;/code&gt; (should be &lt;code&gt;RemoteSigned&lt;/code&gt; or &lt;code&gt;Unrestricted&lt;/code&gt;). If scripts are not enabled, run PowerShell as Administrator and call &lt;code&gt;Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Confirm&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;After you have verified the execution policy above, you will be able to run the following script:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;(new-object Net.WebClient).DownloadString(&amp;quot;http://psget.net/GetPsGet.ps1&amp;quot;) | iex
-Install-Module posh-git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This will do two different things:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Install &lt;a href=&#34;http://psget.net/&#34;&gt;PsGet&lt;/a&gt; into powershell. It allows for easy installation of powershell modules.&lt;/li&gt;
-&lt;li&gt;Install &lt;a href=&#34;https://github.com/dahlbyk/posh-git&#34;&gt;Posh-git&lt;/a&gt;. The best way to deal with git from powershell in windows.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;After the installation, you will see the following output in the console (highlighted in bright green, so its easier to see):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;PsGet is installed and ready to use
-... omitted for brevity
-Module posh-git was successfully installed.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you don&amp;rsquo;t see that, refer to the installation guides of the various modules as listed above. Otherwise, we are technically done setting up powershell with git. Now we can do awesome things such as download new powershell modules from the ps-get directory, view the current status of a git repo and much much more.&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;A repository will now show something along the lines of the following if you feel the need to verify:&lt;/em&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;C:\Dev\sblackler.github.io [master +1 ~2 -0 !]&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;creating-better-diffs-with-out-diff&#34;&gt;Creating better diffs with &lt;code&gt;Out-Diff&lt;/code&gt;&lt;/h2&gt;
-
-&lt;p&gt;Some of the output that we get using the built in &lt;code&gt;git diff&lt;/code&gt; command is a little horrid:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/up-and-running-with-git/git-diff-powershell.PNG&#34; alt=&#34;Sample output&#34; title=&#34;Sample Output&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;What &lt;a href=&#34;http://psget.net/directory/out-diff/&#34;&gt;Out-Diff&lt;/a&gt; does is create a unifed diff for you using the &lt;a href=&#34;http://en.wikipedia.org/wiki/Diff_utility#Unified_format&#34;&gt;Unified Diff Format&lt;/a&gt;.&lt;/p&gt;
-
-&lt;p&gt;To install the &lt;code&gt;Out-Diff&lt;/code&gt;, use the same powershell console as earlier and type/copy:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Install-Module Out-Diff
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;After that you should see the following confirmation:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Module out-diff was successfully installed.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now, when we run out &lt;code&gt;git diff&lt;/code&gt; command, we add a slight twist pointing it to the &lt;code&gt;Out-Diff&lt;/code&gt; function like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git diff | Out-Diff
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This results in brighter colours in the console and slightly cleaner output. If the output of git diff consists of many lines of text, PowerShell will redirect them to the Out-Diff function one line at a time. This is called a streaming pipeline and it allows PowerShell to be responsive and consume less memory even when processing large amounts of data.&lt;/p&gt;
-
-&lt;h2 id=&#34;creating-helper-functions-and-setting-up-a-powershell-profile&#34;&gt;Creating helper functions and setting up a powershell profile&lt;/h2&gt;
-
-&lt;p&gt;The current powershell profile we are in comes in a variable called &lt;code&gt;$PROFILE&lt;/code&gt; and we can hack this to do what we want. First of all, you need to expand that variable in the powershell window eg:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$PROFILE
-C:\Users\stuar_000\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Now we can access the profile in one of two ways, through powershell or through our editor of choice. I choose powershell, naturally. To edit this through powershell, type:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ise $PROFILE
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Which launches the powershell scripting environment. Currently, my profile is blank and only loads the &lt;code&gt;Posh-git&lt;/code&gt; sample profile:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# Load posh-git example profile
-&#39;C:\Users\stuar_000\Documents\WindowsPowerShell\Modules\posh-git\profile.example.ps1&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;When you reload the powershell console you may have seen that it couldn&amp;rsquo;t find the ssh-agent. This is something that we can fix here. To do that, add the following line to the top of the file:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$env:path += &amp;quot;;&amp;quot; + (Get-Item &amp;quot;Env:ProgramFiles(x86)&amp;quot;).Value + &amp;quot;\Git\bin&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Unfortunately we have to do this because msysgit doesn&amp;rsquo;t automatically add that folder to the path variable. Then we can do really cool things after the &lt;code&gt;Posh-git&lt;/code&gt; profile has been loaded like setting our base directory:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt; Set-Location C:\Dev
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Creating a better diff function so that we don&amp;rsquo;t have to type it out everytime:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;function gdiff(){
-    git diff -U5 | Out-Diff
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or ever start our preffered IDE when we hit a solution file (vs only):&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;function ide(){
-    $files = Get-ChildItem *.sln -Recurse
-    foreach($file in $files){
-        Start-Process $file.Name
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Here is only a small number of things that you can do now. So go git the power(shell). When you&amp;rsquo;re done save the profile and reload the powershell console for the changes to take effect.&lt;/p&gt;</description>
+      <description>&lt;p&gt;We&amp;rsquo;ve all experienced a time where we use our pc&amp;rsquo;s for a prolonged period of time, accumulating a ton of crap along the way as we try out various technologies and fads. After a while, the pc begins to do funny things like crash for no apparent reason. This week, I needed to rebuild my dev machine and decided to change from Atlassian&amp;rsquo;s Source Tree over to Powershell and raw git.&lt;/p&gt;</description>
     </item>
     
   </channel>

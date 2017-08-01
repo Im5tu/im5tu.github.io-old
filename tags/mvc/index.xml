@@ -2,11 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mvc on Stuart Blackler&#39;s Blog</title>
-    <link>https://im5tu.io/tags/mvc/index.xml</link>
+    <link>https://im5tu.io/tags/mvc/</link>
     <description>Recent content in Mvc on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://im5tu.io/tags/mvc/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 10 Jun 2014 18:19:47 +0000</lastBuildDate>
+    
+	<atom:link href="https://im5tu.io/tags/mvc/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Enabling HTTP Strict Transport Security HSTS via Web Config</title>
@@ -14,50 +17,7 @@
       <pubDate>Tue, 10 Jun 2014 18:19:47 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/enabling-http-strict-transport-security-hsts-via-web-config/</guid>
-      <description>&lt;p&gt;In my previous post, I discussed how to &lt;a href=&#34;https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/&#34;&gt;enable HSTS via MVC Action Filters&lt;/a&gt;. I thought that I would just do a follow up post showing you how to enable it via the web.config. &lt;/p&gt;
-
-&lt;p&gt;In order to do this via a web configuration file, you must be running IIS 7.0 or higher, &lt;a href=&#34;http://www.iis.net/configreference/system.webserver/httpprotocol/customheaders#002&#34;&gt;according to this compatability chart&lt;/a&gt;. The reason for this, is that the &lt;code&gt;HttpProtocol&lt;/code&gt; element was added in IIS 7.0. This is the element that is responsible for generating custom headers.&lt;/p&gt;
-
-&lt;p&gt;Below is a small sample configuration that enables a custom header called &lt;code&gt;Header Name&lt;/code&gt; with the value &lt;code&gt;Header Value&lt;/code&gt;:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;configuration&amp;gt;
-  &amp;lt;system.webServer&amp;gt;
-    &amp;lt;httpProtocol&amp;gt;
-      &amp;lt;customHeaders&amp;gt;
-        &amp;lt;add name=&amp;quot;Header Name&amp;quot; value=&amp;quot;Header Value&amp;quot; /&amp;gt;
-      &amp;lt;/customHeaders&amp;gt;
-    &amp;lt;/httpProtocol&amp;gt;
-  &amp;lt;/system.webServer&amp;gt;
-&amp;lt;/configuration&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;In order to enable HSTS, we need to change the header name to be &lt;code&gt;Strict-Transport-Security&lt;/code&gt; and the value to be &lt;code&gt;max-age=x&lt;/code&gt; (where x is, replace with the maximum age in seconds). If you wish to enable this for sub-domains as well, append &lt;code&gt;; includeSubDomains&lt;/code&gt; to the header value.&lt;/p&gt;
-
-&lt;p&gt;The end result for enabling HSTS with a 300 second limit is:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;configuration&amp;gt;
-  &amp;lt;system.webServer&amp;gt;
-    &amp;lt;httpProtocol&amp;gt;
-      &amp;lt;customHeaders&amp;gt;
-        &amp;lt;add name=&amp;quot;Strict-Transport-Security&amp;quot; value=&amp;quot;max-age=300&amp;quot; /&amp;gt;
-      &amp;lt;/customHeaders&amp;gt;
-    &amp;lt;/httpProtocol&amp;gt;
-  &amp;lt;/system.webServer&amp;gt;
-&amp;lt;/configuration&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Including the sub-domain protection:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;configuration&amp;gt;
-  &amp;lt;system.webServer&amp;gt;
-    &amp;lt;httpProtocol&amp;gt;
-      &amp;lt;customHeaders&amp;gt;
-        &amp;lt;add name=&amp;quot;Strict-Transport-Security&amp;quot; value=&amp;quot;max-age=300; includeSubDomains&amp;quot; /&amp;gt;
-      &amp;lt;/customHeaders&amp;gt;
-    &amp;lt;/httpProtocol&amp;gt;
-  &amp;lt;/system.webServer&amp;gt;
-&amp;lt;/configuration&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;</description>
+      <description>&lt;p&gt;In my previous post, I discussed how to &lt;a href=&#34;https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/&#34;&gt;enable HSTS via MVC Action Filters&lt;/a&gt;. I thought that I would just do a follow up post showing you how to enable it via the web.config. &lt;/p&gt;</description>
     </item>
     
     <item>
@@ -66,116 +26,7 @@
       <pubDate>Mon, 21 Apr 2014 18:19:47 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/</guid>
-      <description>&lt;p&gt;After reading &lt;a href=&#34;http://www.troyhunt.com/&#34;&gt;Troy Hunt&amp;rsquo;s&lt;/a&gt; free ebook on the &lt;a href=&#34;http://www.troyhunt.com/2011/12/free-ebook-owasp-top-10-for-net.html&#34;&gt;OWASP Top 10 for .Net Developers&lt;/a&gt;, I discovered an additional mechanism to help developers secure their websites. That mechanism is HTTP Strict Transport Security.&lt;/p&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;HTTP Strict Transport Security (HSTS) is an opt-in security enhancement that is specified by a web application through the use of a special response header. Once a supported browser receives this header that browser will prevent any communications from being sent over HTTP to the specified domain and will instead send all communications over HTTPS. It also prevents HTTPS click through prompts on browsers. The specification has been released and published end of 2012 as &lt;a href=&#34;https://tools.ietf.org/html/rfc6797&#34;&gt;RFC 6797&lt;/a&gt;. &lt;a href=&#34;https://www.owasp.org/index.php/HTTP_Strict_Transport_Security&#34;&gt;Source&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;There are three main categories of attacks that are addressed in this specification: Passive Network Attacks, Active Network Attacks and Web Site Development &amp;amp; Deployment Bugs. These are present in &lt;a href=&#34;https://tools.ietf.org/html/rfc6797&#34;&gt;RFC 6797 - Section 2.3.1&lt;/a&gt; but are re-produced here.&lt;/p&gt;
-
-&lt;h2 id=&#34;passive-network-attacks&#34;&gt;Passive Network Attacks&lt;/h2&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;When a user browses the web on a local wireless network (e.g., an
-   802.11-based wireless local area network) a nearby attacker can
-   possibly eavesdrop on the user&amp;rsquo;s unencrypted Internet Protocol-based
-   connections, such as HTTP, regardless of whether or not the local
-   wireless network itself is secured [BeckTews09].  Freely available
-   wireless sniffing toolkits (e.g., [Aircrack-ng]) enable such passive
-   eavesdropping attacks, even if the local wireless network is
-   operating in a secure fashion.  A passive network attacker using such
-   tools can steal session identifiers/cookies and hijack the user&amp;rsquo;s web
-   session(s) by obtaining cookies containing authentication credentials
-   [ForceHTTPS].  For example, there exist widely available tools, such
-   as Firesheep (a web browser extension) [Firesheep], that enable their
-   wielder to obtain other local users&amp;rsquo; session cookies for various web
-   applications.&lt;/p&gt;
-
-&lt;p&gt;To mitigate such threats, some web sites support, but usually do not
-   force, access using end-to-end secure transport &amp;ndash; e.g., signaled
-   through URIs constructed with the &amp;ldquo;https&amp;rdquo; scheme [RFC2818].  This can
-   lead users to believe that accessing such services using secure
-   transport protects them from passive network attackers.
-   Unfortunately, this is often not the case in real-world deployments,
-   as session identifiers are often stored in non-Secure cookies to
-   permit interoperability with versions of the service offered over
-   insecure transport (&amp;ldquo;Secure cookies&amp;rdquo; are those cookies containing the
-   &amp;ldquo;Secure&amp;rdquo; attribute [RFC6265]).  For example, if the session
-   identifier for a web site (an email service, say) is stored in a
-   non-Secure cookie, it permits an attacker to hijack the user&amp;rsquo;s
-   session if the user&amp;rsquo;s UA makes a single insecure HTTP request to the
-   site.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&#34;active-network-attacks&#34;&gt;Active Network Attacks&lt;/h2&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;A determined attacker can mount an active attack, either by
-   impersonating a user&amp;rsquo;s DNS server or, in a wireless network, by
-   spoofing network frames or offering a similarly named evil twin
-   access point.  If the user is behind a wireless home router, an
-   attacker can attempt to reconfigure the router using default
-   passwords and other vulnerabilities.  Some sites, such as banks, rely
-   on end-to-end secure transport to protect themselves and their users
-   from such active attackers.  Unfortunately, browsers allow their
-   users to easily opt out of these protections in order to be usable for sites that incorrectly deploy secure transport, for example by
-   generating and self-signing their own certificates (without also
-   distributing their certification authority (CA) certificate to their
-   users&amp;rsquo; browsers).&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&#34;website-development-deployment-bugs&#34;&gt;Website Development &amp;amp; Deployment Bugs&lt;/h2&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;The security of an otherwise uniformly secure site (i.e., all of its
-   content is materialized via &amp;ldquo;https&amp;rdquo; URIs) can be compromised
-   completely by an active attacker exploiting a simple mistake, such as
-   the loading of a cascading style sheet or a SWF (Shockwave Flash)
-   movie over an insecure connection (both cascading style sheets and
-   SWF movies can script the embedding page, to the surprise of many web
-   developers, plus some browsers do not issue so-called &amp;ldquo;mixed content
-   warnings&amp;rdquo; when SWF files are embedded via insecure connections).
-   Even if the site&amp;rsquo;s developers carefully scrutinize their login page
-   for &amp;ldquo;mixed content&amp;rdquo;, a single insecure embedding anywhere on the
-   overall site compromises the security of their login page because an
-   attacker can script (i.e., control) the login page by injecting code
-   (e.g., a script) into another, insecurely loaded, site page.&lt;/p&gt;
-
-&lt;p&gt;NOTE:  &amp;ldquo;Mixed content&amp;rdquo; as used above (see also Section 5.3 in
-          [W3C.REC-wsc-ui-20100812]) refers to the notion termed &amp;ldquo;mixed
-          security context&amp;rdquo; in this specification and should not be
-          confused with the same &amp;ldquo;mixed content&amp;rdquo; term used in the
-          context of markup languages such as XML and HTML.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&#34;implementation-details&#34;&gt;Implementation Details&lt;/h2&gt;
-
-&lt;p&gt;Implementing the HSTS from the web server is simply a case of having the site running over HTTPS and appending a single header onto the response. The header required is:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Strict-Transport-Security: max-age=300
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Alternatively, if you wish the security to cover all sub-domains of your site, then the header is:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Strict-Transport-Security: max-age=300; includeSubDomains
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;em&gt;Where 300 is, replace with the duration in seconds.&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;implementing-hsts-as-an-action-filter&#34;&gt;Implementing HSTS as an action filter&lt;/h2&gt;
-
-&lt;p&gt;The implementation that I provide below &lt;strong&gt;SHOULD&lt;/strong&gt; be used alongside the &lt;code&gt;RequireHttpsAttribute&lt;/code&gt; in order to have the specification fully implemented. The reason is that the header will only be sent over a secure connection, if not already present. Furthermore, the &lt;code&gt;RequireHttpsAttribute&lt;/code&gt; already takes care of the redirection to a secure connection, so this is not something that I have to worry about implementing correctly.&lt;/p&gt;
-
-&lt;h2 id=&#34;browser-support&#34;&gt;Browser support&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Chromium and Google Chrome since version 4.0.211.0&lt;/li&gt;
-&lt;li&gt;Firefox since version 4; with Firefox 17, Mozilla integrates a list of websites supporting HSTS&lt;/li&gt;
-&lt;li&gt;Opera since version 12&lt;/li&gt;
-&lt;li&gt;Safari as of OS X Mavericks
--Internet Explorer does not support HSTS, but is expected to support it in the next major release after IE 11&lt;/li&gt;
-&lt;/ul&gt;</description>
+      <description>&lt;p&gt;After reading &lt;a href=&#34;http://www.troyhunt.com/&#34;&gt;Troy Hunt&amp;rsquo;s&lt;/a&gt; free ebook on the &lt;a href=&#34;http://www.troyhunt.com/2011/12/free-ebook-owasp-top-10-for-net.html&#34;&gt;OWASP Top 10 for .Net Developers&lt;/a&gt;, I discovered an additional mechanism to help developers secure their websites. That mechanism is HTTP Strict Transport Security.&lt;/p&gt;</description>
     </item>
     
   </channel>

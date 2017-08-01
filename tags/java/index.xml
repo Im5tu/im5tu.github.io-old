@@ -2,11 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Java on Stuart Blackler&#39;s Blog</title>
-    <link>https://im5tu.io/tags/java/index.xml</link>
+    <link>https://im5tu.io/tags/java/</link>
     <description>Recent content in Java on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://im5tu.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 Jun 2014 18:21:04 +0000</lastBuildDate>
+    
+	<atom:link href="https://im5tu.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>How your binary search implementation is broken and how to fix it</title>
@@ -14,120 +17,7 @@
       <pubDate>Fri, 20 Jun 2014 18:21:04 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/how-your-binary-search-implementation-is-broken-and-how-to-fix-it/</guid>
-      <description>&lt;p&gt;I have recently begun studying the theory and implementations of algorithms. During this study, I came across &lt;a href=&#34;http://googleresearch.blogspot.co.uk/2006/06/extra-extra-read-all-about-it-nearly.html&#34;&gt;this post&lt;/a&gt; which describes how a bug exists in most implementations of a binary search algorithm. &lt;/p&gt;
-
-&lt;p&gt;I&amp;rsquo;ll begin with the example given in the post, which is taken from &lt;code&gt;java.util.Arrays&lt;/code&gt;.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;public static int BinarySearch(int[] a, int key) {
-    int low = 0;
-    int high = a.length - 1;
-    while (low &amp;lt;= high) {
-        int mid = (low + high) / 2;
-        int midVal = a[mid];
-        if (midVal &amp;lt; key)
-        {
-            low = mid + 1;
-        }
-        else if (midVal &amp;gt; key)
-        {
-            high = mid - 1;
-        }
-        else
-        {
-            return mid; // key found
-        }
-    }
-    return -(low + 1);  // key not found.
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;For all intensive purposes this implementation is correct. Except for a bug which can raise an Overflow Exception. The problematic line is this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;int mid = (low + high) / 2;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If the result of &lt;code&gt;low + high&lt;/code&gt; is greater than maximum value of an 32-bit integer, the exception is raised. Luckily, there are ways that we can fix this:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;int mid = low + (high - low) / 2;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Or if you&amp;rsquo;re in Java:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;int mid = (low + high) &amp;gt;&amp;gt;&amp;gt; 1;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;If you are working in .Net languages you will need to work with the &lt;code&gt;unchecked&lt;/code&gt; keyword in order to use the bit shift method:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;int mid;
-unchecked
-{
-    mid = (low + high) &amp;gt;&amp;gt; 1;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;blockquote&gt;
-&lt;p&gt;The &lt;code&gt;unchecked&lt;/code&gt; keyword is used to suppress overflow-checking for integral-type arithmetic operations and conversions.&lt;/p&gt;
-
-&lt;p&gt;In an unchecked context, if an expression produces a value that is outside the range of the destination type, the overflow is not flagged. For example, because the calculation in the following example is performed in an unchecked block or expression, the fact that the result is too large for an integer is ignored, and int1 is assigned the value -2,147,483,639.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;(&lt;a href=&#34;http://msdn.microsoft.com/en-GB/library/a569z7k8.aspx&#34;&gt;Source&lt;/a&gt;)&lt;/p&gt;
-
-&lt;p&gt;So here is the differential method in C#:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;public static int BinarySearch(int[] a, int key) {
-    int low = 0;
-    int high = a.length - 1;
-    while (low &amp;lt;= high) {
-        int mid = low + (high - low) / 2;
-        int midVal = a[mid];
-        if (midVal &amp;lt; key)
-        {
-            low = mid + 1;
-        }
-        else if (midVal &amp;gt; key)
-        {
-            high = mid - 1;
-        }
-        else
-        {
-            return mid; // key found
-        }
-    }
-    return -1;  // key not found.
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;And using the bit shift method:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;public static int BinarySearch(int[] a, int key) {
-    int low = 0;
-    int high = a.length - 1;
-    while (low &amp;lt;= high) {
-        int mid;
-        unchecked
-        {
-            mid = (low + high) &amp;gt;&amp;gt; 1;
-        }
-        int midVal = a[mid];
-        if (midVal &amp;lt; key)
-        {
-            low = mid + 1;
-        }
-        else if (midVal &amp;gt; key)
-        {
-            high = mid - 1;
-        }
-        else
-        {
-            return mid; // key found
-        }
-    }
-    return -1;  // key not found.
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Personally, I prefer the differential version over the bit shift version but I have provided both for completeness. Even though this bug only manifests itself with well over a billion elements in an array, I still thought it was worth pointing out. I encourage you to read the other articles for more complete context.&lt;/p&gt;</description>
+      <description>&lt;p&gt;I have recently begun studying the theory and implementations of algorithms. During this study, I came across &lt;a href=&#34;http://googleresearch.blogspot.co.uk/2006/06/extra-extra-read-all-about-it-nearly.html&#34;&gt;this post&lt;/a&gt; which describes how a bug exists in most implementations of a binary search algorithm. &lt;/p&gt;</description>
     </item>
     
   </channel>

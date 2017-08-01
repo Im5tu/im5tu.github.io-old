@@ -2,11 +2,14 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blogging on Stuart Blackler&#39;s Blog</title>
-    <link>https://im5tu.io/tags/blogging/index.xml</link>
+    <link>https://im5tu.io/tags/blogging/</link>
     <description>Recent content in Blogging on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <atom:link href="https://im5tu.io/tags/blogging/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 18 Nov 2016 19:01:38 +0000</lastBuildDate>
+    
+	<atom:link href="https://im5tu.io/tags/blogging/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Blog Building - Part 3 - Theming</title>
@@ -15,95 +18,7 @@
       
       <guid>https://im5tu.io/article/2016/11/blog-building---part-3---theming/</guid>
       <description>&lt;p&gt;In this article, I will show you how the theme has been constructed and show you how the overrides work. So far we have created a site, setup most of our workflow and posted our first article.
-&lt;/p&gt;
-
-&lt;p&gt;When we installed the theme in the previous post, a series of conventions took over and began the process of rending our pages for us. Because hugo is convention based, we can override the defaults by placing files in the correct place, but first we need to understand the layout. Below you can see the parts of the website that we care about the most:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;/root
-    /archetypes
-    /content
-    /layouts
-    /static
-    /themes
-        /themeA
-            /archetypes
-            /layouts
-                /_default
-                /indexes
-                /partials
-                /taxonomy
-            index.html
-        /themeB
-            &amp;lt;as above&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;defaults&#34;&gt;Defaults&lt;/h2&gt;
-
-&lt;p&gt;When hugo begins to render a site, the configuration is checked to see if there is a theme configured. If a theme is configured, it looks for that theme under the &lt;code&gt;themes&lt;/code&gt; directory by checking for a &lt;code&gt;theme.toml&lt;/code&gt; file under each sub-directory. If one of the &lt;code&gt;theme.toml&lt;/code&gt; files contains the correct theme name, that theme is loaded and the used as the default for the rest of the rending.&lt;/p&gt;
-
-&lt;p&gt;From the directory listing above, you will notice that there are two &lt;code&gt;layouts&lt;/code&gt; folders. One under the site root and one under themeA. As far as I am aware, the layout of each &lt;code&gt;layouts&lt;/code&gt; folder is identical. This means that if your theme defines something under &lt;code&gt;/root/themes/themeA/layouts/_default/list.html&lt;/code&gt; we can override it by placing a file in &lt;code&gt;/root/layouts/_default/list.html&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Now that we know this, we can customise the theme how we see fit.&lt;/p&gt;
-
-&lt;h2 id=&#34;rendering&#34;&gt;Rendering&lt;/h2&gt;
-
-&lt;p&gt;Before continuing, I strongly recommend that you read the &lt;a href=&#34;http://gohugo.io/templates/go-templates/&#34;&gt;Go Template Primer&lt;/a&gt; created by the hugo team. Don&amp;rsquo;t worry, i&amp;rsquo;ll wait.&lt;/p&gt;
-
-&lt;h3 id=&#34;baseof&#34;&gt;baseOf&lt;/h3&gt;
-
-&lt;p&gt;A theme creator may decide, like I have for bones, to create a &lt;code&gt;baseOf&lt;/code&gt; file under the &lt;code&gt;/root/themes/&amp;lt;theme name&amp;gt;/_default/&lt;/code&gt; folder. This special file allows you to create a master layout, keeping your theme nice and clean. Inside of file, you can define blocks which another page can also define and implement. What happens here is that the &lt;code&gt;baseOf&lt;/code&gt; file says &amp;ldquo;You can configure this section called ABC&amp;rdquo;. Then inside of another file, eg: article/full.html, we can say &amp;ldquo;I want to configure section called ABC and here is what it should contain&amp;rdquo;. In hugo speak, this is called &lt;a href=&#34;http://gohugo.io/templates/blocks/&#34;&gt;Block Templates&lt;/a&gt; and is how the whole of the bones theme is configured.&lt;/p&gt;
-
-&lt;p&gt;You can see an example of this &lt;a href=&#34;https://github.com/Im5tu/hugo-bones/blob/master/layouts/_default/baseof.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;render&#34;&gt;.Render&lt;/h3&gt;
-
-&lt;p&gt;The &lt;a href=&#34;http://gohugo.io/templates/functions/#render&#34;&gt;.Render&lt;/a&gt; function is a special kind of function that you can call when rendering a list. It&amp;rsquo;s like rendering a partial view but for the current item in an enumeration.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;{{ range .Data.Pages }}
-    {{ .Render &amp;quot;summary&amp;quot;}}
-{{ end }}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The above sample will inspect the page data and enumerate all the available pages associated with the current page before calling render on each item. C#/Java would look something like:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c#&#34;&gt;foreach(var page in this.Data.Pages)
-    Render(&amp;quot;summary&amp;quot;, currentItem);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;You can see an example of this &lt;a href=&#34;https://github.com/Im5tu/hugo-bones/blob/master/layouts/article/list.html#L4&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&#34;partial&#34;&gt;partial&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://gohugo.io/templates/partials/&#34;&gt;Partial templates&lt;/a&gt; are often used to separate out sections of a site into reusable components. The main difference between &lt;code&gt;partial&lt;/code&gt; and &lt;code&gt;.Render&lt;/code&gt; is that partial can be used to render whole sections of a site with a specific context where is &lt;code&gt;.Render&lt;/code&gt; is limited to the current item in an enumeration.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-go&#34;&gt;&amp;lt;body&amp;gt;
-{{ block &amp;quot;content&amp;quot; . -}} {{- end }}
-{{- partial &amp;quot;header/scripts&amp;quot; . -}}
-&amp;lt;/body&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;The above &lt;a href=&#34;https://github.com/Im5tu/hugo-bones/blob/master/layouts/_default/baseof.html&#34;&gt;example from the baseOf file from bones&lt;/a&gt; does the following:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;Says to the theming engine that it wants to declare an overridable section content, passing in the current page context&lt;/li&gt;
-&lt;li&gt;Render the partial called &lt;code&gt;scripts&lt;/code&gt;, located under the &lt;code&gt;header&lt;/code&gt; folder, inside of the &lt;code&gt;partials&lt;/code&gt; folder, supplying the current page context&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;All partials are located under &lt;code&gt;&amp;lt;root/theme&amp;gt;/layouts/partials/&amp;lt;path&amp;gt;&lt;/code&gt;. Where &lt;code&gt;&amp;lt;path&amp;gt;&lt;/code&gt; is the folder structure to the file.&lt;/p&gt;
-
-&lt;p&gt;You can see an example of this &lt;a href=&#34;https://github.com/Im5tu/hugo-bones/blob/master/layouts/_default/baseof.html&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;archetypes&#34;&gt;Archetypes&lt;/h2&gt;
-
-&lt;p&gt;Archetypes are really just a fancy way of saying content types. A theme can define them for you, or you can define your own like I have for the bones theme.&lt;/p&gt;
-
-&lt;p&gt;You can see an example of that &lt;a href=&#34;https://github.com/Im5tu/hugo-bones/blob/master/archetypes/article.md&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;the-static&#34;&gt;The Static&lt;/h2&gt;
-
-&lt;p&gt;Anything under the static folder, will get copied across to the main site when it gets rendered. This behaved slightly differently than I expected when I first tried this out. I had a file located under &lt;code&gt;/root/static/img/img1.jpg&lt;/code&gt;. When I attempted to render an image tag on the page with the src set to &lt;code&gt;/static/img/img1.jpg&lt;/code&gt; it didn&amp;rsquo;t work. When I rendered the files to disk by calling &lt;code&gt;hugo&lt;/code&gt; and checking the public folder, I could see that it rendered the image under &lt;code&gt;/img/img1.jpg&lt;/code&gt;. Slightly different that what I was expecting, but it still worked nevertheless.&lt;/p&gt;
-
-&lt;p&gt;Hopefully you will now have a basic understanding of how a theme is constructed so that you can roll your own and override portions of the theme you have selecting. Next up, I will setup my frontend pipeline of choice so that I can start applying styling to my site.&lt;/p&gt;</description>
+&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -113,72 +28,7 @@
       
       <guid>https://im5tu.io/article/2016/11/blog-building---part-2---my-first-post/</guid>
       <description>&lt;p&gt;In &lt;a href=&#34;https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/&#34;&gt;the last article&lt;/a&gt;, we setup our workflow and all the pieces that you will need to create a new site. Now we need to install a theme and begin publishing. Prior to writing this series, I began evaluating the extensibility of hugo themes and started work on something I call bones - a no thrills template with no styling, just structure. As I improve the template it will become more useful, maybe. It will remain the template behind mysite as I continue to improve it.
-&lt;/p&gt;
-
-&lt;h2 id=&#34;installing-a-theme&#34;&gt;Installing a theme&lt;/h2&gt;
-
-&lt;p&gt;To install a theme, you need to know the repositories git url. You can see additional themes at &lt;a href=&#34;http://themes.gohugo.io/&#34;&gt;http://themes.gohugo.io/&lt;/a&gt;. I will be using my &lt;a href=&#34;https://github.com/Im5tu/hugo-bones.git&#34;&gt;bones theme&lt;/a&gt; as the base.&lt;/p&gt;
-
-&lt;p&gt;Once you have the themes git url:
-    - Open the command line to repository that has our generation files in it
-    - Change directories to the themes folder
-    - Clone the git repo to this location, eg: &lt;code&gt;git clone https://github.com/Im5tu/hugo-bones.git&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;Once the repository is cloned, we need to tell hugo how to use our new theme. To do this we need to open the &lt;code&gt;config.toml&lt;/code&gt; file inside of the root directory and create an entry called theme. When this is done, your config file should look something along the lines of the following:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c#&#34;&gt;baseurl = &amp;quot;http://example.org/&amp;quot;
-title = &amp;quot;My New Hugo Site&amp;quot;
-languageCode = &amp;quot;en-us&amp;quot;
-theme = &amp;quot;hugo-bones&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Whilst I am here, I am going to change the other properties accordingly:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c#&#34;&gt;baseurl = &amp;quot;https://im5tu.io/&amp;quot;
-title = &amp;quot;Stuart Blackler&#39;s Tech Blog&amp;quot;
-languageCode = &amp;quot;en-us&amp;quot;
-theme = &amp;quot;hugo-bones&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Don&amp;rsquo;t forget to save the file. It&amp;rsquo;s also probably a good idea to commit your progress as you go.&lt;/p&gt;
-
-&lt;h2 id=&#34;creating-our-first-post&#34;&gt;Creating our first post&lt;/h2&gt;
-
-&lt;p&gt;Now that we have our theme all setup, we should probably create a hello world post. Assuming that you are using the bones theme like me, we can go back the root of our repository and run this command to generate a new post: &lt;code&gt;hugo new article\hello-world.md&lt;/code&gt;. This creates a file under the &lt;code&gt;content\article&lt;/code&gt; directory.&lt;/p&gt;
-
-&lt;p&gt;We can preview this site by running the command: &lt;code&gt;hugo server -D&lt;/code&gt; and navigating to &lt;code&gt;http://localhost:1313/&lt;/code&gt;. All being well you should see the following:&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://im5tu.io/img/blog-building-part-2/first-post.JPG&#34; alt=&#34;First Post Image&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;One of the great things about hugo is that it has live reload capabilities built in. This means that we can navigate to the page that we want to edit in the browser and everytime we make a change to the file, it will be synced to the screen. Try it! This magic happens because we called &lt;code&gt;hugo server&lt;/code&gt; which, in a way, breaks down to mean:
-    - &lt;code&gt;hugo&lt;/code&gt;: build my site please
-    - &lt;code&gt;server&lt;/code&gt;: load a simple http server with my content&lt;/p&gt;
-
-&lt;p&gt;Additionally, I added the flag &lt;code&gt;-D&lt;/code&gt; which means that I want to build draft posts. In the template that I created, I wanted to create everything as a draft so that I could work on it in isolation and be safe in the knowledge that I wouldn&amp;rsquo;t accidently post something that wasn&amp;rsquo;t ready.&lt;/p&gt;
-
-&lt;h2 id=&#34;additional-configuration&#34;&gt;Additional configuration&lt;/h2&gt;
-
-&lt;p&gt;Before I finish up this post and write more, I want to change a few of the configuration options. Personally, I like working with json rather than yaml/toml inside of the markdown files, it feels more natural to me. Other changes that I wish to make include: changing permalink styles, output verbosity and enabling the robots.txt file.&lt;/p&gt;
-
-&lt;p&gt;In order to make these changes, we need to once more open the &lt;code&gt;config.toml&lt;/code&gt; file and add the properties as follows:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-c#&#34;&gt;baseurl = &amp;quot;https://im5tu.io/&amp;quot;
-title = &amp;quot;Stuart Blackler&#39;s Tech Blog&amp;quot;
-languageCode = &amp;quot;en-us&amp;quot;
-theme = &amp;quot;hugo-bones&amp;quot;
-metaDataFormat = &amp;quot;json&amp;quot;
-enableRobotsTXT = true
-[permalinks]
-	article = &amp;quot;article/:year/:month/:title/&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;next-steps&#34;&gt;Next steps&lt;/h2&gt;
-
-&lt;p&gt;One of the next things that I will be doing is working with the template to ensure that everything is setup in terms of category/tag pages, rss feeds etc. This, although unstyled, will be enough to begin pushing to the live site.&lt;/p&gt;
-
-&lt;p&gt;After that is complete, I will be setting up gulp to build, clean and minify my javascript and css files. From there I can start working on the visual styling of the site. I will blog the entire process, but this may take some time as I figure out exactly what I want.&lt;/p&gt;
-
-&lt;p&gt;Finally, it&amp;rsquo;s setting up Github and Cloudflare so that everyone can enjoy an SSL enabled site around the world at blazing speeds.&lt;/p&gt;</description>
+&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -188,105 +38,7 @@ enableRobotsTXT = true
       
       <guid>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</guid>
       <description>&lt;p&gt;As promised in this first mini-series, I am going to guide you through the steps that I have taken to get my blog up and running on Github pages and Cloudflare with SSL. As these the steps that I have taken to get this blog up and running, your milage may vary with this as different versions get released. That said, you should be fine.
-&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;NB: I had already pushed a hello world up into my hosted repository with an index file containing hello world before I decided to write this guide.&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;prerequisite-installing-git&#34;&gt;Prerequisite: Installing Git&lt;/h2&gt;
-
-&lt;p&gt;The likelyhood is that you&amp;rsquo;ve already installed git, but if you haven&amp;rsquo;t download and install the latest version of git from &lt;a href=&#34;https://git-scm.com/&#34;&gt;the git website&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;installing-hugo&#34;&gt;Installing Hugo&lt;/h2&gt;
-
-&lt;p&gt;Now that we have git installed, we are ready and raring to go. I&amp;rsquo;m going to make the assumption that you are on Windows with the instructions. We are going to install go, then use go to install hugo from source, installing all the updates as we go.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Navigate in your favourite browser to: &lt;a href=&#34;https://golang.org/dl/&#34;&gt;https://golang.org/dl/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Download the installer of choice and follow the instructions in the installer, making a note of installation directory (eg: &lt;code&gt;E:\GoLang\&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;Open a new command prompt and enter: &lt;code&gt;echo %GOROOT%&lt;/code&gt;. You should see the installation directory echo&amp;rsquo;d out to the console window. Close the command prompt for the next step&lt;/li&gt;
-&lt;li&gt;Next, we need to ensure that &lt;code&gt;GOPATH&lt;/code&gt; is set on your path
-
-&lt;ul&gt;
-&lt;li&gt;Right click on the start button&lt;/li&gt;
-&lt;li&gt;Click on System&lt;/li&gt;
-&lt;li&gt;Click on Advanced System Settings on the left&lt;/li&gt;
-&lt;li&gt;Click on the Environment Variables� button on the bottom&lt;/li&gt;
-&lt;li&gt;In the User variables section, click the New� button&lt;/li&gt;
-&lt;li&gt;Type the name &lt;code&gt;GOPATH&lt;/code&gt; for the variable name&lt;/li&gt;
-&lt;li&gt;In the value textbox, type in the folder where you wish to extract hugo to. Eg: &lt;code&gt;E:\GoLang\&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;With the Environment Variables window open still, edit the PATH variable under user to include `%GOPATH%\bin&lt;/li&gt;
-&lt;li&gt;Re-open any command prompt windows so that the variables take effect&lt;/li&gt;
-&lt;li&gt;Now we are ready to install hugo by running the following command: &lt;code&gt;go get -u -v github.com/spf13/hugo&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;This will download hugo, update its dependencies and build hugo. Expect this process to take 5 minutes or so.&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Verify that hugo has downloaded successfully by running &lt;code&gt;hugo --help&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;configuring-git&#34;&gt;Configuring Git&lt;/h2&gt;
-
-&lt;p&gt;Typically you can host on Github pages for two scenarios: Project pages or User/Organisation pages. When you are hosting the former, you will have a branch named &lt;code&gt;gh-pages&lt;/code&gt; which hosts the site within the project. The latter is what we are going to setup which requires the site to be present on the master branch. For this, we are going to use git submodules. This will mean that we actually have two repositories created, one for the hosted site and one for the structure code. This is actually quiet a nice way around an otherwise awkward branching model.&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Create repository &lt;code&gt;&amp;lt;github-handle&amp;gt;.github.io&lt;/code&gt;, eg: &lt;code&gt;im5tu.github.io&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;This repository will contain the finished site&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Create repository &lt;code&gt;&amp;lt;github-handle&amp;gt;-hugo&lt;/code&gt;, eg: &lt;code&gt;im5tu-hugo&lt;/code&gt;
-
-&lt;ul&gt;
-&lt;li&gt;This repository will contain all of the generation code and templates etc&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Create a location on disk where you will store the generation files and navigate to that directory on the command line
-
-&lt;ul&gt;
-&lt;li&gt;Eg: &lt;code&gt;mkdir E:\im5tu-hugo &amp;amp;&amp;amp; cd E:\im5tu-hugo&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Next run the following command to make a new site in the new directory: &lt;code&gt;hugo new site .&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;It&amp;rsquo;s probably a good time to create the git respository and commit the code we have currently
-
-&lt;ul&gt;
-&lt;li&gt;To initialize the git repository: &lt;code&gt;git init&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Add all the current files: &lt;code&gt;git add -A&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Commit all of the files: &lt;code&gt;git commit -am &amp;quot;Initial Commit&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Add the remote url of your Github repository: &lt;code&gt;git remote add origin https://github.com/Im5tu/im5tu-hugo.git&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Push the code to your new repository: &lt;code&gt;git push -u origin master&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Next we are going to create a sub-module in the public directory. This folder is where the generated output goes.
-
-&lt;ul&gt;
-&lt;li&gt;I used GitKraken to do this, but you could do it from the command line also:&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;git submodule add -b master git@github.com:&amp;lt;github-handle&amp;gt;/&amp;lt;github-handle&amp;gt;.github.io.git public&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;Now we have that setup, commit everything again
-
-&lt;ul&gt;
-&lt;li&gt;Commit all of the files: &lt;code&gt;git commit -am &amp;quot;Initialized submodules&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Push the code to Github: &lt;code&gt;git push&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;From now on, when we generate our site with &lt;code&gt;hugo&lt;/code&gt; (the way we will generate our site) the files will be generated inside of the public directory. Then its a case of either committing the files in the main repository or changing to the public folder and committing the changes in that repository to push it to our live site.&lt;/p&gt;
-
-&lt;p&gt;Out of curiosity, I tested to make sure that they have different git histories:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-powershell&#34;&gt;E:\im5tu-hugo&amp;gt;git log --oneline
-f3c2595 Initialized submodules
-e60426b Initial commit
-
-E:\im5tu-hugo&amp;gt;cd public &amp;amp;&amp;amp; git log --oneline
-ef81fbc Create CNAME
-3043605 Hello World
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;This can be verified on both repositories &lt;a href=&#34;https://github.com/Im5tu/im5tu-hugo/commits/master&#34;&gt;here&lt;/a&gt; and &lt;a href=&#34;https://github.com/Im5tu/im5tu.github.io/commits/master&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h2 id=&#34;summary&#34;&gt;Summary&lt;/h2&gt;
-
-&lt;p&gt;So far we have created our git repositories, installed both Go Lang and hugo and setup our workflow ready to begin work on our site. In the next article, I will begin adding a theme so that we can start publishing the posts that we are writing.&lt;/p&gt;</description>
+&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -297,9 +49,7 @@ ef81fbc Create CNAME
       <guid>https://im5tu.io/article/2016/11/hello-world/</guid>
       <description>&lt;p&gt;Hello World. Safe to say it&amp;rsquo;s been a little while since I have blogged or even had a website come to think of it. Alas, I am back with some fresh ideas and recharged to help you dear reader.&lt;/p&gt;
 
-&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;Finally I&amp;rsquo;ve been able to match up my Github/Twitter handles with my website to make things alot easier to find. I&amp;rsquo;ve also began to build this site on a static site generator called hugo, hosted by Github pages and delivered through Cloudflare. My first port of call is to show you how i&amp;rsquo;ve done it should you wish to re-create my steps for yourself. Naturally, steps may vary as time progresses and things change - so feel free to fix any instructions on my &lt;a href=&#34;https://github.com/Im5tu/im5tu-hugo&#34;&gt;Github repository&lt;/a&gt;.&lt;/p&gt;</description>
+&lt;p&gt;&lt;/p&gt;</description>
     </item>
     
   </channel>
