@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Dotnetcore on Stuart Blackler&#39;s Blog</title>
+    <link>https://im5tu.io/tags/dotnetcore/</link>
+    <description>Recent content in Dotnetcore on Stuart Blackler&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 17 Jun 2018 21:35:00 +0100</lastBuildDate>
+    
+	<atom:link href="https://im5tu.io/tags/dotnetcore/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Automated Builds in VSTS with YML Build Definitions</title>
+      <link>https://im5tu.io/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/</link>
+      <pubDate>Sun, 17 Jun 2018 21:35:00 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/</guid>
+      <description>In this article we will explore a preview feature inside of Visual Studio Team Services (VSTS) called YML Build Definitions. In essence, this allows you to change your build process from a .yml file in your git repository much in the same way as you can do with other services such as AppVeyor. During the article, we will setup a build definition for an Aspnet Core website.
+Prerequisites Before we take a look at the struture of the file, you will need to complete the following tasks:</description>
+    </item>
+    
+  </channel>
+</rss>

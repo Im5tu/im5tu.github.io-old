@@ -21,6 +21,15 @@
     </item>
     
     <item>
+      <title>Aspnetcore</title>
+      <link>https://im5tu.io/tags/aspnetcore/</link>
+      <pubDate>Sun, 17 Jun 2018 21:35:00 +0100</pubDate>
+      
+      <guid>https://im5tu.io/tags/aspnetcore/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Azure</title>
       <link>https://im5tu.io/tags/azure/</link>
       <pubDate>Tue, 17 Feb 2015 18:37:00 +0000</pubDate>
@@ -86,7 +95,7 @@
     <item>
       <title>Devops</title>
       <link>https://im5tu.io/tags/devops/</link>
-      <pubDate>Sat, 24 Jan 2015 18:36:29 +0000</pubDate>
+      <pubDate>Sun, 17 Jun 2018 21:35:00 +0100</pubDate>
       
       <guid>https://im5tu.io/tags/devops/</guid>
       <description></description>
@@ -98,6 +107,15 @@
       <pubDate>Tue, 04 Apr 2017 10:38:38 +0100</pubDate>
       
       <guid>https://im5tu.io/tags/dotnet/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Dotnetcore</title>
+      <link>https://im5tu.io/tags/dotnetcore/</link>
+      <pubDate>Sun, 17 Jun 2018 21:35:00 +0100</pubDate>
+      
+      <guid>https://im5tu.io/tags/dotnetcore/</guid>
       <description></description>
     </item>
     
@@ -341,6 +359,15 @@
       <pubDate>Sat, 11 Feb 2017 12:15:27 +0000</pubDate>
       
       <guid>https://im5tu.io/tags/vb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vsts</title>
+      <link>https://im5tu.io/tags/vsts/</link>
+      <pubDate>Sun, 17 Jun 2018 21:35:00 +0100</pubDate>
+      
+      <guid>https://im5tu.io/tags/vsts/</guid>
       <description></description>
     </item>
     

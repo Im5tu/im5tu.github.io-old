@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Automated Builds in VSTS with YML Build Definitions - Stuart Blackler&#39;s Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    
+    
+    
+    <meta property="og:title" content="Automated Builds in VSTS with YML Build Definitions - Stuart Blackler&#39;s Blog" />
+<meta property="og:type" content="website" />
+
+<meta property="og:description" content="A little place for all my thoughts on all things cyber.">
+
+<meta property="og:url" content="https://im5tu.io/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/" />
+<meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
+<meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@im5tu" />
+
+<style>*{margin:0;padding:0}body{font-size:100%}ul,ol{margin:1em 1em}ul li,ol li{margin:.25em auto}ol ul{margin:0.25em 1em}hr{margin:.5em auto}html,body{height:100%;background:#f9f9f9;color:#444;text-align:justify;font-family:"Rajdhani","Helvetica Neue",Helvetica,Arial,sans-serif}h1,h2,h3,h4,h5{font-family:"Michroma","Helvetica Neue",Helvetica,Arial,sans-serif;margin:1.25em 0 0.25em 0;font-weight:800;color:#161616;text-align:left}h1{font-size:2.3em;line-height:2.8em}h2{font-size:1.8em;line-height:2.3em}h3{font-size:1.3em;line-height:1.8em}h4{font-size:1.2em;line-height:1.7em}h5{font-size:1.1em;line-height:1.6em}p{margin:1.5em 0}p,p li{font-size:1.1em;line-height:1.6em}p code,ul li code,ol li code{color:#b30000}p code:hover,ul li code:hover,ol li code:hover{color:#ff0101}a:link,a:visited{color:#111;text-decoration:none}a:hover{color:#800}pre{background:#fff;border:1px solid #cdcdcd;color:#444}pre:hover{border-color:#8d8d8d}pre,pre code{font-family:'Cutive Mono', monospace}.pageWrap{margin:0 auto}@media screen and (min-width: 320px){.pageWrap{width:97%}}@media screen and (min-width: 740px){.pageWrap{width:90%}}@media screen and (min-width: 980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}.article-list>footer{margin:1em auto;font-size:1.25em;line-height:1.75em}.article-list .article footer{margin-bottom:0}.article{background:#fff;padding:0 2em 1em 2em;border:1px solid #d0d0d0;margin:2em 0}.article-content a:link,.article-content a:visited{color:maroon}.article-content a:hover{color:#515151}.article-footer{margin:1em auto}.article blockquote{border-left:5px solid #848484;padding:25px;margin-left:-10px;font-style:italic;font-weight:bold;margin-bottom:1em;background:#fff;font-size:1.5em;line-height:2em}.article blockquote p{margin:0}.article pre{font-size:1em;line-height:1.5em;margin:.5em;padding:.5em;white-space:pre-wrap;-webkit-transition:background 2s ease-in-out;-o-transition:background 2s ease-in-out;transition:background 2s ease-in-out;-webkit-transition:border-color 500ms ease-in-out;-o-transition:border-color 500ms ease-in-out;transition:border-color 500ms ease-in-out;-webkit-transition:color 75ms ease-in-out;-o-transition:color 75ms ease-in-out;transition:color 75ms ease-in-out}.article pre:hover{color:#fff;background:#333;border-color:#777}.article img{max-width:100%}.article .article-header p{font-style:italic}.article .warning{margin:2em;padding:1em 2em;color:#8A6D3B;background-color:#fcf8e3;border:1px solid #8A6D3B;text-align:center}.article .warning h1,.article .warning h2,.article .warningh3,.article .warning h4,.article .warning h5{font-weight:700;margin:0;padding:0;text-align:center}ul.article-tags{margin-left:.5em;display:inline;list-style:none}ul.article-tags li{display:inline}ul.article-tags li:not(:last-child):after{content:", "}ul.article-tags li:last{margin-right:0}a.article-tag:link,a.article-tag:visited{color:#b30000}a.article-tag:hover{color:#515151}.pageContainer{min-height:100%;position:relative}.pageContainer-content{margin:0 auto;padding-bottom:6em}#pageHeader{background:#fff;color:#000;padding:.5em 0;border-bottom:1px solid #d0d0d0}#pageHeader:hover{background:#fff;border-bottom-color:#b7b7b7}#pageHeader-nav{float:right}#pageHeader-nav-ul{float:right;margin:0;list-style:none}#pageHeader-nav-ul li{float:left;margin-left:1em}#pageHeader-about section{width:100%;clear:both;text-align:center;margin:2em 0}#pageHeader-about h4{font-style:italic}#pageHeader-about h1,#pageHeader-about h2,#pageHeader-about h3,#pageHeader-about h4{text-align:center;line-height:normal}#pageHeader-about-links-nav-ul{margin:0;padding:0;display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;list-style:none}#pageHeader-about-links-nav-ul li{display:-webkit-box;display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-box-align:start;-webkit-align-items:flex-start;-ms-flex-align:start;align-items:flex-start}a.pageHeader-nav-ul-li-link:link,a.pageHeader-nav-ul-li-link:visited{color:#000;font-weight:900;font-family:"Reader","Helvetica Neue",Helvetica,Arial,sans-serif}a.pageHeader-nav-ul-li-link:hover{color:#b00}#pageFooter{padding:2em 0;width:100%;display:-webkit-inline-box;display:-webkit-inline-flex;display:-ms-inline-flexbox;display:inline-flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-webkit-flex-flow:row wrap;-ms-flex-flow:row wrap;flex-flow:row wrap;-webkit-align-content:flex-start;-ms-flex-line-pack:start;align-content:flex-start;-webkit-box-pack:center;-webkit-justify-content:center;-ms-flex-pack:center;justify-content:center;background:#dedede;color:#5f5f5f;position:absolute;bottom:0;font-size:.9em;line-height:1.4em}#pageFooter a{color:inherit}.pageFooter-section{-webkit-box-flex:1;-webkit-flex-grow:1;-ms-flex-positive:1;flex-grow:1;text-align:center}.pageFooter-section:hover{color:#1f1f1f}
+</style>
+<link href="https://fonts.googleapis.com/css?family=Cutive+Mono|Michroma|Rajdhani" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Blog" /></head>
+<body>
+<section class="pageContainer">
+    <header id="pageHeader">
+    <section id="pageHeader-about" class="pageWrap" itemscope itemtype="http://schema.org/person">
+        <section id="pageHeader-about-title">
+            <h1 itemprop="name"><a href="/" title="Homepage">Stuart Blackler</a></h1>
+            <h4 itemprop="jobtitle">Lead Architect / Software Consultant / Crossfitter</h4>
+        </section>
+        <section id="pageHeader-about-description">
+            <p itemprop="description">I am a lead architect at the UK&#39;s first clearing bank in 250 years, ClearBank. I specialise in designing and building backend systems, specifically messaging based systems and RESTful API&#39;s. I am also one of two UK representives in an ISO working group looking at API&#39;s in financial services. Follow my journey via the channels below:</p>
+        </section>
+        <section id="pageHeader-about-links">
+            <nav id="pageHeader-about-links-nav">
+                <ul id="pageHeader-about-links-nav-ul">
+                    <li><a class="pageHeader-about-links-nav-ul-li-link" rel="noopener" target="_blank" href="https://github.com/im5tu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a></li>
+                    <li><a class="pageHeader-about-links-nav-ul-li-link" rel="noopener" target="_blank" href="https://instagram.com/cf_stu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11.984 16.815c2.596 0 4.706-2.111 4.706-4.707 0-1.409-.623-2.674-1.606-3.538-.346-.303-.735-.556-1.158-.748-.593-.27-1.249-.421-1.941-.421s-1.349.151-1.941.421c-.424.194-.814.447-1.158.749-.985.864-1.608 2.129-1.608 3.538 0 2.595 2.112 4.706 4.706 4.706zm.016-8.184c1.921 0 3.479 1.557 3.479 3.478 0 1.921-1.558 3.479-3.479 3.479s-3.479-1.557-3.479-3.479c0-1.921 1.558-3.478 3.479-3.478zm5.223.369h6.777v10.278c0 2.608-2.114 4.722-4.722 4.722h-14.493c-2.608 0-4.785-2.114-4.785-4.722v-10.278h6.747c-.544.913-.872 1.969-.872 3.109 0 3.374 2.735 6.109 6.109 6.109s6.109-2.735 6.109-6.109c.001-1.14-.327-2.196-.87-3.109zm2.055-9h-12.278v5h-1v-5h-1v5h-1v-4.923c-.346.057-.682.143-1 .27v4.653h-1v-4.102c-1.202.857-2 2.246-2 3.824v3.278h7.473c1.167-1.282 2.798-2 4.511-2 1.722 0 3.351.725 4.511 2h7.505v-3.278c0-2.608-2.114-4.722-4.722-4.722zm2.722 5.265c0 .406-.333.735-.745.735h-2.511c-.411 0-.744-.329-.744-.735v-2.53c0-.406.333-.735.744-.735h2.511c.412 0 .745.329.745.735v2.53z"/></svg></a></li>
+                    <li><a class="pageHeader-about-links-nav-ul-li-link" rel="noopener" target="_blank" href="https://keybase.io/im5tu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M21 21v3h-18v-3h18zm-13-15c0-2.206 1.795-4 4-4s4 1.794 4 4v3h2v-3c0-3.313-2.687-6-6-6s-6 2.687-6 6v3h2v-3zm13 8v-3h-18v3h18zm0 5v-3h-18v3h18z"/></svg></a></li>
+                    <li><a class="pageHeader-about-links-nav-ul-li-link" rel="noopener" target="_blank" href="https://www.linkedin.com/in/im5tu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z"/></svg></a></li>
+                    <li><a class="pageHeader-about-links-nav-ul-li-link" rel="noopener" target="_blank" href="https://twitter.com/im5tu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg></a></li>
+                    <li><a class="pageHeader-about-links-nav-ul-li-link" rel="noopener" target="_blank" href="/article/index.xml"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.118-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/></svg></a></li>
+                </ul>
+            </nav>
+        </section>
+    </section>
+</header>
+    <section class="pageContainer-content pageWrap">
+        <article class="article" itemscope itemtype="http://schema.org/blog">
+    <header class="article-header">
+        <h1><a href="https://im5tu.io/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/" itemprop="name">Automated Builds in VSTS with YML Build Definitions</a></h1>
+        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2018-06-17T21:35:00">2018-06-17 21:35:00 &#43;0100 BST</time></p>
+    </header>
+    <section class="article-content" itemprop="text">
+
+<p>In this article we will explore a preview feature inside of Visual Studio Team Services (VSTS) called YML Build Definitions. In essence, this allows you to change your build process from a <code>.yml</code> file in your git repository much in the same way as you can do with other services such as AppVeyor. During the article, we will setup a build definition for an Aspnet Core website.</p>
+
+<!-- more -->
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>Before we take a look at the struture of the file, you will need to complete the following tasks:</p>
+
+<ol>
+<li>Setup a git repository inside of VSTS</li>
+<li>Enable the preview feature (requires account level administration access)</li>
+</ol>
+
+<p>For the sake of brevity, I will assume that you already have administrator access to your VSTS account and that you have a git repository already setup. If you need to know how to setup a git repository inside of VSTS, please use <a href="https://docs.microsoft.com/en-us/vsts/git/create-new-repo?view=vsts">this guide</a>.</p>
+
+<p>Enabling a preview feature inside of VSTS requires that you have administration access to your account, not just your team project. If you do not have access, or unable to obtain access, you will be unable to follow the rest of the article. Once you have secured administrator level access, use the <a href="https://docs.microsoft.com/en-us/vsts/project/navigation/preview-features?view=vsts">following guide</a> to enable the &ldquo;YML Build Definition&rdquo; preview feature.</p>
+
+<h2 id="say-hello-to-vsts-ci-yml">Say hello to <code>.vsts-ci.yml</code></h2>
+
+<p>The way that VSTS has implemented the automated build system, is nothing short of excellent. They have used a convention based approach to locating the file and have built the system on top of existing tasks in your VSTS account. Unfortunately, task groups do not work as yet, but there is a templating feature which may be useful in some instances.</p>
+
+<p>In order to use the feature, you need to create a <code>.vsts-ci.yml</code> file in the root of the repository. It is worth noting that this file is white-space sensitive so pay attention to that from the outset. Once this file is committed to the repository, it will automatically run everytime one or more commits are pushed to VSTS. Just like regular builds, the YML Build Definition builds integrate seamlessly into the pull request system inside of VSTS.</p>
+
+<p>The first build, once the file has been pushed, takes a little longer than use as VSTS has to create all the required build parts for the first time. In your build definitions inside of VSTS, you will see a new definition in the following naming convention:</p>
+
+<pre><code>&lt;repository name&gt; CI
+</code></pre>
+
+<p>If I had a repository called <code>hello-world-web</code> then the build defintion that you can search for will be <code>hello-world-web CI</code>.</p>
+
+<p>The file we will create follows the following structure:</p>
+
+<pre><code>name: &lt;version number&gt;
+triggers:
+  &lt;list of triggers&gt;
+variables:
+  &lt;list of variables&gt;
+steps:
+  &lt;our build process&gt;
+</code></pre>
+
+<p>The <code>name</code> property, from what I can tell, represents the build number which we can extract later on in the build process. <code>triggers</code> allows us to only trigger when the required conditions are met. <code>variables</code> are an invaluable part of the build definition. I always try and variable anything useful as the build files can become quite lengthy depending on your desired process. Lastly, <code>steps</code> is where all of the build process is defined. The build files do support phases, but i am keeping that out of scope for this article. For the remainder of the article, we will assume the build number is <code>0.1.0</code> or <code>name: 0.1.0</code> in the yml file.</p>
+
+<p><strong>Note:</strong> <em>At the end of this article, there is a complete file that you can use as a template.</em></p>
+
+<h2 id="setting-up-triggers">Setting up triggers</h2>
+
+<p>If you do not specify a trigger section, VSTS will run a build for every branch that you ever commit/push to regardless of what it&rsquo;s called. I usually setup my builds to automatically trigger on any feature/bugfix/release/hotfix branch and, naturally, the master branch. To do this, configure the section as follows:</p>
+
+<pre><code>trigger:
+    branches:
+        include:
+        - master
+        - hotfix/*
+        - release/*
+        - feature/*
+        - bugfix/*
+</code></pre>
+
+<p>The full syntax, if you choose to use it, is:</p>
+
+<pre><code>trigger:
+branches:
+    include: [string]
+    exclude: [string]
+paths:
+    include: [string]
+    exclude: [string]
+</code></pre>
+
+<p>The shorter, inclusive only syntax is:</p>
+
+<pre><code>trigger:
+    [string]
+</code></pre>
+
+<p>Personally, I prefer the full syntax, but it doesn&rsquo;t make a difference as I typically only use inclusive only filters. Where <code>[string]</code> is present, either place a single entry or if multiple entries are required, follow my example where I place <code>-</code> on the start of each new line of the element.</p>
+
+<p>One last point to note, if you setup your branching policies in VSTS to require a build from the yml build definition, this will always be triggered regardless of the settings in this section - as far as I am aware.</p>
+
+<h2 id="using-variables">Using variables</h2>
+
+<p>You do not have to use variables in your scripts. If you decide to, they can be extremly powerful. The variables can be passed to task inputs using the macro syntax <code>$(variableName)</code>, or accessed within a script using the environment variable. For an example of how the alternative syntaxes, see the <a href="https://github.com/Microsoft/vsts-agent/blob/master/docs/preview/yamlgettingstarted-phase.md">documentation</a>:</p>
+
+<pre><code>variables:
+   buildConfiguration: 'Release'
+   buildProjects: '**/*.csproj'
+   testProjects: '**/*Tests*.csproj'
+   publishProject: 'src\CHANGEME\CHANGEME.csproj'
+   dotnetCliVersion: '2.1.300'
+</code></pre>
+
+<p>In our script that we are building, we have some simple variables for some of the key sections of our code. It can be incredibly easy to parameterise everything, but I would advise only do that which is necessary.</p>
+
+<h2 id="the-build-pipeline">The build pipeline</h2>
+
+<p>As mentioned earlier in the article, I will be walking through how to create a build pipeline for a sample Aspnet Core website. In order for us to have something to publish-able at the end of the build, I will take you through the following:</p>
+
+<ol>
+<li>Cleaning the sources (Issue #4 at the end of the article)</li>
+<li>Ensure the dotnet CLI is installed</li>
+<li>Run the build in release mode</li>
+<li>Run the tests in release mode</li>
+<li>Publish the website to the artifact directory of the VSTS build</li>
+<li>Label the VSTS build with the build number</li>
+</ol>
+
+<h2 id="cleaning-sources">Cleaning Sources</h2>
+
+<p>As a best practise, the first thing that I do in a build process is to reset the state of the repository. This prevents any issues such as false positives from previous builds etc. In order to do this, we can execute a small git magic:</p>
+
+<pre><code>steps: 
+- script: |
+  git clean -d -x -f
+
+  displayName: Clean Sources
+</code></pre>
+
+<p>This portion is declared directly under the <code>steps:</code> section in the yml file. Inline scripts, as shown above, are limited to around 500 characters at the time of writing. So you may need to get inventive with your scripts or use an external file (out of scope for this article). As the file is whitespace sensitive, there is no need for quotation marks around most things, so we can just type <code>Clean Sources</code> and the space will be preserved in the name of the step when we view it inside of VSTS.</p>
+
+<p>For completeness, the git options entered are:</p>
+
+<ul>
+<li><code>-d</code>: Removes untracked files</li>
+<li><code>-x</code>: Basically removes everything regardless of whether or not it&rsquo;s in the <code>.gitignore</code></li>
+<li><code>-f</code>: Force the clean operation</li>
+</ul>
+
+<p>In my testing, these options successfully remove the build output if present.</p>
+
+<h2 id="ensuring-the-dotnet-cli-in-installed">Ensuring the dotnet CLI in installed</h2>
+
+<p>Depending on where you are running your build process, you may or may not need this step, but I always include it for completeness. This steps checks for the specified version of the dotnet CLI and installs it if it is not present. We pull the version from a variable, which I&rsquo;ll cover later.</p>
+
+<pre><code>- task: DotNetCoreInstaller@0
+displayName: DotNet CLI Installer
+inputs:
+    version: $(dotnetCliVersion)
+</code></pre>
+
+<p>This should be placed under the definition of Clean Sources above. For each of the remaining steps, place them directly after the last step you entered, unless you want to change the order of the process (the build executes the steps from top to bottom - so the first one in the file is the first one to be run).</p>
+
+<h2 id="building-the-projects">Building the projects</h2>
+
+<p>In order to build the project(s), I use a two step process: restore the required nuget packages using a nuget.config file, followed by building the projects.</p>
+
+<pre><code>- task: DotNetCoreCLI@2
+displayName: Restore Packages
+inputs:
+    command: restore
+    feedsToUse: config
+    nugetConfigPath: 'nuget.config'
+    projects: $(buildProjects)
+    noCache: true
+    verbosityRestore: Normal
+</code></pre>
+
+<p>In the above snippet, the first thing that I want to mention is that I am using a variable to decide which projects I want nuget packages to be restored for.The projects directive supports a wildcard approach, so we can declare a folder structure such as <code>**/*.csproj</code> should we want to. Next, I had to set the <code>noCache: true</code> directive as I always wanted the latest versions from the nuget feeds. This shouldn&rsquo;t be required on hosted build servers, but may be needed for your own build servers. Lastly, I set the verbosity level back to normal, where the default is detailed. This massively cleans up the corresponding build logs. I&rsquo;ll leave it up to you, the reader, to extract this to a variable should you wish too.</p>
+
+<pre><code>- task: DotNetCoreCLI@2
+displayName: Build Projects
+inputs:
+    projects: $(buildProjects)
+    packDirectory: '$(Build.ArtifactStagingDirectory)'
+    arguments: '-c $(buildConfiguration) /p:Version=$(Build.BuildNumber)'
+</code></pre>
+
+<p>Once again, I have used a couple of variables. The first is the projects to build which is the exact same definition as in the previous step. The second variable is the configuration that we wish to build. In this case, I always have my automated builds built in <code>Release</code> mode - so this is how i&rsquo;ve defined this variable. Last but by no means least, I set version number in the arguments so the assemblies are versioned correctly.</p>
+
+<h2 id="testing-the-projects">Testing the projects</h2>
+
+<p>Testing is always a part of my pipeline, regardless of whether or not the solution actually contains any tests at the current time. Luckily, if tests are not present when this step runs, then there is a only a warning on the step rather than a failing build.</p>
+
+<pre><code>- task: DotNetCoreCLI@2
+displayName: Test Projects
+inputs:
+    command: test
+    projects: $(testProjects)
+    publishTestResults: true
+    arguments: '--no-build -c $(buildConfiguration)'
+</code></pre>
+
+<p>You may of noticed that I used a separate variable for the projects that I wish to test (<code>$(testProjects)</code>). For me, this is just a subset of the projects that I have already built and I always want to run in the same configuration that I built in. This allows me to pass in the <code>--no-build</code> argument, saving a small amount of time on executing the tests. Luckily, the built in task for tests can automatically publish the test results (if available) via the <code>publishTestResults: true</code> input.</p>
+
+<h2 id="publishing-the-website">Publishing the website</h2>
+
+<p><em>Sorry about some of the formatting in this section. See the full file at the end of this article for the proper formatting. I will sort this out eventually.</em></p>
+
+<p>There are two steps in publishing our website. The first is to build the project with the runtime, placing the output in a staging directory. The second part is taking the build output from the staging directory and publishing it to the artificts of the build.</p>
+
+<pre><code>- task: DotNetCoreCLI@2
+displayName: Publish Web App
+condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+inputs:
+    command: publish
+    projects: $(publishProject)
+    arguments: '-c Release --self-contained -r win7-x64 -o $(Build.ArtifactStagingDirectory)/drop /p:Version=$(Build.BuildNumber)'
+</code></pre>
+
+<p>This is the first time that we have used a condition. The default condition is <code>succeeded()</code> which means &ldquo;only run this step if the previous one completed successfully&rdquo;. Here I have said, where the previous step completed successfully and the branch that&rsquo;s being built is the <code>master</code> branch. For some of our builds we only publish on the master branch, though it can be handy to have this step in place for pull requests etc. It purely depends on the requirements on your build pipeline.</p>
+
+<p>Taking a look at the arguments, I want to point out the use of: <code>--self-contained</code>, <code>-r</code> and <code>-o</code>. They have the following attributes:</p>
+
+<ul>
+<li><code>--self-contained</code>: Publish the .NET Core runtime with your application so the runtime doesn&rsquo;t need to be installed on the target machine.</li>
+<li><code>-r &lt;runtime&gt;</code>: Publish the project for a given runtime.</li>
+<li><code>-o &lt;directory&gt;</code>: This places the build output into the specified directory. In our case, it&rsquo;s a folder called <code>drop</code> inside of the VSTS staging directory. You do not need to manually create these folders, VSTS takes care of this for you.</li>
+</ul>
+
+<p>The next step is to publish the artifacts so we can use it after the build completes:</p>
+
+<pre><code>- task: PublishBuildArtifacts@1
+condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/drop'
+    artifactName: 'drop'
+    publishLocation: Container
+</code></pre>
+
+<p>This step takes the contents of the <code>drop</code> folder in the staging area, and copies it to the published artifacts <code>drop</code> directory. Occassionally, I build and package multiple projects, so I have them split out in the staging/published areas in separate folders. This, however, is not required.</p>
+
+<h2 id="labelling-the-build">Labelling the Build</h2>
+
+<p>This section requires the <a href="https://marketplace.visualstudio.com/items?itemName=YodLabs.VariableTasks">following extension</a> to be installed. Though there may be another, built in, way to complete the same task. In my real builds, I usually have multiple tags for our release process. To add additional tags, enter another line at the same indentation as <code>Build-$(Build.BuildNumber)</code>.</p>
+
+<pre><code>- task: YodLabs.VariableTasks.AddTag.AddTag@0
+displayName: Tag VSTS Build
+condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+inputs:
+    tags: |
+    Build-$(Build.BuildNumber)
+</code></pre>
+
+<p>Once this task completes, you should have a tag on your build like: <code>Build-0.1.0</code>.</p>
+
+<h2 id="final-file">Final file</h2>
+
+<p>As I mentioned near the start of the article, the <code>.vsts-ci.yml</code> file is whitespace sensitive, so for completeness, here is a sample file that you can use for your own builds.</p>
+
+<script src="https://gist.github.com/Im5tu/3ed84e07f4db212440b56a4b84d4ad3e.js"></script>
+
+<h2 id="teaching-yourself">Teaching yourself</h2>
+
+<p>Although I have covered a very basic process here, there are two ways that you can discover the features currently available in the preview feature. Firstly, you can create a build definition manually adding in the relevant tasks to your process. Once you are ready, click on the phase that you are interested in then look for the <code>View YAML</code> option in the right hand pane. Alternatively, there is the <a href="https://github.com/Microsoft/vsts-agent/blob/master/docs/preview/yamlgettingstarted.md">preview documentation</a>. I used both approaches to teach myself how to do the builds. The documentation could do with a little bit more detail in places, so a lot of this is currently experimentation.</p>
+
+<h2 id="potential-issues">Potential Issues</h2>
+
+<p>I wanted to include this section, because there are a few things that I have noticed that doesn&rsquo;t quite work as expected, or at all in some cases:</p>
+
+<ol>
+<li>Changing the queue using the <code>queue:</code> setting does not appear to work. I have tried using a variety of syntaxes in a few different places (top level/phases) but nothing seems to work at the moment. So you have to change the build manually if this is an issue for you.</li>
+<li>In order to perform git operations from the command line, you need to either:
+
+<ul>
+<li>Use the VSTS API and API token system to perform the action</li>
+<li>Give the project collection build user account <code>Contributor</code> access to your repository</li>
+</ul></li>
+<li>When I experimented with using the git command line to tag our repositories, the command to push to the repository seemed never to complete or timeout (it was &ldquo;pushing&rdquo; for well over 5 minutes)</li>
+<li>You can get build server re-use which can lead to incremental builds rather than a clean build, which can have some disasterous consequences. So for all of my builds, I force git to clean all of the sources before I do anything for the current build.</li>
+</ol>
+
+<p>I&rsquo;m sure that all of these issues will be resolved in due course as more and more support is added to the feature. It is well worth using if it works for your scenario. In a future article, I will show you how to publish a SQL project, Service Fabric project and Nuget package all from a YML Build Definition.</p>
+</section>
+    <footer class="article-footer">
+        <hr />Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/vsts/">vsts</a></li><li><a class="article-tag" href="/tags/dotnetcore/">dotnetcore</a></li><li><a class="article-tag" href="/tags/aspnetcore/">aspnetcore</a></li><li><a class="article-tag" href="/tags/devops/">devops</a></li>
+</ul></footer>
+</article>
+    </section>
+    <footer id="pageFooter">
+    <section id="pageFooter-copyright" class="pageFooter-section">
+        &copy; 2016 Stuart Blackler
+    </section>
+    <section id="pageFooter-details" class="pageFooter-section">
+        <a href="https://github.com/im5tu/im5tu-hugo" rel="noopener" target="_blank">Edit me on Github</a>
+    </section>
+    <section id="pageFooter-scroll" class="pageFooter-section">
+        <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>
+    </section>
+</footer>
+</section>
+<script src="/js/site-400fc317.js" defer></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-88036425-1', 'auto');
+  ga('send', 'pageview');
+</script>
+</body>
+</html>

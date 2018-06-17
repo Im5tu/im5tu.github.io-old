@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://im5tu.io/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/</loc>
+    <lastmod>2018-06-17T21:35:00+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/</loc>
     <lastmod>2017-06-11T20:50:11+01:00</lastmod>
   </url>
@@ -200,7 +205,13 @@
   
   <url>
     <loc>https://im5tu.io/article/</loc>
-    <lastmod>2017-06-11T20:50:11+01:00</lastmod>
+    <lastmod>2018-06-17T21:35:00+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/aspnetcore/</loc>
+    <lastmod>2018-06-17T21:35:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -254,7 +265,7 @@
   
   <url>
     <loc>https://im5tu.io/categories/development/</loc>
-    <lastmod>2017-06-11T20:50:11+01:00</lastmod>
+    <lastmod>2018-06-17T21:35:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -266,13 +277,19 @@
   
   <url>
     <loc>https://im5tu.io/tags/devops/</loc>
-    <lastmod>2015-01-24T18:36:29+00:00</lastmod>
+    <lastmod>2018-06-17T21:35:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://im5tu.io/tags/dotnet/</loc>
     <lastmod>2017-04-04T10:38:38+01:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/dotnetcore/</loc>
+    <lastmod>2018-06-17T21:35:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -325,13 +342,13 @@
   </url>
   
   <url>
-    <loc>https://im5tu.io/categories/life/</loc>
+    <loc>https://im5tu.io/tags/life/</loc>
     <lastmod>2017-01-20T13:55:18+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://im5tu.io/tags/life/</loc>
+    <loc>https://im5tu.io/categories/life/</loc>
     <lastmod>2017-01-20T13:55:18+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -361,13 +378,13 @@
   </url>
   
   <url>
-    <loc>https://im5tu.io/categories/news/</loc>
+    <loc>https://im5tu.io/tags/news/</loc>
     <lastmod>2017-03-01T19:32:24+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://im5tu.io/tags/news/</loc>
+    <loc>https://im5tu.io/categories/news/</loc>
     <lastmod>2017-03-01T19:32:24+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -455,7 +472,7 @@
   
   <url>
     <loc>https://im5tu.io/</loc>
-    <lastmod>2017-06-11T20:50:11+01:00</lastmod>
+    <lastmod>2018-06-17T21:35:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -474,6 +491,12 @@
   <url>
     <loc>https://im5tu.io/tags/vb/</loc>
     <lastmod>2017-02-11T12:15:27+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/vsts/</loc>
+    <lastmod>2018-06-17T21:35:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
