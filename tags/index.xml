@@ -95,7 +95,7 @@
     <item>
       <title>Devops</title>
       <link>https://im5tu.io/tags/devops/</link>
-      <pubDate>Sun, 17 Jun 2018 21:35:00 +0100</pubDate>
+      <pubDate>Sat, 30 Jun 2018 19:40:00 +0100</pubDate>
       
       <guid>https://im5tu.io/tags/devops/</guid>
       <description></description>
@@ -113,7 +113,7 @@
     <item>
       <title>Dotnetcore</title>
       <link>https://im5tu.io/tags/dotnetcore/</link>
-      <pubDate>Sun, 17 Jun 2018 21:35:00 +0100</pubDate>
+      <pubDate>Sat, 30 Jun 2018 19:40:00 +0100</pubDate>
       
       <guid>https://im5tu.io/tags/dotnetcore/</guid>
       <description></description>
@@ -336,6 +336,15 @@
     </item>
     
     <item>
+      <title>Service Fabric</title>
+      <link>https://im5tu.io/tags/service-fabric/</link>
+      <pubDate>Sat, 30 Jun 2018 19:40:00 +0100</pubDate>
+      
+      <guid>https://im5tu.io/tags/service-fabric/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Sql</title>
       <link>https://im5tu.io/tags/sql/</link>
       <pubDate>Sat, 15 Mar 2014 13:18:01 +0000</pubDate>
@@ -365,7 +374,7 @@
     <item>
       <title>Vsts</title>
       <link>https://im5tu.io/tags/vsts/</link>
-      <pubDate>Sun, 17 Jun 2018 21:35:00 +0100</pubDate>
+      <pubDate>Sat, 30 Jun 2018 19:40:00 +0100</pubDate>
       
       <guid>https://im5tu.io/tags/vsts/</guid>
       <description></description>

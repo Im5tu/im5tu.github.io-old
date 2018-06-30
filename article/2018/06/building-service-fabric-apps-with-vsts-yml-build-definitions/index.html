@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/tags/personal-development/">
+    <title>Building Service Fabric Apps With VSTS YML Build Definitions - Stuart Blackler&#39;s Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="Publish an Service Fabric application using a VSTS YML build definition.">
     
     
-    
-    <meta property="og:title" content="Personal Development - Stuart Blackler&#39;s Blog" />
+    <meta property="og:title" content="Building Service Fabric Apps With VSTS YML Build Definitions - Stuart Blackler&#39;s Blog" />
 <meta property="og:type" content="website" />
 
-<meta property="og:description" content="A little place for all my thoughts on all things cyber.">
+<meta property="og:description" content="Publish an Service Fabric application using a VSTS YML build definition.">
 
-<meta property="og:url" content="https://im5tu.io/tags/personal-development/" />
+<meta property="og:url" content="https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/" />
 <meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
 <meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
 <meta name="twitter:card" content="summary" />
@@ -49,31 +49,133 @@
     </section>
 </header>
     <section class="pageContainer-content pageWrap">
-        
-
-<article class="tagpage">
-    <header class="tagpage-header">
-        <h1>Pages tagged: Personal Development</p>
-    </header>
-    <section class="tagpage-content">
-        
-            <article class="article" itemscope itemtype="http://schema.org/blog">
+        <article class="article" itemscope itemtype="http://schema.org/blog">
     <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2017/04/5-tips-for-getting-what-you-want/" itemprop="name">5 Tips For Getting What You Want</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2017-04-12T16:25:48">2017-04-12 16:25:48 &#43;0100 BST</time></p>
+        <h1><a href="https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/" itemprop="name">Building Service Fabric Apps With VSTS YML Build Definitions</a></h1>
+        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2018-06-30T19:40:00">2018-06-30 19:40:00 &#43;0100 BST</time></p>
     </header>
-    <section class="article-summary" itemprop="about"><p>Over recent months, some close friends and I have found ourselves in a bit of a rut and woken up to the fact that we aren&rsquo;t getting any younger and don&rsquo;t really have a plan. Naturally, this can be upsetting to a person and it&rsquo;s something that can be easily rectified. </p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/personal-development/">Personal Development</a></li>
+    <section class="article-content" itemprop="text">
+
+<p>In my <a href="/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/">previous article</a>, we setup a standarised build using the new YML build definitions within VSTS, using the .Net CLI tooling. In this article, we will use the same setup as our base, but we will build and publish a service fabric application.</p>
+
+<!-- more -->
+
+<p>Our <a href="/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/">sample build file</a> has the following steps:</p>
+
+<ol>
+<li>Clean Sources</li>
+<li>Install the Dotnet CLI</li>
+<li>Restore Packages</li>
+<li>Build Projects</li>
+<li>Test Projects</li>
+<li>Publish the Web App</li>
+<li>Publish Build Artifacts</li>
+<li>Tag VSTS Build</li>
+</ol>
+
+<p>For our service fabric build, we will need the following steps:</p>
+
+<ol>
+<li>Clean Sources</li>
+<li>Install the Dotnet CLI</li>
+<li>Restore Packages - csproj</li>
+<li><strong>Restore Packages - sfproj (* New)</strong></li>
+<li>Build Projects</li>
+<li>Test Projects</li>
+<li><strong>Publish the Service Fabric App (* New)</strong></li>
+<li><strong>Update the Service Fabric App Version (* New)</strong></li>
+<li><strong>Copy Publish Profiles (* New)</strong></li>
+<li>Publish Build Artifacts</li>
+<li>Tag VSTS Build</li>
+</ol>
+
+<p>For the sake of brevity, I am going to only talk about the new steps in the sequence and the reasoning behind their existance but i&rsquo;ll include a full sample file at the end of the post.</p>
+
+<h2 id="restore-packages-sfproj">Restore Packages (SFPROJ)</h2>
+
+<p>At first, this step may seem a little strange. Currently, the service fabric tooling does not support the dotnet CLI properly, though it&rsquo;s getting better. The major hurdle is the restoring of the msbuild package that contains the targets - this does not seem to restore properly with the CLI, so I use an additional step using the old nuget commands:</p>
+
+<pre><code class="language-yml">- task: NuGetCommand@2
+  displayName: Restore Packages (SF Projects)
+  inputs:
+    restoreSolution: $(packageProjects)
+    restoreDirectory: '..\..\packages'
+    feedsToUse: config
+    nugetConfigPath: nuget.config
+    noCache: true
+    verbosityRestore: Normal
+</code></pre>
+
+<p>Here, <code>$(packageProjects)</code> is defined as <code>**/*.sfproj</code> allowing for multiple service fabric applications in a single solution. The only real difference between this step and the <code>dotnet restore</code> step from the previous article is the fact that we restore to the solution level packages folder instead of <code>dotnet restore</code>&rsquo;s default location. This is because the targets in the sfproj are looking in this directory. Adjust <code>restoreDirectory</code> according to your own folder structure - I place all the sources under an <code>/src</code> folder for reference.</p>
+
+<h2 id="publishing-the-service-fabric-app">Publishing the Service Fabric App</h2>
+
+<p>When it comes around to publishing the application(s), I usually create two versions, one in a debug build and one in release. Both are then published to the artifacts. The debug build is useful for downloading by other developers for use on their local machines and the release build is what is used for deployments. If you wish to mirror this, duplicate the step and replace Release with Debug.</p>
+
+<pre><code class="language-yml">- task: DotNetCoreCLI@2
+  displayName: Package Projects (Publish - Release)
+  inputs:
+    projects: $(packageProjects)
+    packDirectory: '$(Build.ArtifactStagingDirectory)\\drop\\release'
+    arguments: '-c Release /p:Platform=x64 /p:Version=$(Build.BuildNumber) /t:Package /p:PackageLocation=$(Build.ArtifactStagingDirectory)\drop\release\applicationpackage'
+</code></pre>
+
+<p><em><strong>Note</strong></em>: <em>Sorry about the formatting, see the full file at the end of the article for the proper formatting.</em></p>
+
+<p>In this step, we package directly to the artifact staging directory to make publishing to the build artifacts a lot easier later in the process. All of the output is placed inside of the <code>drop</code> folder as a way of differentiating between this artifact and others. Under the <code>drop</code> folder, we split based on the configuration type: Debug/Release. Both the debug and the release folder mirror the same folder structure which is an <code>applicationpackage</code> folder, containing the packaged code and the <code>projectartifacts</code> folder which will contain the publish profiles. So the full folder structure appears like:</p>
+
+<pre><code>/drop
+    /debug
+        /applicationpackage
+        /projectartifacts
+    /release
+        /applicationpackage
+        /projectartifacts
+</code></pre>
+
+<p>The only other element that I wish to point out is that service fabric applications have to be built as the <code>x64</code> platform.</p>
+
+<h2 id="update-the-service-fabric-app-version">Update the Service Fabric App Version</h2>
+
+<p>I am currently unaware of the correct msbuild switch to set the version number of the service fabric application, so I use a built in step to change the manifest numbers to match the assembly numbers and ensure a rolling upgrade is possible on the service fabric cluster.</p>
+
+<pre><code class="language-yml"># Update the service fabric build numbers
+- task: ServiceFabricUpdateManifests@2
+  displayName: Update Service Fabric Version (Release)
+  inputs:
+    applicationPackagePath: '$(Build.ArtifactStagingDirectory)\\drop\\release\\applicationpackage'
+    versionSuffix: '$(Build.BuildNumber)'
+    versionBehavior: Replace
+</code></pre>
+
+<p>The <code>versionBehavior</code> parameter has two modes: Append/Replace. Since I always use the build number, which is always a semver version, I use the replacement mode. We look inside of the <code>applicationpackage</code> folder to find the manifest file, which is the location we previously published the application to.</p>
+
+<h2 id="copying-publish-profiles">Copying Publish Profiles</h2>
+
+<p>In order to publish the service fabric application from the release area in VSTS, we need to copy the publish profiles that are defined with the project (unless you want to re-create them in the release pipeline, everytime!).</p>
+
+<pre><code class="language-yml">- task: CopyFiles@2
+  displayName: Copy XML Files To Artifacts (Release)
+  inputs:
+    SourceFolder: 'src\'
+    Contents: |
+     **\*.ServiceFabric\PublishProfiles\*.xml
+     **\*.ServiceFabric\ApplicationParameters\*.xml
+    TargetFolder: '$(Build.ArtifactStagingDirectory)\drop\release\projectartifacts\'
+    CleanTargetFolder: true
+</code></pre>
+
+<p>As mentioned previously, I keep the sourcecode under an <code>src</code> folder in the repository. Inside of that folder, we need to search for any xml files in the <code>PublishProfiles</code> and <code>ApplicationParameters</code> folders and place them in the <code>projectartifacts</code> folder as described previously. The only convention here is that my service fabric applications end in <code>.ServiceFabric</code> so you may need to adjust this for your own build scripts.</p>
+
+<p>If you put all the pieces together, you should have a working service fabric build pipeline, along the lines of the following sample:</p>
+
+<script src="https://gist.github.com/Im5tu/3f114127c4174cb4e6602d6295b8c827.js"></script>
+</section>
+    <footer class="article-footer">
+        <hr />Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/vsts/">vsts</a></li><li><a class="article-tag" href="/tags/dotnetcore/">dotnetcore</a></li><li><a class="article-tag" href="/tags/service-fabric/">service fabric</a></li><li><a class="article-tag" href="/tags/devops/">devops</a></li>
 </ul></footer>
 </article>
-        
-    </section>
-    <footer class="tagpage-footer">
-    </footer>
-</article>
-
-
     </section>
     <footer id="pageFooter">
     <section id="pageFooter-copyright" class="pageFooter-section">
