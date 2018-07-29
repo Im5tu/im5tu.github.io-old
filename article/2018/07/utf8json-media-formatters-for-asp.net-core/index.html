@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/tags/java/">
+    <title>Utf8Json Media Formatters for ASP.Net Core - Stuart Blackler&#39;s Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2018/07/utf8json-media-formatters-for-asp.net-core/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="An updated sample of the input/output media formatters which use Utf8Json as the serialisation library">
     
     
-    
-    <meta property="og:title" content="Java - Stuart Blackler&#39;s Blog" />
+    <meta property="og:title" content="Utf8Json Media Formatters for ASP.Net Core - Stuart Blackler&#39;s Blog" />
 <meta property="og:type" content="website" />
 
-<meta property="og:description" content="A little place for all my thoughts on all things cyber.">
+<meta property="og:description" content="An updated sample of the input/output media formatters which use Utf8Json as the serialisation library">
 
-<meta property="og:url" content="https://im5tu.io/tags/java/" />
+<meta property="og:url" content="https://im5tu.io/article/2018/07/utf8json-media-formatters-for-asp.net-core/" />
 <meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
 <meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
 <meta name="twitter:card" content="summary" />
@@ -49,31 +49,98 @@
     </section>
 </header>
     <section class="pageContainer-content pageWrap">
-        
-
-<article class="tagpage">
-    <header class="tagpage-header">
-        <h1>Pages tagged: Java</p>
-    </header>
-    <section class="tagpage-content">
-        
-            <article class="article" itemscope itemtype="http://schema.org/blog">
+        <article class="article" itemscope itemtype="http://schema.org/blog">
     <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2014/06/how-your-binary-search-implementation-is-broken-and-how-to-fix-it/" itemprop="name">How your binary search implementation is broken and how to fix it</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2014-06-20T18:21:04">2014-06-20 18:21:04 &#43;0000 UTC</time></p>
+        <h1><a href="https://im5tu.io/article/2018/07/utf8json-media-formatters-for-asp.net-core/" itemprop="name">Utf8Json Media Formatters for ASP.Net Core</a></h1>
+        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2018-07-29T16:40:00">2018-07-29 16:40:00 &#43;0100 BST</time></p>
     </header>
-    <section class="article-summary" itemprop="about"><p>I have recently begun studying the theory and implementations of algorithms. During this study, I came across <a href="http://googleresearch.blogspot.co.uk/2006/06/extra-extra-read-all-about-it-nearly.html">this post</a> which describes how a bug exists in most implementations of a binary search algorithm. </p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/csharp/">csharp</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/java/">java</a></li>
+    <section class="article-content" itemprop="text">
+
+<p>Recently, I have been looking at the <a href="https://github.com/neuecc/Utf8Json">Utf8Json</a> project and evaluating for use in our high performance payments API. Looking at the benchmarks on the Github page, and running my own benchmarks, the numbers stated seemed to tally up, so I built a few media formatters for aspnet core.</p>
+
+<!-- more -->
+
+<p>Now, the project does already ship with some media formatters as a separate nuget package. However, I wanted to improve the following things:</p>
+
+<ul>
+<li>Add support for the media type <code>application/problem+json</code> by letting the server define the content type</li>
+<li>Return a <code>NoValue</code> result on the input formatter when the request body is zero lengthed</li>
+<li>Only read input values when they are of type <code>application/json</code></li>
+</ul>
+
+<p>Whilst not massive improvements, they may still help others. The formatters can be added via the <code>InputFormatters</code>/<code>OutputFormatters</code> properties when configuring the options for <code>UseMvc</code>. The only problem that I am aware of, is that occassionally the deserializer does not map some camel cased proeprty names. I have dug into this problem yet as my initial evalution has finished but I suspect it&rsquo;s to do with the default resolver naming convention used.</p>
+
+<h2 id="utf8json-input-media-formatter">Utf8Json Input Media Formatter</h2>
+
+<pre><code class="language-c#">using Microsoft.AspNetCore.Mvc.Formatters;
+using System.Threading.Tasks;
+using Utf8Json;
+
+internal sealed class Utf8JsonInputFormatter : IInputFormatter
+{
+    private readonly IJsonFormatterResolver _resolver;
+
+    public Utf8JsonInputFormatter() : this(null) { }
+    public Utf8JsonInputFormatter(IJsonFormatterResolver resolver)
+    {
+        _resolver = resolver ?? JsonSerializer.DefaultResolver;
+    }
+
+    public bool CanRead(InputFormatterContext context) =&gt; context.HttpContext.Request.ContentType.StartsWith(&quot;application/json&quot;);
+
+    public Task&lt;InputFormatterResult&gt; ReadAsync(InputFormatterContext context)
+    {
+        var request = context.HttpContext.Request;
+
+        if (request.Body.CanSeek &amp;&amp; request.Body.Length == 0)
+            return InputFormatterResult.NoValueAsync();
+
+        var result = JsonSerializer.NonGeneric.Deserialize(context.ModelType, request.Body, _resolver);
+        return InputFormatterResult.SuccessAsync(result);
+    }
+}
+</code></pre>
+
+<h2 id="utf8json-output-media-formatter">Utf8Json Output Media Formatter</h2>
+
+<pre><code class="language-c#">using Microsoft.AspNetCore.Mvc.Formatters;
+using System.Threading.Tasks;
+using Utf8Json;
+
+internal sealed class Utf8JsonOutputFormatter : IOutputFormatter
+{
+    private readonly IJsonFormatterResolver _resolver;
+
+    public Utf8JsonOutputFormatter() : this(null) { }
+    public Utf8JsonOutputFormatter(IJsonFormatterResolver resolver)
+    {
+        _resolver = resolver ?? JsonSerializer.DefaultResolver;
+    }
+
+    public bool CanWriteResult(OutputFormatterCanWriteContext context) =&gt; true;
+
+    public Task WriteAsync(OutputFormatterWriteContext context)
+    {
+        if (!context.ContentTypeIsServerDefined)
+            context.HttpContext.Response.ContentType = &quot;application/json&quot;;
+
+        if (context.ObjectType == typeof(object))
+        {
+            return JsonSerializer.NonGeneric.SerializeAsync(context.HttpContext.Response.Body, context.Object, _resolver);
+        }
+        else
+        {
+            return JsonSerializer.NonGeneric.SerializeAsync(context.ObjectType, context.HttpContext.Response.Body, context.Object, _resolver);
+        }
+    }
+}
+</code></pre>
+</section>
+    <footer class="article-footer">
+        <hr />Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/aspnetcore/">aspnetcore</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/dotnetcore/">dotnetcore</a></li>
 </ul></footer>
 </article>
-        
-    </section>
-    <footer class="tagpage-footer">
-    </footer>
-</article>
-
-
     </section>
     <footer id="pageFooter">
     <section id="pageFooter-copyright" class="pageFooter-section">

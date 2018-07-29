@@ -6,10 +6,20 @@
     <description>Recent content in Development on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 30 Jun 2018 19:40:00 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 29 Jul 2018 16:40:00 +0100</lastBuildDate>
     
 	<atom:link href="https://im5tu.io/categories/development/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Utf8Json Media Formatters for ASP.Net Core</title>
+      <link>https://im5tu.io/article/2018/07/utf8json-media-formatters-for-asp.net-core/</link>
+      <pubDate>Sun, 29 Jul 2018 16:40:00 +0100</pubDate>
+      
+      <guid>https://im5tu.io/article/2018/07/utf8json-media-formatters-for-asp.net-core/</guid>
+      <description>Recently, I have been looking at the Utf8Json project and evaluating for use in our high performance payments API. Looking at the benchmarks on the Github page, and running my own benchmarks, the numbers stated seemed to tally up, so I built a few media formatters for aspnet core.
+Now, the project does already ship with some media formatters as a separate nuget package. However, I wanted to improve the following things:</description>
+    </item>
     
     <item>
       <title>Building Service Fabric Apps With VSTS YML Build Definitions</title>

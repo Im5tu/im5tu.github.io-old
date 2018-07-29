@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://im5tu.io/article/2018/07/utf8json-media-formatters-for-asp.net-core/</loc>
+    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/</loc>
     <lastmod>2018-06-30T19:40:00+01:00</lastmod>
   </url>
@@ -210,13 +215,13 @@
   
   <url>
     <loc>https://im5tu.io/article/</loc>
-    <lastmod>2018-06-30T19:40:00+01:00</lastmod>
+    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://im5tu.io/tags/aspnetcore/</loc>
-    <lastmod>2018-06-17T21:35:00+01:00</lastmod>
+    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -270,7 +275,7 @@
   
   <url>
     <loc>https://im5tu.io/categories/development/</loc>
-    <lastmod>2018-06-30T19:40:00+01:00</lastmod>
+    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -288,13 +293,13 @@
   
   <url>
     <loc>https://im5tu.io/tags/dotnet/</loc>
-    <lastmod>2017-04-04T10:38:38+01:00</lastmod>
+    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://im5tu.io/tags/dotnetcore/</loc>
-    <lastmod>2018-06-30T19:40:00+01:00</lastmod>
+    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -483,7 +488,7 @@
   
   <url>
     <loc>https://im5tu.io/</loc>
-    <lastmod>2018-06-30T19:40:00+01:00</lastmod>
+    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
     <priority>0</priority>
   </url>
   
