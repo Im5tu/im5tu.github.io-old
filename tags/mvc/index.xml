@@ -17,7 +17,7 @@
       <pubDate>Tue, 10 Jun 2014 18:19:47 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/enabling-http-strict-transport-security-hsts-via-web-config/</guid>
-      <description>&lt;p&gt;In my previous post, I discussed how to &lt;a href=&#34;https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/&#34;&gt;enable HSTS via MVC Action Filters&lt;/a&gt;. I thought that I would just do a follow up post showing you how to enable it via the web.config. &lt;/p&gt;</description>
+      <description>&lt;p&gt;In my previous post, I discussed how to &lt;a href=&#34;https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/&#34;&gt;enable HSTS via MVC Action Filters&lt;/a&gt;. I thought that I would just do a follow up post showing you how to enable it via the web.config.&lt;/p&gt;</description>
     </item>
     
     <item>

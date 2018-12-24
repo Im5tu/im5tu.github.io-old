@@ -17,19 +17,16 @@
       <pubDate>Thu, 29 Dec 2016 20:25:58 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/</guid>
-      <description>&lt;p&gt;Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&amp;rsquo;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&amp;rsquo;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Blog Building - Part 4 - Frontend</title>
-      <link>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</link>
+      <link>https://im5tu.io/article/2016/11/blog-building-part-4-frontend/</link>
       <pubDate>Sat, 19 Nov 2016 08:01:38 +0000</pubDate>
       
-      <guid>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</guid>
-      <description>&lt;p&gt;So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <guid>https://im5tu.io/article/2016/11/blog-building-part-4-frontend/</guid>
+      <description>&lt;p&gt;So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.&lt;/p&gt;</description>
     </item>
     
   </channel>

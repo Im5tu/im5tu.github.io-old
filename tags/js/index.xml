@@ -13,13 +13,11 @@
     
     <item>
       <title>Blog Building - Part 4 - Frontend</title>
-      <link>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</link>
+      <link>https://im5tu.io/article/2016/11/blog-building-part-4-frontend/</link>
       <pubDate>Sat, 19 Nov 2016 08:01:38 +0000</pubDate>
       
-      <guid>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</guid>
-      <description>&lt;p&gt;So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <guid>https://im5tu.io/article/2016/11/blog-building-part-4-frontend/</guid>
+      <description>&lt;p&gt;So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.&lt;/p&gt;</description>
     </item>
     
   </channel>

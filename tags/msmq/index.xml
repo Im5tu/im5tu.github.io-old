@@ -17,7 +17,7 @@
       <pubDate>Sun, 28 Sep 2014 18:35:57 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/09/message-queue-fundementals-msmq/</guid>
-      <description>&lt;p&gt;MSMQ is Microsoft&amp;rsquo;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API. &lt;/p&gt;</description>
+      <description>&lt;p&gt;MSMQ is Microsoft&amp;rsquo;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API.&lt;/p&gt;</description>
     </item>
     
   </channel>

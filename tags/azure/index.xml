@@ -6,10 +6,19 @@
     <description>Recent content in Azure on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 17 Feb 2015 18:37:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 24 Dec 2018 14:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://im5tu.io/tags/azure/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Building a custom build agent image with Docker and Azure DevOps pipelines</title>
+      <link>https://im5tu.io/article/2018/12/building-a-custom-build-agent-image-with-docker-and-azure-devops-pipelines/</link>
+      <pubDate>Mon, 24 Dec 2018 14:00:00 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2018/12/building-a-custom-build-agent-image-with-docker-and-azure-devops-pipelines/</guid>
+      <description>&lt;p&gt;In this article, we will learn how to use a custom dockerfile as the bases for a customised Azure DevOps build agent. There are many reasons why you might want to do this, including running custom tooling that takes a while to setup or tooling that isn&amp;rsquo;t supported yet.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>3 Easy Steps To Configuring Azure With Powershell</title>
@@ -17,8 +26,7 @@
       <pubDate>Tue, 17 Feb 2015 18:37:00 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2015/02/3-easy-steps-to-configuring-azure-with-powershell/</guid>
-      <description>&lt;p&gt;Recently, I had to automate some tasks in Azure. This is the easiest way I could get started.
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;Recently, I had to automate some tasks in Azure. This is the easiest way I could get started.&lt;/p&gt;</description>
     </item>
     
   </channel>

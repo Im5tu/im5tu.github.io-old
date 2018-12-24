@@ -17,8 +17,7 @@
       <pubDate>Tue, 24 Jun 2014 09:21:19 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/finding-reducible-expressions/</guid>
-      <description>&lt;p&gt;Today I just wanted to share a quick note regarding &lt;a href=&#34;http://stackoverflow.com/a/2040097/315711&#34;&gt;a Stack Overflow answer&lt;/a&gt; that I recently came across. In the answer the author explains that a call to &lt;code&gt;Expression.CanReduce&lt;/code&gt; will typically return false, while &lt;code&gt;Expression.Reduce()&lt;/code&gt; will return the current expression. The author continues to state that one of the types that overrides &lt;code&gt;Expression.Reduce()&lt;/code&gt; and &lt;code&gt;Expression.CanReduce&lt;/code&gt; is &lt;code&gt;MemberInitExpression&lt;/code&gt;.
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today I just wanted to share a quick note regarding &lt;a href=&#34;http://stackoverflow.com/a/2040097/315711&#34;&gt;a Stack Overflow answer&lt;/a&gt; that I recently came across. In the answer the author explains that a call to &lt;code&gt;Expression.CanReduce&lt;/code&gt; will typically return false, while &lt;code&gt;Expression.Reduce()&lt;/code&gt; will return the current expression. The author continues to state that one of the types that overrides &lt;code&gt;Expression.Reduce()&lt;/code&gt; and &lt;code&gt;Expression.CanReduce&lt;/code&gt; is &lt;code&gt;MemberInitExpression&lt;/code&gt;.&lt;/p&gt;</description>
     </item>
     
   </channel>

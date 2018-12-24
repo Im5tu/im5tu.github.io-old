@@ -6,10 +6,19 @@
     <description>Recent content in Development on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Jul 2018 16:40:00 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 24 Dec 2018 14:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://im5tu.io/categories/development/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Building a custom build agent image with Docker and Azure DevOps pipelines</title>
+      <link>https://im5tu.io/article/2018/12/building-a-custom-build-agent-image-with-docker-and-azure-devops-pipelines/</link>
+      <pubDate>Mon, 24 Dec 2018 14:00:00 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2018/12/building-a-custom-build-agent-image-with-docker-and-azure-devops-pipelines/</guid>
+      <description>&lt;p&gt;In this article, we will learn how to use a custom dockerfile as the bases for a customised Azure DevOps build agent. There are many reasons why you might want to do this, including running custom tooling that takes a while to setup or tooling that isn&amp;rsquo;t supported yet.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Utf8Json Media Formatters for ASP.Net Core</title>
@@ -48,9 +57,7 @@ Prerequisites Before we take a look at the struture of the file, you will need t
       <pubDate>Sun, 11 Jun 2017 20:50:11 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/</guid>
-      <description>&lt;p&gt;In this article, we will increase our websites level of protecting against Cross-Site Request Forgery and Cross-Site Script Inclusion attacks by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this article, we will increase our websites level of protecting against Cross-Site Request Forgery and Cross-Site Script Inclusion attacks by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -59,9 +66,7 @@ Prerequisites Before we take a look at the struture of the file, you will need t
       <pubDate>Sun, 11 Jun 2017 20:38:07 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/</guid>
-      <description>&lt;p&gt;In this article, we will take a look at secure cookies, that is by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this article, we will take a look at secure cookies, that is by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -70,9 +75,7 @@ Prerequisites Before we take a look at the struture of the file, you will need t
       <pubDate>Tue, 06 Jun 2017 15:01:04 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/</guid>
-      <description>&lt;p&gt;In this article, I will give a brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite. We will also be creating our first outbound rewrite rule with a pre-condition.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this article, I will give a brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite. We will also be creating our first outbound rewrite rule with a pre-condition.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -81,9 +84,7 @@ Prerequisites Before we take a look at the struture of the file, you will need t
       <pubDate>Mon, 05 Jun 2017 15:00:59 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/06/removing-trailing-slashes-with-url-rewrite/</guid>
-      <description>&lt;p&gt;In the &lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;previous post&lt;/a&gt;, I explained why canonical urls are important and how to enforce them . In this article, I will show you how to have a canonical host url.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;In the &lt;a href=&#34;https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/&#34;&gt;previous post&lt;/a&gt;, I explained why canonical urls are important and how to enforce them . In this article, I will show you how to have a canonical host url.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -98,13 +99,11 @@ What is a canonical host url? It can be incredibly easy to distribute different 
     
     <item>
       <title>Up and running with URL Rewrite - going from HTTP to HTTPS</title>
-      <link>https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/</link>
+      <link>https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite-going-from-http-to-https/</link>
       <pubDate>Sat, 03 Jun 2017 15:00:51 +0100</pubDate>
       
-      <guid>https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite---going-from-http-to-https/</guid>
-      <description>&lt;p&gt;In this series, I am going to take you through a few &lt;code&gt;web.config&lt;/code&gt; snippets that have come in handy for me when using URL Rewrite on IIS. Firstly, I am going to introduce the URL Rewrite module then show a sample of going from HTTP to HTTPS.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <guid>https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite-going-from-http-to-https/</guid>
+      <description>&lt;p&gt;In this series, I am going to take you through a few &lt;code&gt;web.config&lt;/code&gt; snippets that have come in handy for me when using URL Rewrite on IIS. Firstly, I am going to introduce the URL Rewrite module then show a sample of going from HTTP to HTTPS.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -119,12 +118,11 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
     
     <item>
       <title>Talks: Episerver Content Providers &amp; Lightening Talk</title>
-      <link>https://im5tu.io/article/2017/04/talks-episerver-content-providers--lightening-talk/</link>
+      <link>https://im5tu.io/article/2017/04/talks-episerver-content-providers-lightening-talk/</link>
       <pubDate>Tue, 04 Apr 2017 10:38:38 +0100</pubDate>
       
-      <guid>https://im5tu.io/article/2017/04/talks-episerver-content-providers--lightening-talk/</guid>
-      <description>&lt;p&gt;On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&amp;rsquo;s London offices. I ended up giving two talks: Episerver Content Providers &amp;amp; a 5 minute lightening talk.
-&lt;/p&gt;</description>
+      <guid>https://im5tu.io/article/2017/04/talks-episerver-content-providers-lightening-talk/</guid>
+      <description>&lt;p&gt;On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&amp;rsquo;s London offices. I ended up giving two talks: Episerver Content Providers &amp;amp; a 5 minute lightening talk.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -133,9 +131,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Sat, 11 Feb 2017 12:15:27 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2017/02/openmessage-2017-roadmap/</guid>
-      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/im5tu/openmessage&#34;&gt;OpenMessage&lt;/a&gt; originally started out as a replacement for an internal library that was used across teams. At the time, the team I was apart of needed the latest version of dotnet core for the library where as the other team were stuck on RC1. They were also developing features for that version of the framework and a few pre-existing details that we were unhappy with (eg: the request/response implementation). With that in mind, I created a minimal wrapper for what we needed. Looking forward, I plan to dedicate a bit more time to the project and improve it.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;&lt;a href=&#34;https://github.com/im5tu/openmessage&#34;&gt;OpenMessage&lt;/a&gt; originally started out as a replacement for an internal library that was used across teams. At the time, the team I was apart of needed the latest version of dotnet core for the library where as the other team were stuck on RC1. They were also developing features for that version of the framework and a few pre-existing details that we were unhappy with (eg: the request/response implementation). With that in mind, I created a minimal wrapper for what we needed. Looking forward, I plan to dedicate a bit more time to the project and improve it.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -144,9 +140,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Sun, 05 Feb 2017 15:31:54 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2017/02/openmessage-1.1-released/</guid>
-      <description>&lt;p&gt;Just a quick update to say that the Azure provider for &lt;a href=&#34;https://github.com/Im5tu/OpenMessage&#34;&gt;OpenMessage&lt;/a&gt; has been released. This update fixes an issue with scheduling messages on topics.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;Just a quick update to say that the Azure provider for &lt;a href=&#34;https://github.com/Im5tu/OpenMessage&#34;&gt;OpenMessage&lt;/a&gt; has been released. This update fixes an issue with scheduling messages on topics.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -155,8 +149,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Thu, 29 Dec 2016 20:25:58 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/</guid>
-      <description>&lt;p&gt;Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&amp;rsquo;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&amp;rsquo;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -165,49 +158,43 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Wed, 21 Dec 2016 23:25:27 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2016/12/write-good-code-not-code-hastily/</guid>
-      <description>&lt;p&gt;This article is a rework of a draft that I&amp;rsquo;ve had sitting in my drafts folder for a long while now. Over the last six months or so, I&amp;rsquo;ve been reviewing a lot more code than I had previously thanks in part to a promotion and in part, code reviewing applicants coding entries. Some of the code has been good, with some code, really not so good!
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;This article is a rework of a draft that I&amp;rsquo;ve had sitting in my drafts folder for a long while now. Over the last six months or so, I&amp;rsquo;ve been reviewing a lot more code than I had previously thanks in part to a promotion and in part, code reviewing applicants coding entries. Some of the code has been good, with some code, really not so good!&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Blog Building - Part 4 - Frontend</title>
-      <link>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</link>
+      <link>https://im5tu.io/article/2016/11/blog-building-part-4-frontend/</link>
       <pubDate>Sat, 19 Nov 2016 08:01:38 +0000</pubDate>
       
-      <guid>https://im5tu.io/article/2016/11/blog-building---part-4---frontend/</guid>
-      <description>&lt;p&gt;So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <guid>https://im5tu.io/article/2016/11/blog-building-part-4-frontend/</guid>
+      <description>&lt;p&gt;So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Blog Building - Part 3 - Theming</title>
-      <link>https://im5tu.io/article/2016/11/blog-building---part-3---theming/</link>
+      <link>https://im5tu.io/article/2016/11/blog-building-part-3-theming/</link>
       <pubDate>Fri, 18 Nov 2016 19:01:38 +0000</pubDate>
       
-      <guid>https://im5tu.io/article/2016/11/blog-building---part-3---theming/</guid>
-      <description>&lt;p&gt;In this article, I will show you how the theme has been constructed and show you how the overrides work. So far we have created a site, setup most of our workflow and posted our first article.
-&lt;/p&gt;</description>
+      <guid>https://im5tu.io/article/2016/11/blog-building-part-3-theming/</guid>
+      <description>&lt;p&gt;In this article, I will show you how the theme has been constructed and show you how the overrides work. So far we have created a site, setup most of our workflow and posted our first article.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Blog Building - Part 2 - My First Post</title>
-      <link>https://im5tu.io/article/2016/11/blog-building---part-2---my-first-post/</link>
+      <link>https://im5tu.io/article/2016/11/blog-building-part-2-my-first-post/</link>
       <pubDate>Thu, 17 Nov 2016 23:01:38 +0000</pubDate>
       
-      <guid>https://im5tu.io/article/2016/11/blog-building---part-2---my-first-post/</guid>
-      <description>&lt;p&gt;In &lt;a href=&#34;https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/&#34;&gt;the last article&lt;/a&gt;, we setup our workflow and all the pieces that you will need to create a new site. Now we need to install a theme and begin publishing. Prior to writing this series, I began evaluating the extensibility of hugo themes and started work on something I call bones - a no thrills template with no styling, just structure. As I improve the template it will become more useful, maybe. It will remain the template behind mysite as I continue to improve it.
-&lt;/p&gt;</description>
+      <guid>https://im5tu.io/article/2016/11/blog-building-part-2-my-first-post/</guid>
+      <description>&lt;p&gt;In &lt;a href=&#34;https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/&#34;&gt;the last article&lt;/a&gt;, we setup our workflow and all the pieces that you will need to create a new site. Now we need to install a theme and begin publishing. Prior to writing this series, I began evaluating the extensibility of hugo themes and started work on something I call bones - a no thrills template with no styling, just structure. As I improve the template it will become more useful, maybe. It will remain the template behind mysite as I continue to improve it.&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Blog Building - Part 1 - Hello Hugo</title>
-      <link>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</link>
+      <link>https://im5tu.io/article/2016/11/blog-building-part-1-hello-hugo/</link>
       <pubDate>Thu, 17 Nov 2016 20:23:00 +0000</pubDate>
       
-      <guid>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</guid>
-      <description>&lt;p&gt;As promised in this first mini-series, I am going to guide you through the steps that I have taken to get my blog up and running on Github pages and Cloudflare with SSL. As these the steps that I have taken to get this blog up and running, your milage may vary with this as different versions get released. That said, you should be fine.
-&lt;/p&gt;</description>
+      <guid>https://im5tu.io/article/2016/11/blog-building-part-1-hello-hugo/</guid>
+      <description>&lt;p&gt;As promised in this first mini-series, I am going to guide you through the steps that I have taken to get my blog up and running on Github pages and Cloudflare with SSL. As these the steps that I have taken to get this blog up and running, your milage may vary with this as different versions get released. That said, you should be fine.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -216,9 +203,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Thu, 17 Nov 2016 19:34:17 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2016/11/hello-world/</guid>
-      <description>&lt;p&gt;Hello World. Safe to say it&amp;rsquo;s been a little while since I have blogged or even had a website come to think of it. Alas, I am back with some fresh ideas and recharged to help you dear reader.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;Hello World. Safe to say it&amp;rsquo;s been a little while since I have blogged or even had a website come to think of it. Alas, I am back with some fresh ideas and recharged to help you dear reader.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -245,8 +230,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Tue, 17 Feb 2015 18:37:00 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2015/02/3-easy-steps-to-configuring-azure-with-powershell/</guid>
-      <description>&lt;p&gt;Recently, I had to automate some tasks in Azure. This is the easiest way I could get started.
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;Recently, I had to automate some tasks in Azure. This is the easiest way I could get started.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -264,7 +248,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Wed, 17 Dec 2014 18:36:09 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/12/dev-lunches-what-why-how/</guid>
-      <description>&lt;p&gt;If you&amp;rsquo;re not up-to-date, you fall behind. You fall behind in your work, which leads you to fall behind at home. If continued, it&amp;rsquo;s a never ending circle that can seem like climbing Everest in order to overcome. I propose that we, as developers, start doing is utilizing our free time to help not only ourselves but our co-workers too. We can do this via dev lunches.  &lt;/p&gt;</description>
+      <description>&lt;p&gt;If you&amp;rsquo;re not up-to-date, you fall behind. You fall behind in your work, which leads you to fall behind at home. If continued, it&amp;rsquo;s a never ending circle that can seem like climbing Everest in order to overcome. I propose that we, as developers, start doing is utilizing our free time to help not only ourselves but our co-workers too. We can do this via dev lunches.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -273,7 +257,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Sun, 28 Sep 2014 18:35:57 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/09/message-queue-fundementals-msmq/</guid>
-      <description>&lt;p&gt;MSMQ is Microsoft&amp;rsquo;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API. &lt;/p&gt;</description>
+      <description>&lt;p&gt;MSMQ is Microsoft&amp;rsquo;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -291,8 +275,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Tue, 24 Jun 2014 09:21:19 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/finding-reducible-expressions/</guid>
-      <description>&lt;p&gt;Today I just wanted to share a quick note regarding &lt;a href=&#34;http://stackoverflow.com/a/2040097/315711&#34;&gt;a Stack Overflow answer&lt;/a&gt; that I recently came across. In the answer the author explains that a call to &lt;code&gt;Expression.CanReduce&lt;/code&gt; will typically return false, while &lt;code&gt;Expression.Reduce()&lt;/code&gt; will return the current expression. The author continues to state that one of the types that overrides &lt;code&gt;Expression.Reduce()&lt;/code&gt; and &lt;code&gt;Expression.CanReduce&lt;/code&gt; is &lt;code&gt;MemberInitExpression&lt;/code&gt;.
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today I just wanted to share a quick note regarding &lt;a href=&#34;http://stackoverflow.com/a/2040097/315711&#34;&gt;a Stack Overflow answer&lt;/a&gt; that I recently came across. In the answer the author explains that a call to &lt;code&gt;Expression.CanReduce&lt;/code&gt; will typically return false, while &lt;code&gt;Expression.Reduce()&lt;/code&gt; will return the current expression. The author continues to state that one of the types that overrides &lt;code&gt;Expression.Reduce()&lt;/code&gt; and &lt;code&gt;Expression.CanReduce&lt;/code&gt; is &lt;code&gt;MemberInitExpression&lt;/code&gt;.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -301,7 +284,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Fri, 20 Jun 2014 18:21:04 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/how-your-binary-search-implementation-is-broken-and-how-to-fix-it/</guid>
-      <description>&lt;p&gt;I have recently begun studying the theory and implementations of algorithms. During this study, I came across &lt;a href=&#34;http://googleresearch.blogspot.co.uk/2006/06/extra-extra-read-all-about-it-nearly.html&#34;&gt;this post&lt;/a&gt; which describes how a bug exists in most implementations of a binary search algorithm. &lt;/p&gt;</description>
+      <description>&lt;p&gt;I have recently begun studying the theory and implementations of algorithms. During this study, I came across &lt;a href=&#34;http://googleresearch.blogspot.co.uk/2006/06/extra-extra-read-all-about-it-nearly.html&#34;&gt;this post&lt;/a&gt; which describes how a bug exists in most implementations of a binary search algorithm.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -310,7 +293,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Wed, 18 Jun 2014 18:20:25 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/unit-testing-equals-the-forgotten-tests/</guid>
-      <description>&lt;p&gt;Today I wanted to cover something that is not often covered when unit testing an object. If an object has the &lt;code&gt;Equals&lt;/code&gt; method overridden, then there are a number of tests that we should be running as a minimum, these are:&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today I wanted to cover something that is not often covered when unit testing an object. If an object has the &lt;code&gt;Equals&lt;/code&gt; method overridden, then there are a number of tests that we should be running as a minimum&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -319,7 +302,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Tue, 10 Jun 2014 18:19:47 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/enabling-http-strict-transport-security-hsts-via-web-config/</guid>
-      <description>&lt;p&gt;In my previous post, I discussed how to &lt;a href=&#34;https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/&#34;&gt;enable HSTS via MVC Action Filters&lt;/a&gt;. I thought that I would just do a follow up post showing you how to enable it via the web.config. &lt;/p&gt;</description>
+      <description>&lt;p&gt;In my previous post, I discussed how to &lt;a href=&#34;https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/&#34;&gt;enable HSTS via MVC Action Filters&lt;/a&gt;. I thought that I would just do a follow up post showing you how to enable it via the web.config.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -337,7 +320,8 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Sat, 15 Mar 2014 13:18:01 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/03/sap-business-one-v9-version-strings/</guid>
-      <description>&lt;p&gt;Today I had to figure out what the current version of SAP Business One is. In order to do this, I looked at the table SFMD inside of SBO-Common and found the following results:&lt;/p&gt;</description>
+      <description>Version | Patch Level ----------------------- 900046 | 00 900052 | 01 900053 | 01 Hotfix 1 900055 | 03 900056 | 04 900058 | 06 900059 | 07 900060 | 08 902000 | 09 902001 | 09 Hotfix 1 902002 | 10  Note: I added the Hotfix 1 to clarify. I believe these are correct, I can&amp;rsquo;t find a definitive source to verify these results.
+Then in order to check the target databases version, I ran the following against the target database:</description>
     </item>
     
     <item>
@@ -346,8 +330,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Mon, 10 Jun 2013 20:14:39 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2013/06/becoming-an-mcp/</guid>
-      <description>&lt;p&gt;As the title suggests, today I passed the 70-483 Programming in C# exam to offically become a Microsoft Certifed Professional.
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;As the title suggests, today I passed the 70-483 Programming in C# exam to offically become a Microsoft Certifed Professional.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -356,8 +339,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Mon, 06 May 2013 18:09:25 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2013/05/using-idisposible-correctly/</guid>
-      <description>&lt;p&gt;In this article, I am going to show you how to use the &lt;code&gt;IDisposable&lt;/code&gt; interface correctly in your code. When I read others code, it is easy to pick up on subtle bugs. We need to begin to train ourselves to see the bugs and we do this by understanding what we are using. Before we begin, we need to make sure that we understand a core piece of computer science theory: Destructors.
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this article, I am going to show you how to use the &lt;code&gt;IDisposable&lt;/code&gt; interface correctly in your code. When I read others code, it is easy to pick up on subtle bugs. We need to begin to train ourselves to see the bugs and we do this by understanding what we are using. Before we begin, we need to make sure that we understand a core piece of computer science theory: Destructors.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -366,8 +348,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Mon, 11 Mar 2013 18:06:28 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2013/03/semaphore-vs-seamphoreslim-micro-benchmark/</guid>
-      <description>&lt;p&gt;In this post, I am going to show a small micro-benchmark to demonstrate the performance difference between the &lt;code&gt;Semaphore&lt;/code&gt; and &lt;code&gt;SemaphoreSlim&lt;/code&gt; classes in C#. A &lt;code&gt;Semaphore&lt;/code&gt; is often used to restrict the number of threads than can access some (physical or logical) resource. In this case, we want the restriction to be as little as possible.
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this post, I am going to show a small micro-benchmark to demonstrate the performance difference between the &lt;code&gt;Semaphore&lt;/code&gt; and &lt;code&gt;SemaphoreSlim&lt;/code&gt; classes in C#. A &lt;code&gt;Semaphore&lt;/code&gt; is often used to restrict the number of threads than can access some (physical or logical) resource. In this case, we want the restriction to be as little as possible.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -376,8 +357,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Sun, 30 Dec 2012 14:51:38 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2012/12/flicker-free-forms-and-listview-in-.net/</guid>
-      <description>&lt;p&gt;On a project I have been working on recently, I came across a problem where under Windows an Mdi Child form would flicker when it loads. Trying to find information on what was the cause of this was near impossible. I ended up trying a lot of code snippets that I found when googling the problem and this is what I have come up with.
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;On a project I have been working on recently, I came across a problem where under Windows an Mdi Child form would flicker when it loads. Trying to find information on what was the cause of this was near impossible. I ended up trying a lot of code snippets that I found when googling the problem and this is what I have come up with.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -386,8 +366,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Sat, 01 Dec 2012 17:51:38 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2012/12/extension-methods-in-dotnet/</guid>
-      <description>&lt;p&gt;In this article we will take a look at what extension methods are and how to use them in .Net. Personally, they are one of the best things that has been introduced into the .Net framework in terms of readability. I will take you through what extension methods are, how to create them (in c# and vb) then I will show you some of the extension methods that I have created (in c# only, conversion is for you to try).
-&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this article we will take a look at what extension methods are and how to use them in .Net. Personally, they are one of the best things that has been introduced into the .Net framework in terms of readability. I will take you through what extension methods are, how to create them (in c# and vb) then I will show you some of the extension methods that I have created (in c# only, conversion is for you to try).&lt;/p&gt;</description>
     </item>
     
   </channel>

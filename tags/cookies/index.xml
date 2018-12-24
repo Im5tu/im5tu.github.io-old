@@ -17,9 +17,7 @@
       <pubDate>Sun, 11 Jun 2017 20:50:11 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/</guid>
-      <description>&lt;p&gt;In this article, we will increase our websites level of protecting against Cross-Site Request Forgery and Cross-Site Script Inclusion attacks by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this article, we will increase our websites level of protecting against Cross-Site Request Forgery and Cross-Site Script Inclusion attacks by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -28,9 +26,7 @@
       <pubDate>Sun, 11 Jun 2017 20:38:07 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/06/ensuring-secure-cookies-with-url-rewrite/</guid>
-      <description>&lt;p&gt;In this article, we will take a look at secure cookies, that is by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this article, we will take a look at secure cookies, that is by appending an additional modifier to the &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -39,9 +35,7 @@
       <pubDate>Tue, 06 Jun 2017 15:01:04 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/06/ensuring-httponly-cookies-with-url-rewrite/</guid>
-      <description>&lt;p&gt;In this article, I will give a brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite. We will also be creating our first outbound rewrite rule with a pre-condition.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this article, I will give a brief overview of cookies, why we want them to be httpOnly and how we can ensure this via URL Rewrite. We will also be creating our first outbound rewrite rule with a pre-condition.&lt;/p&gt;</description>
     </item>
     
   </channel>

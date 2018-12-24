@@ -17,7 +17,8 @@
       <pubDate>Sat, 15 Mar 2014 13:18:01 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/03/sap-business-one-v9-version-strings/</guid>
-      <description>&lt;p&gt;Today I had to figure out what the current version of SAP Business One is. In order to do this, I looked at the table SFMD inside of SBO-Common and found the following results:&lt;/p&gt;</description>
+      <description>Version | Patch Level ----------------------- 900046 | 00 900052 | 01 900053 | 01 Hotfix 1 900055 | 03 900056 | 04 900058 | 06 900059 | 07 900060 | 08 902000 | 09 902001 | 09 Hotfix 1 902002 | 10  Note: I added the Hotfix 1 to clarify. I believe these are correct, I can&amp;rsquo;t find a definitive source to verify these results.
+Then in order to check the target databases version, I ran the following against the target database:</description>
     </item>
     
   </channel>

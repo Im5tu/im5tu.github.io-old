@@ -32,7 +32,7 @@
             <h4 itemprop="jobtitle">Lead Architect / Software Consultant / Crossfitter</h4>
         </section>
         <section id="pageHeader-about-description">
-            <p itemprop="description">I am a lead architect at the UK&#39;s first clearing bank in 250 years, ClearBank. I specialise in designing and building backend systems, specifically messaging based systems and RESTful API&#39;s. I am also one of two UK representives in an ISO working group looking at API&#39;s in financial services. Follow my journey via the channels below:</p>
+            <p itemprop="description">I am a highly experienced lead software engineer, architect &amp; proponent of clean coding. Currently, I am helping to disrupt the banking sector by building high quality micro-services &amp; APIs. This includes looking at some of the latest technologies and architectural patterns &amp; evaluating them for use in various business scenarios. I am also contributing to the future of the finance sector by working with the International Standards Organisation &amp; its corresponding mirror groups in the British Standards Institute, on financial services APIs. Follow my journey via the channels below:</p>
         </section>
         <section id="pageHeader-about-links">
             <nav id="pageHeader-about-links-nav">
@@ -54,8 +54,7 @@
         <h1><a href="https://im5tu.io/article/2013/03/semaphore-vs-seamphoreslim-micro-benchmark/" itemprop="name">Semaphore vs SeamphoreSlim Micro Benchmark</a></h1>
         <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2013-03-11T18:06:28">2013-03-11 18:06:28 &#43;0000 UTC</time></p>
     </header>
-    <section class="article-content" itemprop="text"><p>In this post, I am going to show a small micro-benchmark to demonstrate the performance difference between the <code>Semaphore</code> and <code>SemaphoreSlim</code> classes in C#. A <code>Semaphore</code> is often used to restrict the number of threads than can access some (physical or logical) resource. In this case, we want the restriction to be as little as possible.
-</p>
+    <section class="article-content" itemprop="text"><p>In this post, I am going to show a small micro-benchmark to demonstrate the performance difference between the <code>Semaphore</code> and <code>SemaphoreSlim</code> classes in C#. A <code>Semaphore</code> is often used to restrict the number of threads than can access some (physical or logical) resource. In this case, we want the restriction to be as little as possible.</p>
 
 <p>Semaphores are of two types: local semaphores and named system semaphores. If you create a Semaphore object using a constructor that accepts a name, it is associated with an operating-system semaphore of that name. Named system semaphores are visible throughout the operating system, and can be used to synchronize the activities of processes. You can create multiple Semaphore objects that represent the same named system semaphore, and you can use the OpenExisting method to open an existing named system semaphore. <em><a href="http://msdn.microsoft.com/en-gb/library/system.threading.semaphore.aspx">Source</a></em></p>
 

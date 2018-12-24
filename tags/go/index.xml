@@ -13,12 +13,11 @@
     
     <item>
       <title>Blog Building - Part 1 - Hello Hugo</title>
-      <link>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</link>
+      <link>https://im5tu.io/article/2016/11/blog-building-part-1-hello-hugo/</link>
       <pubDate>Thu, 17 Nov 2016 20:23:00 +0000</pubDate>
       
-      <guid>https://im5tu.io/article/2016/11/blog-building---part-1---hello-hugo/</guid>
-      <description>&lt;p&gt;As promised in this first mini-series, I am going to guide you through the steps that I have taken to get my blog up and running on Github pages and Cloudflare with SSL. As these the steps that I have taken to get this blog up and running, your milage may vary with this as different versions get released. That said, you should be fine.
-&lt;/p&gt;</description>
+      <guid>https://im5tu.io/article/2016/11/blog-building-part-1-hello-hugo/</guid>
+      <description>&lt;p&gt;As promised in this first mini-series, I am going to guide you through the steps that I have taken to get my blog up and running on Github pages and Cloudflare with SSL. As these the steps that I have taken to get this blog up and running, your milage may vary with this as different versions get released. That said, you should be fine.&lt;/p&gt;</description>
     </item>
     
   </channel>
