@@ -3,18 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/tags/azure/">
+    <title>Quick Tip: Accessing a Azure DevOps secret from within a scripted step - Stuart Blackler&#39;s Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2018/12/quick-tip-accessing-a-azure-devops-secret-from-within-a-scripted-step/">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="Learn how to access a Azure DevOps library secret inside of a scripted step">
     
     
-    
-    <meta property="og:title" content="Azure - Stuart Blackler&#39;s Blog" />
+    <meta property="og:title" content="Quick Tip: Accessing a Azure DevOps secret from within a scripted step - Stuart Blackler&#39;s Blog" />
 <meta property="og:type" content="website" />
 
-<meta property="og:description" content="A little place for all my thoughts on all things cyber.">
+<meta property="og:description" content="Learn how to access a Azure DevOps library secret inside of a scripted step">
 
-<meta property="og:url" content="https://im5tu.io/tags/azure/" />
+<meta property="og:url" content="https://im5tu.io/article/2018/12/quick-tip-accessing-a-azure-devops-secret-from-within-a-scripted-step/" />
 <meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
 <meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
 <meta name="twitter:card" content="summary" />
@@ -49,53 +49,61 @@
     </section>
 </header>
     <section class="pageContainer-content pageWrap">
-        
-
-<article class="tagpage">
-    <header class="tagpage-header">
-        <h1>Pages tagged: Azure</p>
-    </header>
-    <section class="tagpage-content">
-        
-            <article class="article" itemscope itemtype="http://schema.org/blog">
+        <article class="article" itemscope itemtype="http://schema.org/blog">
     <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2018/12/quick-tip-accessing-a-azure-devops-secret-from-within-a-scripted-step/" itemprop="name">Quick Tip: Accessing a Azure DevOps secret from within a scripted step</a></h2>
+        <h1><a href="https://im5tu.io/article/2018/12/quick-tip-accessing-a-azure-devops-secret-from-within-a-scripted-step/" itemprop="name">Quick Tip: Accessing a Azure DevOps secret from within a scripted step</a></h1>
         <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2018-12-26T14:00:00">2018-12-26 14:00:00 &#43;0000 GMT</time></p>
     </header>
-    <section class="article-summary" itemprop="about"><p>In today&rsquo;s quick tip, we are going to see how we can access a secret that we&rsquo;ve defined in a variable group as part of a Azure DevOps yml based build.</p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
+    <section class="article-content" itemprop="text"><p>In today&rsquo;s quick tip, we are going to see how we can access a secret that we&rsquo;ve defined in a variable group as part of a Azure DevOps yml based build.</p>
+
+<p>By design, any variable from a linked variable set will:</p>
+
+<ul>
+<li>Be hidden from logs; and</li>
+<li>Not be placed in as an environment variable</li>
+</ul>
+
+<p>In the blog posts that I&rsquo;ve seen to date, they&rsquo;ve mentioned about using the <code>##vso[task.setvariable name]value</code> command inside of a script. I personally dislike this way as it clutters the build with extra steps that I feel are unnecessary and it makes it harder to find when looking at the configuration file. You may still have to use this approach when the following tip does not work.</p>
+
+<p>In order to pull in a value from a variable group, you must link the variables by using the following snippet:</p>
+
+<pre><code>variables:
+- group: MY_VARIABLE_GROUP_NAME
+</code></pre>
+
+<p><em>Replace <code>MY_VARIABLE_GROUP_NAME</code> with your variable group name.</em></p>
+
+<p>Multiple groups can be added like so:</p>
+
+<pre><code>variables:
+- group: MY_VARIABLE_GROUP_NAME
+- group: MY_VARIABLE_GROUP_NAME_2
+</code></pre>
+
+<p>And then in the steps, and the <code>env:</code> section linking the <code>SECRET_TOKEN</code> variable as follows:</p>
+
+<pre><code>steps:
+- script: 'echo Your script here'
+displayName: 'My Test Script'
+env:
+    SECRET_TOKEN: $(SECRET_TOKEN)
+</code></pre>
+
+<p><em>Replace <code>SECRET_TOKEN</code> with the name of your variable that you wish to access.</em></p>
+
+<p>That&rsquo;s it. From now you should be able to access your secret variables from within your scripts and not have them written out to logs.</p>
+
+<h3 id="further-reading">Further Reading</h3>
+
+<ul>
+<li><a href="https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=vsts&amp;tabs=yaml%2Cbatch">Build variables - Microsoft Azure Docs</a></li>
+<li><a href="https://github.com/Im5tu/dns/blob/master/azure-pipelines.yml">Sample YML - Github - Im5tu/dns</a></li>
+</ul></section>
+    <footer class="article-footer">
+        <hr />Tags: <ul class="article-tags">
     <li><a class="article-tag" href="/tags/devops/">devops</a></li><li><a class="article-tag" href="/tags/vsts/">vsts</a></li><li><a class="article-tag" href="/tags/azure/">azure</a></li>
 </ul></footer>
 </article>
-        
-            <article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2018/12/building-a-custom-build-agent-image-with-docker-and-azure-devops-pipelines/" itemprop="name">Building a custom build agent image with Docker and Azure DevOps pipelines</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2018-12-24T14:00:00">2018-12-24 14:00:00 &#43;0000 GMT</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>In this article, we will learn how to use a custom dockerfile as the bases for a customised Azure DevOps build agent. There are many reasons why you might want to do this, including running custom tooling that takes a while to setup or tooling that isn&rsquo;t supported yet.</p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/devops/">devops</a></li><li><a class="article-tag" href="/tags/vsts/">vsts</a></li><li><a class="article-tag" href="/tags/azure/">azure</a></li>
-</ul></footer>
-</article>
-        
-            <article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2015/02/3-easy-steps-to-configuring-azure-with-powershell/" itemprop="name">3 Easy Steps To Configuring Azure With Powershell</a></h2>
-        <p>Published by <span itemprop="author">Stuart Blackler</span> <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2015-02-17T18:37:00">2015-02-17 18:37:00 &#43;0000 UTC</time></p>
-    </header>
-    <section class="article-summary" itemprop="about"><p>Recently, I had to automate some tasks in Azure. This is the easiest way I could get started.</p></section>
-    <footer class="article-footer">Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/azure/">azure</a></li><li><a class="article-tag" href="/tags/powershell/">powershell</a></li>
-</ul></footer>
-</article>
-        
-    </section>
-    <footer class="tagpage-footer">
-    </footer>
-</article>
-
-
     </section>
     <footer id="pageFooter">
     <section id="pageFooter-copyright" class="pageFooter-section">

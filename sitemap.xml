@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://im5tu.io/article/2018/12/quick-tip-accessing-a-azure-devops-secret-from-within-a-scripted-step/</loc>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2018/12/building-a-custom-build-agent-image-with-docker-and-azure-devops-pipelines/</loc>
     <lastmod>2018-12-24T14:00:00+00:00</lastmod>
   </url>
@@ -220,7 +225,7 @@
   
   <url>
     <loc>https://im5tu.io/article/</loc>
-    <lastmod>2018-12-24T14:00:00+00:00</lastmod>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -232,7 +237,7 @@
   
   <url>
     <loc>https://im5tu.io/tags/azure/</loc>
-    <lastmod>2018-12-24T14:00:00+00:00</lastmod>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -280,7 +285,7 @@
   
   <url>
     <loc>https://im5tu.io/categories/development/</loc>
-    <lastmod>2018-12-24T14:00:00+00:00</lastmod>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -292,7 +297,7 @@
   
   <url>
     <loc>https://im5tu.io/tags/devops/</loc>
-    <lastmod>2018-12-24T14:00:00+00:00</lastmod>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -493,7 +498,7 @@
   
   <url>
     <loc>https://im5tu.io/</loc>
-    <lastmod>2018-12-24T14:00:00+00:00</lastmod>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -517,7 +522,7 @@
   
   <url>
     <loc>https://im5tu.io/tags/vsts/</loc>
-    <lastmod>2018-12-24T14:00:00+00:00</lastmod>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   

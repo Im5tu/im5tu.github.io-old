@@ -6,10 +6,19 @@
     <description>Recent content in Articles on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 24 Dec 2018 14:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 26 Dec 2018 14:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://im5tu.io/article/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Quick Tip: Accessing a Azure DevOps secret from within a scripted step</title>
+      <link>https://im5tu.io/article/2018/12/quick-tip-accessing-a-azure-devops-secret-from-within-a-scripted-step/</link>
+      <pubDate>Wed, 26 Dec 2018 14:00:00 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2018/12/quick-tip-accessing-a-azure-devops-secret-from-within-a-scripted-step/</guid>
+      <description>&lt;p&gt;In today&amp;rsquo;s quick tip, we are going to see how we can access a secret that we&amp;rsquo;ve defined in a variable group as part of a Azure DevOps yml based build.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Building a custom build agent image with Docker and Azure DevOps pipelines</title>
