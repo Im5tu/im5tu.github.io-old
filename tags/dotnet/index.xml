@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Dotnet on Stuart Blackler&#39;s Blog</title>
+    <title>dotnet on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/dotnet/</link>
-    <description>Recent content in Dotnet on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in dotnet on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 29 Jul 2018 16:40:00 +0100</lastBuildDate>
@@ -27,7 +27,7 @@ Now, the project does already ship with some media formatters as a separate nuge
       <pubDate>Tue, 04 Apr 2017 10:38:38 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/04/talks-episerver-content-providers-lightening-talk/</guid>
-      <description>&lt;p&gt;On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&amp;rsquo;s London offices. I ended up giving two talks: Episerver Content Providers &amp;amp; a 5 minute lightening talk.&lt;/p&gt;</description>
+      <description>&lt;p&gt;On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&#39;s London offices. I ended up giving two talks: Episerver Content Providers &amp;amp; a 5 minute lightening talk.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -63,7 +63,7 @@ Now, the project does already ship with some media formatters as a separate nuge
       <pubDate>Wed, 17 Dec 2014 18:36:09 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/12/dev-lunches-what-why-how/</guid>
-      <description>&lt;p&gt;If you&amp;rsquo;re not up-to-date, you fall behind. You fall behind in your work, which leads you to fall behind at home. If continued, it&amp;rsquo;s a never ending circle that can seem like climbing Everest in order to overcome. I propose that we, as developers, start doing is utilizing our free time to help not only ourselves but our co-workers too. We can do this via dev lunches.&lt;/p&gt;</description>
+      <description>&lt;p&gt;If you&#39;re not up-to-date, you fall behind. You fall behind in your work, which leads you to fall behind at home. If continued, it&#39;s a never ending circle that can seem like climbing Everest in order to overcome. I propose that we, as developers, start doing is utilizing our free time to help not only ourselves but our co-workers too. We can do this via dev lunches.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -72,7 +72,7 @@ Now, the project does already ship with some media formatters as a separate nuge
       <pubDate>Sun, 28 Sep 2014 18:35:57 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/09/message-queue-fundementals-msmq/</guid>
-      <description>&lt;p&gt;MSMQ is Microsoft&amp;rsquo;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API.&lt;/p&gt;</description>
+      <description>&lt;p&gt;MSMQ is Microsoft&#39;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -108,7 +108,7 @@ Now, the project does already ship with some media formatters as a separate nuge
       <pubDate>Wed, 18 Jun 2014 18:20:25 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/unit-testing-equals-the-forgotten-tests/</guid>
-      <description>&lt;p&gt;Today I wanted to cover something that is not often covered when unit testing an object. If an object has the &lt;code&gt;Equals&lt;/code&gt; method overridden, then there are a number of tests that we should be running as a minimum&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today I wanted to cover something that is not often covered when unit testing an object. If an object has the &lt;code&gt;Equals&lt;/code&gt; method overridden, then there are a number of tests that we should be running as a minimum:&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -126,7 +126,7 @@ Now, the project does already ship with some media formatters as a separate nuge
       <pubDate>Mon, 21 Apr 2014 18:19:47 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/</guid>
-      <description>&lt;p&gt;After reading &lt;a href=&#34;http://www.troyhunt.com/&#34;&gt;Troy Hunt&amp;rsquo;s&lt;/a&gt; free ebook on the &lt;a href=&#34;http://www.troyhunt.com/2011/12/free-ebook-owasp-top-10-for-net.html&#34;&gt;OWASP Top 10 for .Net Developers&lt;/a&gt;, I discovered an additional mechanism to help developers secure their websites. That mechanism is HTTP Strict Transport Security.&lt;/p&gt;</description>
+      <description>&lt;p&gt;After reading &lt;a href=&#34;http://www.troyhunt.com/&#34;&gt;Troy Hunt&#39;s&lt;/a&gt; free ebook on the &lt;a href=&#34;http://www.troyhunt.com/2011/12/free-ebook-owasp-top-10-for-net.html&#34;&gt;OWASP Top 10 for .Net Developers&lt;/a&gt;, I discovered an additional mechanism to help developers secure their websites. That mechanism is HTTP Strict Transport Security.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -135,8 +135,7 @@ Now, the project does already ship with some media formatters as a separate nuge
       <pubDate>Sat, 15 Mar 2014 13:18:01 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/03/sap-business-one-v9-version-strings/</guid>
-      <description>Version | Patch Level ----------------------- 900046 | 00 900052 | 01 900053 | 01 Hotfix 1 900055 | 03 900056 | 04 900058 | 06 900059 | 07 900060 | 08 902000 | 09 902001 | 09 Hotfix 1 902002 | 10  Note: I added the Hotfix 1 to clarify. I believe these are correct, I can&amp;rsquo;t find a definitive source to verify these results.
-Then in order to check the target databases version, I ran the following against the target database:</description>
+      <description>&lt;p&gt;Today I had to figure out what the current version of SAP Business One is. In order to do this, I looked at the table SFMD inside of SBO-Common and found the following results&lt;/p&gt;</description>
     </item>
     
     <item>

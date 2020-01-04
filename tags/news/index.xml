@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>News on Stuart Blackler&#39;s Blog</title>
+    <title>news on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/news/</link>
-    <description>Recent content in News on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in news on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 01 Mar 2017 19:32:24 +0000</lastBuildDate>

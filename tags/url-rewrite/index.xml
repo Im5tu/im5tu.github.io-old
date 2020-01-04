@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Url Rewrite on Stuart Blackler&#39;s Blog</title>
@@ -54,7 +54,7 @@
       
       <guid>https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/</guid>
       <description>In the previous post, I gave a brief intoduction to URL Rewriting and showed you how to get from HTTP to HTTPS. In this article, I will show you how to have a canonical host url.
-What is a canonical host url? It can be incredibly easy to distribute different urls for your website. Lets say that we have www.site.com/post1 and site.com/post1. If you&amp;rsquo;re a search engine, you think that these are different different pages with the same content.</description>
+What is a canonical host url? It can be incredibly easy to distribute different urls for your website. Lets say that we have www.site.com/post1 and site.com/post1. If you&#39;re a search engine, you think that these are different different pages with the same content.</description>
     </item>
     
     <item>

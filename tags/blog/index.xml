@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blog on Stuart Blackler&#39;s Blog</title>
+    <title>blog on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/blog/</link>
-    <description>Recent content in Blog on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in blog on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 29 Dec 2016 20:25:58 +0000</lastBuildDate>
@@ -17,7 +17,7 @@
       <pubDate>Thu, 29 Dec 2016 20:25:58 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/</guid>
-      <description>&lt;p&gt;Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&amp;rsquo;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&#39;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.&lt;/p&gt;</description>
     </item>
     
     <item>

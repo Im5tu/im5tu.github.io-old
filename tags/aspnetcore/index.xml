@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Aspnetcore on Stuart Blackler&#39;s Blog</title>
+    <title>aspnetcore on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/aspnetcore/</link>
-    <description>Recent content in Aspnetcore on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in aspnetcore on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 29 Jul 2018 16:40:00 +0100</lastBuildDate>

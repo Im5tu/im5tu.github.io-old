@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Csharp on Stuart Blackler&#39;s Blog</title>
+    <title>csharp on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/csharp/</link>
-    <description>Recent content in Csharp on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in csharp on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 11 Feb 2017 12:15:27 +0000</lastBuildDate>
@@ -35,7 +35,7 @@
       <pubDate>Sun, 28 Sep 2014 18:35:57 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/09/message-queue-fundementals-msmq/</guid>
-      <description>&lt;p&gt;MSMQ is Microsoft&amp;rsquo;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API.&lt;/p&gt;</description>
+      <description>&lt;p&gt;MSMQ is Microsoft&#39;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -62,7 +62,7 @@
       <pubDate>Wed, 18 Jun 2014 18:20:25 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/unit-testing-equals-the-forgotten-tests/</guid>
-      <description>&lt;p&gt;Today I wanted to cover something that is not often covered when unit testing an object. If an object has the &lt;code&gt;Equals&lt;/code&gt; method overridden, then there are a number of tests that we should be running as a minimum&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today I wanted to cover something that is not often covered when unit testing an object. If an object has the &lt;code&gt;Equals&lt;/code&gt; method overridden, then there are a number of tests that we should be running as a minimum:&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -80,7 +80,7 @@
       <pubDate>Mon, 21 Apr 2014 18:19:47 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/</guid>
-      <description>&lt;p&gt;After reading &lt;a href=&#34;http://www.troyhunt.com/&#34;&gt;Troy Hunt&amp;rsquo;s&lt;/a&gt; free ebook on the &lt;a href=&#34;http://www.troyhunt.com/2011/12/free-ebook-owasp-top-10-for-net.html&#34;&gt;OWASP Top 10 for .Net Developers&lt;/a&gt;, I discovered an additional mechanism to help developers secure their websites. That mechanism is HTTP Strict Transport Security.&lt;/p&gt;</description>
+      <description>&lt;p&gt;After reading &lt;a href=&#34;http://www.troyhunt.com/&#34;&gt;Troy Hunt&#39;s&lt;/a&gt; free ebook on the &lt;a href=&#34;http://www.troyhunt.com/2011/12/free-ebook-owasp-top-10-for-net.html&#34;&gt;OWASP Top 10 for .Net Developers&lt;/a&gt;, I discovered an additional mechanism to help developers secure their websites. That mechanism is HTTP Strict Transport Security.&lt;/p&gt;</description>
     </item>
     
     <item>

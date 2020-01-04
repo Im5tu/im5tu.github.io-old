@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Clean Code on Stuart Blackler&#39;s Blog</title>
@@ -17,7 +17,7 @@
       <pubDate>Wed, 21 Dec 2016 23:25:27 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2016/12/write-good-code-not-code-hastily/</guid>
-      <description>&lt;p&gt;This article is a rework of a draft that I&amp;rsquo;ve had sitting in my drafts folder for a long while now. Over the last six months or so, I&amp;rsquo;ve been reviewing a lot more code than I had previously thanks in part to a promotion and in part, code reviewing applicants coding entries. Some of the code has been good, with some code, really not so good!&lt;/p&gt;</description>
+      <description>&lt;p&gt;This article is a rework of a draft that I&#39;ve had sitting in my drafts folder for a long while now. Over the last six months or so, I&#39;ve been reviewing a lot more code than I had previously thanks in part to a promotion and in part, code reviewing applicants coding entries. Some of the code has been good, with some code, really not so good!&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -26,7 +26,7 @@
       <pubDate>Wed, 05 Aug 2015 18:37:26 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/</guid>
-      <description>&lt;p&gt;This post started as a rebuttal to Ralf Westphal&amp;rsquo;s &lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin&#34;&gt;blog&lt;/a&gt; and his post, &amp;ldquo;&lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin/archive/2015/07/22/there-is-no-such-thing-as-technical-debt.aspx&#34;&gt;There is no such thing as technical debt&lt;/a&gt;&amp;rdquo;. There are many points of view on the subject covered by various people such as &lt;a href=&#34;https://sites.google.com/site/unclebobconsultingllc/a-mess-is-not-a-technical-debt&#34;&gt;Uncle Bob&lt;/a&gt; and &lt;a href=&#34;http://martinfowler.com/bliki/TechnicalDebt.html&#34;&gt;Martin Fowler&lt;/a&gt;, but I thought it might be insightful to show how my team manages our code base.&lt;/p&gt;</description>
+      <description>&lt;p&gt;This post started as a rebuttal to Ralf Westphal&#39;s &lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin&#34;&gt;blog&lt;/a&gt; and his post, &amp;ldquo;&lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin/archive/2015/07/22/there-is-no-such-thing-as-technical-debt.aspx&#34;&gt;There is no such thing as technical debt&lt;/a&gt;&amp;quot;. There are many points of view on the subject covered by various people such as &lt;a href=&#34;https://sites.google.com/site/unclebobconsultingllc/a-mess-is-not-a-technical-debt&#34;&gt;Uncle Bob&lt;/a&gt; and &lt;a href=&#34;http://martinfowler.com/bliki/TechnicalDebt.html&#34;&gt;Martin Fowler&lt;/a&gt;, but I thought it might be insightful to show how my team manages our code base.&lt;/p&gt;</description>
     </item>
     
   </channel>

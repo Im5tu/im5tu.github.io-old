@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Devops on Stuart Blackler&#39;s Blog</title>
+    <title>devops on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/devops/</link>
-    <description>Recent content in Devops on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in devops on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 26 Dec 2018 14:00:00 +0000</lastBuildDate>
@@ -17,7 +17,7 @@
       <pubDate>Wed, 26 Dec 2018 14:00:00 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2018/12/quick-tip-accessing-a-azure-devops-secret-from-within-a-scripted-step/</guid>
-      <description>&lt;p&gt;In today&amp;rsquo;s quick tip, we are going to see how we can access a secret that we&amp;rsquo;ve defined in a variable group as part of a Azure DevOps yml based build.&lt;/p&gt;</description>
+      <description>&lt;p&gt;In today&#39;s quick tip, we are going to see how we can access a secret that we&#39;ve defined in a variable group as part of a Azure DevOps yml based build.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -26,7 +26,7 @@
       <pubDate>Mon, 24 Dec 2018 14:00:00 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2018/12/building-a-custom-build-agent-image-with-docker-and-azure-devops-pipelines/</guid>
-      <description>&lt;p&gt;In this article, we will learn how to use a custom dockerfile as the bases for a customised Azure DevOps build agent. There are many reasons why you might want to do this, including running custom tooling that takes a while to setup or tooling that isn&amp;rsquo;t supported yet.&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this article, we will learn how to use a custom dockerfile as the bases for a customised Azure DevOps build agent. There are many reasons why you might want to do this, including running custom tooling that takes a while to setup or tooling that isn&#39;t supported yet.&lt;/p&gt;</description>
     </item>
     
     <item>

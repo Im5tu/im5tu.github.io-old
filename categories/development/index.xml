@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Development on Stuart Blackler&#39;s Blog</title>
@@ -17,7 +17,7 @@
       <pubDate>Wed, 26 Dec 2018 14:00:00 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2018/12/quick-tip-accessing-a-azure-devops-secret-from-within-a-scripted-step/</guid>
-      <description>&lt;p&gt;In today&amp;rsquo;s quick tip, we are going to see how we can access a secret that we&amp;rsquo;ve defined in a variable group as part of a Azure DevOps yml based build.&lt;/p&gt;</description>
+      <description>&lt;p&gt;In today&#39;s quick tip, we are going to see how we can access a secret that we&#39;ve defined in a variable group as part of a Azure DevOps yml based build.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -26,7 +26,7 @@
       <pubDate>Mon, 24 Dec 2018 14:00:00 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2018/12/building-a-custom-build-agent-image-with-docker-and-azure-devops-pipelines/</guid>
-      <description>&lt;p&gt;In this article, we will learn how to use a custom dockerfile as the bases for a customised Azure DevOps build agent. There are many reasons why you might want to do this, including running custom tooling that takes a while to setup or tooling that isn&amp;rsquo;t supported yet.&lt;/p&gt;</description>
+      <description>&lt;p&gt;In this article, we will learn how to use a custom dockerfile as the bases for a customised Azure DevOps build agent. There are many reasons why you might want to do this, including running custom tooling that takes a while to setup or tooling that isn&#39;t supported yet.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -103,7 +103,7 @@ Prerequisites Before we take a look at the struture of the file, you will need t
       
       <guid>https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/</guid>
       <description>In the previous post, I gave a brief intoduction to URL Rewriting and showed you how to get from HTTP to HTTPS. In this article, I will show you how to have a canonical host url.
-What is a canonical host url? It can be incredibly easy to distribute different urls for your website. Lets say that we have www.site.com/post1 and site.com/post1. If you&amp;rsquo;re a search engine, you think that these are different different pages with the same content.</description>
+What is a canonical host url? It can be incredibly easy to distribute different urls for your website. Lets say that we have www.site.com/post1 and site.com/post1. If you&#39;re a search engine, you think that these are different different pages with the same content.</description>
     </item>
     
     <item>
@@ -131,7 +131,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Tue, 04 Apr 2017 10:38:38 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/04/talks-episerver-content-providers-lightening-talk/</guid>
-      <description>&lt;p&gt;On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&amp;rsquo;s London offices. I ended up giving two talks: Episerver Content Providers &amp;amp; a 5 minute lightening talk.&lt;/p&gt;</description>
+      <description>&lt;p&gt;On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&#39;s London offices. I ended up giving two talks: Episerver Content Providers &amp;amp; a 5 minute lightening talk.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -158,7 +158,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Thu, 29 Dec 2016 20:25:58 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/</guid>
-      <description>&lt;p&gt;Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&amp;rsquo;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It&#39;s quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -167,7 +167,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Wed, 21 Dec 2016 23:25:27 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2016/12/write-good-code-not-code-hastily/</guid>
-      <description>&lt;p&gt;This article is a rework of a draft that I&amp;rsquo;ve had sitting in my drafts folder for a long while now. Over the last six months or so, I&amp;rsquo;ve been reviewing a lot more code than I had previously thanks in part to a promotion and in part, code reviewing applicants coding entries. Some of the code has been good, with some code, really not so good!&lt;/p&gt;</description>
+      <description>&lt;p&gt;This article is a rework of a draft that I&#39;ve had sitting in my drafts folder for a long while now. Over the last six months or so, I&#39;ve been reviewing a lot more code than I had previously thanks in part to a promotion and in part, code reviewing applicants coding entries. Some of the code has been good, with some code, really not so good!&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -212,7 +212,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Thu, 17 Nov 2016 19:34:17 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2016/11/hello-world/</guid>
-      <description>&lt;p&gt;Hello World. Safe to say it&amp;rsquo;s been a little while since I have blogged or even had a website come to think of it. Alas, I am back with some fresh ideas and recharged to help you dear reader.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Hello World. Safe to say it&#39;s been a little while since I have blogged or even had a website come to think of it. Alas, I am back with some fresh ideas and recharged to help you dear reader.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -221,7 +221,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Wed, 05 Aug 2015 18:37:26 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/</guid>
-      <description>&lt;p&gt;This post started as a rebuttal to Ralf Westphal&amp;rsquo;s &lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin&#34;&gt;blog&lt;/a&gt; and his post, &amp;ldquo;&lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin/archive/2015/07/22/there-is-no-such-thing-as-technical-debt.aspx&#34;&gt;There is no such thing as technical debt&lt;/a&gt;&amp;rdquo;. There are many points of view on the subject covered by various people such as &lt;a href=&#34;https://sites.google.com/site/unclebobconsultingllc/a-mess-is-not-a-technical-debt&#34;&gt;Uncle Bob&lt;/a&gt; and &lt;a href=&#34;http://martinfowler.com/bliki/TechnicalDebt.html&#34;&gt;Martin Fowler&lt;/a&gt;, but I thought it might be insightful to show how my team manages our code base.&lt;/p&gt;</description>
+      <description>&lt;p&gt;This post started as a rebuttal to Ralf Westphal&#39;s &lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin&#34;&gt;blog&lt;/a&gt; and his post, &amp;ldquo;&lt;a href=&#34;http://geekswithblogs.net/theArchitectsNapkin/archive/2015/07/22/there-is-no-such-thing-as-technical-debt.aspx&#34;&gt;There is no such thing as technical debt&lt;/a&gt;&amp;quot;. There are many points of view on the subject covered by various people such as &lt;a href=&#34;https://sites.google.com/site/unclebobconsultingllc/a-mess-is-not-a-technical-debt&#34;&gt;Uncle Bob&lt;/a&gt; and &lt;a href=&#34;http://martinfowler.com/bliki/TechnicalDebt.html&#34;&gt;Martin Fowler&lt;/a&gt;, but I thought it might be insightful to show how my team manages our code base.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -230,7 +230,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Mon, 23 Feb 2015 18:37:14 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2015/02/up-and-running-with-git-and-powershell/</guid>
-      <description>&lt;p&gt;We&amp;rsquo;ve all experienced a time where we use our pc&amp;rsquo;s for a prolonged period of time, accumulating a ton of crap along the way as we try out various technologies and fads. After a while, the pc begins to do funny things like crash for no apparent reason. This week, I needed to rebuild my dev machine and decided to change from Atlassian&amp;rsquo;s Source Tree over to Powershell and raw git.&lt;/p&gt;</description>
+      <description>&lt;p&gt;We&#39;ve all experienced a time where we use our pc&#39;s for a prolonged period of time, accumulating a ton of crap along the way as we try out various technologies and fads. After a while, the pc begins to do funny things like crash for no apparent reason. This week, I needed to rebuild my dev machine and decided to change from Atlassian&#39;s Source Tree over to Powershell and raw git.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -257,7 +257,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Wed, 17 Dec 2014 18:36:09 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/12/dev-lunches-what-why-how/</guid>
-      <description>&lt;p&gt;If you&amp;rsquo;re not up-to-date, you fall behind. You fall behind in your work, which leads you to fall behind at home. If continued, it&amp;rsquo;s a never ending circle that can seem like climbing Everest in order to overcome. I propose that we, as developers, start doing is utilizing our free time to help not only ourselves but our co-workers too. We can do this via dev lunches.&lt;/p&gt;</description>
+      <description>&lt;p&gt;If you&#39;re not up-to-date, you fall behind. You fall behind in your work, which leads you to fall behind at home. If continued, it&#39;s a never ending circle that can seem like climbing Everest in order to overcome. I propose that we, as developers, start doing is utilizing our free time to help not only ourselves but our co-workers too. We can do this via dev lunches.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -266,7 +266,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Sun, 28 Sep 2014 18:35:57 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/09/message-queue-fundementals-msmq/</guid>
-      <description>&lt;p&gt;MSMQ is Microsoft&amp;rsquo;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API.&lt;/p&gt;</description>
+      <description>&lt;p&gt;MSMQ is Microsoft&#39;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -302,7 +302,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Wed, 18 Jun 2014 18:20:25 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/06/unit-testing-equals-the-forgotten-tests/</guid>
-      <description>&lt;p&gt;Today I wanted to cover something that is not often covered when unit testing an object. If an object has the &lt;code&gt;Equals&lt;/code&gt; method overridden, then there are a number of tests that we should be running as a minimum&lt;/p&gt;</description>
+      <description>&lt;p&gt;Today I wanted to cover something that is not often covered when unit testing an object. If an object has the &lt;code&gt;Equals&lt;/code&gt; method overridden, then there are a number of tests that we should be running as a minimum:&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -320,7 +320,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Mon, 21 Apr 2014 18:19:47 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/</guid>
-      <description>&lt;p&gt;After reading &lt;a href=&#34;http://www.troyhunt.com/&#34;&gt;Troy Hunt&amp;rsquo;s&lt;/a&gt; free ebook on the &lt;a href=&#34;http://www.troyhunt.com/2011/12/free-ebook-owasp-top-10-for-net.html&#34;&gt;OWASP Top 10 for .Net Developers&lt;/a&gt;, I discovered an additional mechanism to help developers secure their websites. That mechanism is HTTP Strict Transport Security.&lt;/p&gt;</description>
+      <description>&lt;p&gt;After reading &lt;a href=&#34;http://www.troyhunt.com/&#34;&gt;Troy Hunt&#39;s&lt;/a&gt; free ebook on the &lt;a href=&#34;http://www.troyhunt.com/2011/12/free-ebook-owasp-top-10-for-net.html&#34;&gt;OWASP Top 10 for .Net Developers&lt;/a&gt;, I discovered an additional mechanism to help developers secure their websites. That mechanism is HTTP Strict Transport Security.&lt;/p&gt;</description>
     </item>
     
     <item>
@@ -329,8 +329,7 @@ Domain Driven Design (or DDD), is the process of discovering both data and behav
       <pubDate>Sat, 15 Mar 2014 13:18:01 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/03/sap-business-one-v9-version-strings/</guid>
-      <description>Version | Patch Level ----------------------- 900046 | 00 900052 | 01 900053 | 01 Hotfix 1 900055 | 03 900056 | 04 900058 | 06 900059 | 07 900060 | 08 902000 | 09 902001 | 09 Hotfix 1 902002 | 10  Note: I added the Hotfix 1 to clarify. I believe these are correct, I can&amp;rsquo;t find a definitive source to verify these results.
-Then in order to check the target databases version, I ran the following against the target database:</description>
+      <description>&lt;p&gt;Today I had to figure out what the current version of SAP Business One is. In order to do this, I looked at the table SFMD inside of SBO-Common and found the following results&lt;/p&gt;</description>
     </item>
     
     <item>

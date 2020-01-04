@@ -1,6 +1,31 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://im5tu.io/article/</loc>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/azure/</loc>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/categories/</loc>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/categories/development/</loc>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/devops/</loc>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
+  </url>
   
   <url>
     <loc>https://im5tu.io/article/2018/12/quick-tip-accessing-a-azure-devops-secret-from-within-a-scripted-step/</loc>
@@ -8,8 +33,38 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/</loc>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/</loc>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/vsts/</loc>
+    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2018/12/building-a-custom-build-agent-image-with-docker-and-azure-devops-pipelines/</loc>
     <lastmod>2018-12-24T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/aspnetcore/</loc>
+    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/dotnet/</loc>
+    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/dotnetcore/</loc>
+    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
   </url>
   
   <url>
@@ -23,12 +78,32 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/service-fabric/</loc>
+    <lastmod>2018-06-30T19:40:00+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/</loc>
     <lastmod>2018-06-17T21:35:00+01:00</lastmod>
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/cookies/</loc>
+    <lastmod>2017-06-11T20:50:11+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2017/06/ensuring-samesite-cookies-with-url-rewrite/</loc>
+    <lastmod>2017-06-11T20:50:11+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/iis/</loc>
+    <lastmod>2017-06-11T20:50:11+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/url-rewrite/</loc>
     <lastmod>2017-06-11T20:50:11+01:00</lastmod>
   </url>
   
@@ -48,6 +123,11 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/seo/</loc>
+    <lastmod>2017-06-05T15:00:59+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/</loc>
     <lastmod>2017-06-04T15:00:55+01:00</lastmod>
   </url>
@@ -55,6 +135,11 @@
   <url>
     <loc>https://im5tu.io/article/2017/06/up-and-running-with-url-rewrite-going-from-http-to-https/</loc>
     <lastmod>2017-06-03T15:00:51+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/architecture/</loc>
+    <lastmod>2017-05-24T16:25:48+01:00</lastmod>
   </url>
   
   <url>
@@ -68,8 +153,33 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/categories/personal/</loc>
+    <lastmod>2017-04-12T16:25:48+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/personal-development/</loc>
+    <lastmod>2017-04-12T16:25:48+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/public-speaking/</loc>
+    <lastmod>2017-04-04T10:38:38+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2017/04/talks-episerver-content-providers-lightening-talk/</loc>
     <lastmod>2017-04-04T10:38:38+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/categories/news/</loc>
+    <lastmod>2017-03-01T19:32:24+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/news/</loc>
+    <lastmod>2017-03-01T19:32:24+00:00</lastmod>
   </url>
   
   <url>
@@ -78,7 +188,32 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/roundup/</loc>
+    <lastmod>2017-03-01T19:32:24+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/csharp/</loc>
+    <lastmod>2017-02-11T12:15:27+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/messaging/</loc>
+    <lastmod>2017-02-11T12:15:27+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/openmessage/</loc>
+    <lastmod>2017-02-11T12:15:27+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2017/02/openmessage-2017-roadmap/</loc>
+    <lastmod>2017-02-11T12:15:27+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/vb/</loc>
     <lastmod>2017-02-11T12:15:27+00:00</lastmod>
   </url>
   
@@ -88,13 +223,58 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/fitness/</loc>
+    <lastmod>2017-01-20T13:55:18+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/categories/life/</loc>
+    <lastmod>2017-01-20T13:55:18+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/life/</loc>
+    <lastmod>2017-01-20T13:55:18+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/lifestyle/</loc>
+    <lastmod>2017-01-20T13:55:18+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2017/01/my-2017/</loc>
     <lastmod>2017-01-20T13:55:18+00:00</lastmod>
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/blog/</loc>
+    <lastmod>2016-12-29T20:25:58+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/categories/building-a-blog/</loc>
+    <lastmod>2016-12-29T20:25:58+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/hugo/</loc>
+    <lastmod>2016-12-29T20:25:58+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/</loc>
     <lastmod>2016-12-29T20:25:58+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/quick-tips/</loc>
+    <lastmod>2016-12-29T20:25:58+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/clean-code/</loc>
+    <lastmod>2016-12-21T23:25:27+00:00</lastmod>
   </url>
   
   <url>
@@ -108,7 +288,27 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/js/</loc>
+    <lastmod>2016-11-19T08:01:38+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/node/</loc>
+    <lastmod>2016-11-19T08:01:38+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/yarn/</loc>
+    <lastmod>2016-11-19T08:01:38+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2016/11/blog-building-part-3-theming/</loc>
+    <lastmod>2016-11-18T19:01:38+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/blogging/</loc>
     <lastmod>2016-11-18T19:01:38+00:00</lastmod>
   </url>
   
@@ -123,6 +323,16 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/git/</loc>
+    <lastmod>2016-11-17T20:23:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/go/</loc>
+    <lastmod>2016-11-17T20:23:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2016/11/hello-world/</loc>
     <lastmod>2016-11-17T19:34:17+00:00</lastmod>
   </url>
@@ -130,6 +340,11 @@
   <url>
     <loc>https://im5tu.io/article/2015/08/technical-debt-how-we-get-it-and-how-to-avoid-it/</loc>
     <lastmod>2015-08-05T18:37:26+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/powershell/</loc>
+    <lastmod>2015-02-23T18:37:14+00:00</lastmod>
   </url>
   
   <url>
@@ -153,7 +368,17 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/devlunch/</loc>
+    <lastmod>2014-12-17T18:36:09+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2014/09/message-queue-fundementals-msmq/</loc>
+    <lastmod>2014-09-28T18:35:57+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/msmq/</loc>
     <lastmod>2014-09-28T18:35:57+00:00</lastmod>
   </url>
   
@@ -163,12 +388,22 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/expressions/</loc>
+    <lastmod>2014-06-24T09:21:19+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2014/06/finding-reducible-expressions/</loc>
     <lastmod>2014-06-24T09:21:19+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://im5tu.io/article/2014/06/how-your-binary-search-implementation-is-broken-and-how-to-fix-it/</loc>
+    <lastmod>2014-06-20T18:21:04+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/java/</loc>
     <lastmod>2014-06-20T18:21:04+00:00</lastmod>
   </url>
   
@@ -183,12 +418,32 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/mvc/</loc>
+    <lastmod>2014-06-10T18:19:47+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/</loc>
     <lastmod>2014-04-21T18:19:47+00:00</lastmod>
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/sap/</loc>
+    <lastmod>2014-03-15T13:18:01+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/article/2014/03/sap-business-one-v9-version-strings/</loc>
+    <lastmod>2014-03-15T13:18:01+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/sapb1/</loc>
+    <lastmod>2014-03-15T13:18:01+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/sql/</loc>
     <lastmod>2014-03-15T13:18:01+00:00</lastmod>
   </url>
   
@@ -218,318 +473,11 @@
   </url>
   
   <url>
-    <loc>https://im5tu.io/tags/architecture/</loc>
-    <lastmod>2017-05-24T16:25:48+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/article/</loc>
-    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/aspnetcore/</loc>
-    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/azure/</loc>
-    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/blog/</loc>
-    <lastmod>2016-12-29T20:25:58+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/blogging/</loc>
-    <lastmod>2016-11-18T19:01:38+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/categories/building-a-blog/</loc>
-    <lastmod>2016-12-29T20:25:58+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/categories/</loc>
-    <lastmod>2016-12-29T20:25:58+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/clean-code/</loc>
-    <lastmod>2016-12-21T23:25:27+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/cookies/</loc>
-    <lastmod>2017-06-11T20:50:11+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/csharp/</loc>
-    <lastmod>2017-02-11T12:15:27+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/categories/development/</loc>
-    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/devlunch/</loc>
-    <lastmod>2014-12-17T18:36:09+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/devops/</loc>
-    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/dotnet/</loc>
-    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/dotnetcore/</loc>
-    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/expressions/</loc>
-    <lastmod>2014-06-24T09:21:19+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/fitness/</loc>
-    <lastmod>2017-01-20T13:55:18+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/git/</loc>
-    <lastmod>2016-11-17T20:23:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/go/</loc>
-    <lastmod>2016-11-17T20:23:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/hugo/</loc>
-    <lastmod>2016-12-29T20:25:58+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/iis/</loc>
-    <lastmod>2017-06-11T20:50:11+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/java/</loc>
-    <lastmod>2014-06-20T18:21:04+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/js/</loc>
-    <lastmod>2016-11-19T08:01:38+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/life/</loc>
-    <lastmod>2017-01-20T13:55:18+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/categories/life/</loc>
-    <lastmod>2017-01-20T13:55:18+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/lifestyle/</loc>
-    <lastmod>2017-01-20T13:55:18+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/messaging/</loc>
-    <lastmod>2017-02-11T12:15:27+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/msmq/</loc>
-    <lastmod>2014-09-28T18:35:57+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/mvc/</loc>
-    <lastmod>2014-06-10T18:19:47+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/news/</loc>
-    <lastmod>2017-03-01T19:32:24+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/categories/news/</loc>
-    <lastmod>2017-03-01T19:32:24+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/node/</loc>
-    <lastmod>2016-11-19T08:01:38+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/openmessage/</loc>
-    <lastmod>2017-02-11T12:15:27+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/categories/personal/</loc>
-    <lastmod>2017-04-12T16:25:48+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/personal-development/</loc>
-    <lastmod>2017-04-12T16:25:48+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/powershell/</loc>
-    <lastmod>2015-02-23T18:37:14+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://im5tu.io/private/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/public-speaking/</loc>
-    <lastmod>2017-04-04T10:38:38+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/quick-tips/</loc>
-    <lastmod>2016-12-29T20:25:58+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
   <url>
     <loc>https://im5tu.io/private/recruit/</loc>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/roundup/</loc>
-    <lastmod>2017-03-01T19:32:24+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/sap/</loc>
-    <lastmod>2014-03-15T13:18:01+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/sapb1/</loc>
-    <lastmod>2014-03-15T13:18:01+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/seo/</loc>
-    <lastmod>2017-06-05T15:00:59+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/service-fabric/</loc>
-    <lastmod>2018-06-30T19:40:00+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/sql/</loc>
-    <lastmod>2014-03-15T13:18:01+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/</loc>
-    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/</loc>
-    <lastmod>2017-05-24T16:25:48+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/url-rewrite/</loc>
-    <lastmod>2017-06-11T20:50:11+01:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/vb/</loc>
-    <lastmod>2017-02-11T12:15:27+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/vsts/</loc>
-    <lastmod>2018-12-26T14:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/yarn/</loc>
-    <lastmod>2016-11-19T08:01:38+00:00</lastmod>
-    <priority>0</priority>
   </url>
   
 </urlset>

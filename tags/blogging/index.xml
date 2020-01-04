@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Blogging on Stuart Blackler&#39;s Blog</title>
+    <title>blogging on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/blogging/</link>
-    <description>Recent content in Blogging on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in blogging on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 18 Nov 2016 19:01:38 +0000</lastBuildDate>
@@ -44,7 +44,7 @@
       <pubDate>Thu, 17 Nov 2016 19:34:17 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2016/11/hello-world/</guid>
-      <description>&lt;p&gt;Hello World. Safe to say it&amp;rsquo;s been a little while since I have blogged or even had a website come to think of it. Alas, I am back with some fresh ideas and recharged to help you dear reader.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Hello World. Safe to say it&#39;s been a little while since I have blogged or even had a website come to think of it. Alas, I am back with some fresh ideas and recharged to help you dear reader.&lt;/p&gt;</description>
     </item>
     
   </channel>

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Devlunch on Stuart Blackler&#39;s Blog</title>
+    <title>DevLunch on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/devlunch/</link>
-    <description>Recent content in Devlunch on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in DevLunch on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 17 Dec 2014 18:36:09 +0000</lastBuildDate>
@@ -17,7 +17,7 @@
       <pubDate>Wed, 17 Dec 2014 18:36:09 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/12/dev-lunches-what-why-how/</guid>
-      <description>&lt;p&gt;If you&amp;rsquo;re not up-to-date, you fall behind. You fall behind in your work, which leads you to fall behind at home. If continued, it&amp;rsquo;s a never ending circle that can seem like climbing Everest in order to overcome. I propose that we, as developers, start doing is utilizing our free time to help not only ourselves but our co-workers too. We can do this via dev lunches.&lt;/p&gt;</description>
+      <description>&lt;p&gt;If you&#39;re not up-to-date, you fall behind. You fall behind in your work, which leads you to fall behind at home. If continued, it&#39;s a never ending circle that can seem like climbing Everest in order to overcome. I propose that we, as developers, start doing is utilizing our free time to help not only ourselves but our co-workers too. We can do this via dev lunches.&lt;/p&gt;</description>
     </item>
     
   </channel>

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Public Speaking on Stuart Blackler&#39;s Blog</title>
+    <title>public speaking on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/public-speaking/</link>
-    <description>Recent content in Public Speaking on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in public speaking on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 04 Apr 2017 10:38:38 +0100</lastBuildDate>
@@ -17,7 +17,7 @@
       <pubDate>Tue, 04 Apr 2017 10:38:38 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/04/talks-episerver-content-providers-lightening-talk/</guid>
-      <description>&lt;p&gt;On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&amp;rsquo;s London offices. I ended up giving two talks: Episerver Content Providers &amp;amp; a 5 minute lightening talk.&lt;/p&gt;</description>
+      <description>&lt;p&gt;On the 23rd of March, I had the opportunity to present at the Episerver meetup in Redweb&#39;s London offices. I ended up giving two talks: Episerver Content Providers &amp;amp; a 5 minute lightening talk.&lt;/p&gt;</description>
     </item>
     
   </channel>

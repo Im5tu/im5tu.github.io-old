@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Sapb1 on Stuart Blackler&#39;s Blog</title>
+    <title>SAPB1 on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/sapb1/</link>
-    <description>Recent content in Sapb1 on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in SAPB1 on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 15 Mar 2014 13:18:01 +0000</lastBuildDate>
@@ -17,8 +17,7 @@
       <pubDate>Sat, 15 Mar 2014 13:18:01 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/03/sap-business-one-v9-version-strings/</guid>
-      <description>Version | Patch Level ----------------------- 900046 | 00 900052 | 01 900053 | 01 Hotfix 1 900055 | 03 900056 | 04 900058 | 06 900059 | 07 900060 | 08 902000 | 09 902001 | 09 Hotfix 1 902002 | 10  Note: I added the Hotfix 1 to clarify. I believe these are correct, I can&amp;rsquo;t find a definitive source to verify these results.
-Then in order to check the target databases version, I ran the following against the target database:</description>
+      <description>&lt;p&gt;Today I had to figure out what the current version of SAP Business One is. In order to do this, I looked at the table SFMD inside of SBO-Common and found the following results&lt;/p&gt;</description>
     </item>
     
   </channel>

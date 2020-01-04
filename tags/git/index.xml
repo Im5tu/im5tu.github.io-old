@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Git on Stuart Blackler&#39;s Blog</title>
+    <title>git on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/git/</link>
-    <description>Recent content in Git on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in git on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 17 Nov 2016 20:23:00 +0000</lastBuildDate>
@@ -26,7 +26,7 @@
       <pubDate>Mon, 23 Feb 2015 18:37:14 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2015/02/up-and-running-with-git-and-powershell/</guid>
-      <description>&lt;p&gt;We&amp;rsquo;ve all experienced a time where we use our pc&amp;rsquo;s for a prolonged period of time, accumulating a ton of crap along the way as we try out various technologies and fads. After a while, the pc begins to do funny things like crash for no apparent reason. This week, I needed to rebuild my dev machine and decided to change from Atlassian&amp;rsquo;s Source Tree over to Powershell and raw git.&lt;/p&gt;</description>
+      <description>&lt;p&gt;We&#39;ve all experienced a time where we use our pc&#39;s for a prolonged period of time, accumulating a ton of crap along the way as we try out various technologies and fads. After a while, the pc begins to do funny things like crash for no apparent reason. This week, I needed to rebuild my dev machine and decided to change from Atlassian&#39;s Source Tree over to Powershell and raw git.&lt;/p&gt;</description>
     </item>
     
   </channel>

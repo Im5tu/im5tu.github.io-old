@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Service Fabric on Stuart Blackler&#39;s Blog</title>
+    <title>service fabric on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/service-fabric/</link>
-    <description>Recent content in Service Fabric on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in service fabric on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 30 Jun 2018 19:40:00 +0100</lastBuildDate>

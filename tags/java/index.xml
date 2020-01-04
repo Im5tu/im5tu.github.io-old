@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Java on Stuart Blackler&#39;s Blog</title>
+    <title>java on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/java/</link>
-    <description>Recent content in Java on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in java on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 20 Jun 2014 18:21:04 +0000</lastBuildDate>

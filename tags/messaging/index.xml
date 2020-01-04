@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Messaging on Stuart Blackler&#39;s Blog</title>
+    <title>messaging on Stuart Blackler&#39;s Blog</title>
     <link>https://im5tu.io/tags/messaging/</link>
-    <description>Recent content in Messaging on Stuart Blackler&#39;s Blog</description>
+    <description>Recent content in messaging on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 11 Feb 2017 12:15:27 +0000</lastBuildDate>
@@ -35,7 +35,7 @@
       <pubDate>Sun, 28 Sep 2014 18:35:57 +0000</pubDate>
       
       <guid>https://im5tu.io/article/2014/09/message-queue-fundementals-msmq/</guid>
-      <description>&lt;p&gt;MSMQ is Microsoft&amp;rsquo;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API.&lt;/p&gt;</description>
+      <description>&lt;p&gt;MSMQ is Microsoft&#39;s Message Queuing service that can be used to implement both synchronous and asynchronous solutions. Typically solutions are architectured using the available C++ API’s or via the relevant COM objects. The .Net Framework exposes the System.Messaging namespace which contains all the classes that you need to work with the MSMQ API.&lt;/p&gt;</description>
     </item>
     
     <item>
