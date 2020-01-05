@@ -6,10 +6,19 @@
     <description>Recent content in dotnet on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Jul 2018 16:40:00 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 05 Jan 2020 14:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://im5tu.io/tags/dotnet/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Diagnostics in .Net Core 3: Event Counters</title>
+      <link>https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-event-counters/</link>
+      <pubDate>Sun, 05 Jan 2020 14:00:00 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-event-counters/</guid>
+      <description>&lt;p&gt;Recently, I&#39;ve been playing with the new &lt;a href=&#34;https://devblogs.microsoft.com/dotnet/introducing-diagnostics-improvements-in-net-core-3-0/&#34;&gt;diagnostic improvements in .Net Core 3&lt;/a&gt;. Traditionally, I&#39;ve always used the great &lt;a href=&#34;https://github.com/AppMetrics/AppMetrics&#34;&gt;AppMetrics&lt;/a&gt; package to capture the metrics from our applications and send scrape them with a &lt;a href=&#34;https://github.com/prometheus/prometheus&#34;&gt;Prometheus&lt;/a&gt; &amp;amp; &lt;a href=&#34;https://github.com/grafana/grafana&#34;&gt;Grafana&lt;/a&gt; setup. When reading about the improvements, I wondered whether or not it would be possible to push metrics to &lt;a href=&#34;https://github.com/prometheus/prometheus&#34;&gt;Prometheus&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Utf8Json Media Formatters for ASP.Net Core</title>

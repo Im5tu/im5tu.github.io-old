@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Diagnostics in .Net Core 3: Event Counters - Stuart Blackler&#39;s Blog</title>
+    <link rel="canonical" href="https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-event-counters/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <meta name="description" content="A look into the EventCounters API in .Net Core 3">
+    
+    
+    <meta property="og:title" content="Diagnostics in .Net Core 3: Event Counters - Stuart Blackler&#39;s Blog" />
+<meta property="og:type" content="website" />
+
+<meta property="og:description" content="A look into the EventCounters API in .Net Core 3">
+
+<meta property="og:url" content="https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-event-counters/" />
+<meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
+<meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@im5tu" />
+
+<style>body,html{height:100%;color:#303030;font-family:"Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}.copy-code-button{float:right;display:block;padding:3px 8px;font-size:.8em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}</style>
+<link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Blog" /></head>
+<body>
+<section class="pageContainer">
+    <header id="pageHeader">
+    <section id="pageHeader-about" class="pageWrap" itemscope itemtype="http://schema.org/person">
+        <section id="pageHeader-about-title">
+            <h1 itemprop="name"><a href="/" title="Stuart Blackler">@im5tu</a> / <a href="https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-event-counters/">Diagnostics in .Net Core 3: Event Counters</a></h1>
+        </section>
+    </section>
+</header>
+    <section class="pageContainer-content pageWrap">
+        <article class="article" itemscope itemtype="http://schema.org/blog">
+    <section class="article-content" itemprop="text"><p>Recently, I've been playing with the new <a href="https://devblogs.microsoft.com/dotnet/introducing-diagnostics-improvements-in-net-core-3-0/">diagnostic improvements in .Net Core 3</a>. Traditionally, I've always used the great <a href="https://github.com/AppMetrics/AppMetrics">AppMetrics</a> package to capture the metrics from our applications and send scrape them with a <a href="https://github.com/prometheus/prometheus">Prometheus</a> &amp; <a href="https://github.com/grafana/grafana">Grafana</a> setup. When reading about the improvements, I wondered whether or not it would be possible to push metrics to <a href="https://github.com/prometheus/prometheus">Prometheus</a>.</p>
+<p>Ultimately, I decided that pushing to <a href="https://github.com/prometheus/prometheus">Prometheus</a> wasn't ideal for my use case. However, I have successfully used the approach described in the rest of the article to push the metrics to another platform.</p>
+<p>EventCounters are the .NET Core replacement for Windows performance counters, which are now cross platform. EventCounters are based on the EventPipe that was originally introduced in .Net Core 2.2, but .Net Core 3.0+ adds a lot of additional functionality that we can use going forward to create cross platform monitoring tools for our applications including:</p>
+<ul>
+<li><code>dotnet-dump</code> takes memory snapshot and allow analysis based on most SOS commands;</li>
+<li><code>dotnet-trace</code> collects events emitted by the Core CLR and generate trace file to be analyzed with PerfView;</li>
+<li><code>dotnet-counters</code> collects the metrics corresponding to some performance counters that used to be exposed by the .NET Framework.</li>
+</ul>
+<p>Please note that this article is correct at the time of writing based on the <a href="https://source.dot.net">sources</a> available. I do describe some of the internal workings of the API, which may change overtime.</p>
+<h2 id="application-flow">Application Flow</h2>
+<p>In order to use the new EventCounters API, you first need to create an inherited class that derives from EventSource because every type of counter needs to be registered against an EventSource. Let's start off with the simplist possible EventSource that records metrics dynamically:</p>
+<pre><code class="language-csharp">[EventSource(Name = &quot;MyApplication&quot;)]
+public class MyApplicationEventSource : EventSource
+{
+    public static MyApplicationEventSource Instance = new MyApplicationEventSource();
+    private readonly ConcurrentDictionary&lt;string, EventCounter&gt; _dynamicCounters = new ConcurrentDictionary&lt;string, EventCounter&gt;();
+
+    private MyApplicationEventSource() {}
+
+    public void RecordMetric(string name, float value)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return;
+
+        var counter = _dynamicCounters.GetOrAdd(name, key =&gt; new EventCounter(key, this));
+        counter.WriteMetric(value);
+    }
+}
+</code></pre>
+<p>In order to initialize a new EventCounter instance, we need to give a name and the EventSource that it should be associated with. Whilst this is okay for simple EventCounters, we often need to do more with our applications, such as tracking the start/stopping of certain events. To do this, we can leverage more of the EventSource's infrastructure by using the events mechanism.</p>
+<h3 id="using-eventcounters-and-eventsource-events">Using EventCounters And EventSource Events</h3>
+<p>Let's breakdown the following example, which I've taken from my <a href="https://github.com/Im5tu/OpenMessage/blob/dev/src/OpenMessage/OpenMessageEventSource.cs">OpenMessage project</a>:</p>
+<pre><code class="language-csharp">[EventSource(Name = &quot;OpenMessage&quot;)]
+internal class OpenMessageEventSource : EventSource
+{
+    internal static readonly OpenMessageEventSource Instance = new OpenMessageEventSource();
+
+    private long _inflightMessages = 0;
+    private long _processedCount = 0;
+    private IncrementingPollingCounter _inflightMessagesCounter;
+    private EventCounter _messageDurationCounter;
+    private IncrementingPollingCounter _processedCountCounter;
+
+    private OpenMessageEventSource() { }
+
+    [NonEvent]
+    public ValueStopwatch? ProcessMessageStart()
+    {
+        if (!IsEnabled()) return null;
+
+        MessageStart();
+
+        return ValueStopwatch.StartNew();
+    }
+
+    [Event(1, Level = EventLevel.Informational, Message = &quot;Consumed Message&quot;)]
+    private void MessageStart()
+    {
+        Interlocked.Increment(ref _inflightMessages);
+        Interlocked.Increment(ref _processedCount);
+    }
+
+    [NonEvent]
+    public void ProcessMessageStop(ValueStopwatch stopwatch)
+    {
+        if (!IsEnabled()) return;
+
+        MessageStop(stopwatch.IsActive ? stopwatch.GetElapsedTime().TotalMilliseconds : 0.0);
+    }
+
+    [Event(2, Level = EventLevel.Informational, Message = &quot;Message Completed&quot;)]
+    private void MessageStop(double duration)
+    {
+        Interlocked.Decrement(ref _inflightMessages);
+        _messageDurationCounter.WriteMetric(duration);
+    }
+
+    protected override void OnEventCommand(EventCommandEventArgs command)
+    {
+        if (command.Command == EventCommand.Enable)
+        {
+            _inflightMessagesCounter ??= new IncrementingPollingCounter(&quot;inflight-messages&quot;, this, () =&gt; _inflightMessages)
+            {
+                DisplayName = &quot;Inflight Messages&quot;,
+                DisplayUnits = &quot;Messages&quot;
+            };
+            _messageDurationCounter ??= new EventCounter(&quot;message-duration&quot;, this)
+            {
+                DisplayName = &quot;Average Message Duration&quot;,
+                DisplayUnits = &quot;ms&quot;
+            };
+            _processedCountCounter ??= new IncrementingPollingCounter(&quot;processed-count&quot;, this, () =&gt; _processedCount)
+            {
+                DisplayName = &quot;Messages Processed&quot;,
+                DisplayRateTimeScale = TimeSpan.FromSeconds(1)
+            };
+        }
+    }
+
+    // ... code omitted for brevity
+}
+</code></pre>
+<p>The example above is designed to track the number of messages processed by our system, and how long on average they took to process. The event source is also designed to be lazily initialized, so we only track information when the EventSource is enabled. Let's break some of the import parts down, starting off with <code>OnEventCommand</code>:</p>
+<pre><code class="language-csharp">protected override void OnEventCommand(EventCommandEventArgs command)
+{
+    if (command.Command == EventCommand.Enable)
+    {
+        _inflightMessagesCounter ??= new IncrementingPollingCounter(&quot;inflight-messages&quot;, this, () =&gt; _inflightMessages)
+        {
+            DisplayName = &quot;Inflight Messages&quot;,
+            DisplayUnits = &quot;Messages&quot;
+        };
+        _messageDurationCounter ??= new EventCounter(&quot;message-duration&quot;, this)
+        {
+            DisplayName = &quot;Average Message Duration&quot;,
+            DisplayUnits = &quot;ms&quot;
+        };
+        _processedCountCounter ??= new IncrementingPollingCounter(&quot;processed-count&quot;, this, () =&gt; _processedCount)
+        {
+            DisplayName = &quot;Messages Processed&quot;,
+            DisplayRateTimeScale = TimeSpan.FromSeconds(1)
+        };
+    }
+}
+</code></pre>
+<p>This section is where we register the event counters that we are interested in tracking. EventSource's can receive commands from external sources, namely the ability to enable events. We can receive this message from applications multiple times, so it's important to to make sure that we guard against nulls etc. In the sample above, I use the new null-assignment expression to ensure that only when the field is null, do we perform the expression on the right hand side - which in our case is creating the counters. There are four available types of counters available:</p>
+<ul>
+<li>EventCounter</li>
+<li>IncrementingEventCounter</li>
+<li>PollingCounter</li>
+<li>IncrementingPollingCounter</li>
+</ul>
+<p>Next, we need to look how we can actually record the metrics. In order to do this, I decided to use .Net's EventSource Eventing capabilities so that I can also get the information that I want inside of other tools like PerfView should I want to. So let's take a look how I've done this:</p>
+<pre><code class="language-csharp">[NonEvent]
+public ValueStopwatch? ProcessMessageStart()
+{
+    if (!IsEnabled()) return null;
+
+    MessageStart();
+
+    return ValueStopwatch.StartNew();
+}
+
+[Event(1, Level = EventLevel.Informational, Message = &quot;Consumed Message&quot;)]
+private void MessageStart()
+{
+    Interlocked.Increment(ref _inflightMessages);
+    Interlocked.Increment(ref _processedCount);
+}
+
+[NonEvent]
+public void ProcessMessageStop(ValueStopwatch stopwatch)
+{
+    if (!IsEnabled()) return;
+
+    MessageStop(stopwatch.IsActive ? stopwatch.GetElapsedTime().TotalMilliseconds : 0.0);
+}
+
+[Event(2, Level = EventLevel.Informational, Message = &quot;Message Completed&quot;)]
+private void MessageStop(double duration)
+{
+    Interlocked.Decrement(ref _inflightMessages);
+    _messageDurationCounter.WriteMetric(duration);
+}
+</code></pre>
+<p>In essence, we have two operations that we are really interested in Start &amp; Stop. In the example above, each of the operations is split out into a <code>[NonEvent]</code> and a corresponding <code>[Event]</code>. The <code>[Event]</code> is what the EventSource system uses to write the events to the underlying stream so that it can be picked up by tools such as PerfView. The entry point is always the <code>[NonEvent]</code> so that we can check to see if anyone is listening to the EventSource before we do anything, plus it does not emit the Event unnecessarily. This is the same pattern that is used throughout the .Net Code base from what I can tell.</p>
+<p>For the <code>[Event]</code>'s, you will notice that the Start/Stop is EventId 1/2 respectively and the also end with Start/Stop. This allows some magic to happen such as automatically figuring out the duration inside of PerfView. For more information on some of the magic that occurs, I strongly recommend reading <a href="https://blogs.msdn.microsoft.com/vancem/2015/09/14/exploring-eventsource-activity-correlation-and-causation-features/">Vance Morrison's Excellent Blog Post</a> instead of me duplicating the knowledge here.</p>
+<p>Once you have your EventSource configured, then you can record your metrics at will (eg: <code>OpenMessageEventSource.ProcessMessageStart()</code>) and the runtime will take care of the rest.</p>
+<h3 id="other-eventsource-examples">Other EventSource Examples</h3>
+<ul>
+<li><a href="https://github.com/aspnet/AspNetCore/blob/master/src/Hosting/Hosting/src/Internal/HostingEventSource.cs">HostingEventSource</a>: Used to track the current number of requests including: failed/total/requests per second.</li>
+<li><a href="https://github.com/aspnet/AspNetCore/blob/master/src/Servers/Kestrel/Core/src/Internal/Infrastructure/KestrelEventSource.cs">KestrelEventSource</a>: Used to track details of connections to the Kestrel WebServer - including when connections and requests Start/Stop.</li>
+<li><a href="https://github.com/aspnet/AspNetCore/blob/master/src/Middleware/ConcurrencyLimiter/src/ConcurrencyLimiterEventSource.cs">ConcurrencyLimiterEventSource</a>: Used to track the number of queued requests and the duration in the queue.</li>
+</ul>
+<h2 id="types-of-diagnosticcounters">Types of DiagnosticCounters</h2>
+<p>The <code>DiagnosticCounter</code> class is the abstract base class that all of the event counters types inherit from. Currently, there are four implementations registered in the <a href="https://source.dot.net/#Microsoft.Diagnostics.Tracing.EventSource/DiagnosticCounter.cs,28677f9e15895cc9,references">source</a>: <code>EventCounter</code>, <code>IncrementingEventCounter</code>, <code>PollingCounter</code> and <code>IncrementingPollingCounter</code>. Although abstract, we can't really inherit from <code>DiagnosticCounter</code> as the internal components that we need, which are described below, are protected from external use. The four implementations that I mentioned, appear to cover pretty much every use case that I can think of anyway.</p>
+<h3 id="eventcounter">EventCounter</h3>
+<p>This type of event counter is typically used for tracking latency of requests to external parties due to the aggregated stats that this type provides. An EventCounter instance tracks the following about the metrics that it's recorded:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>DisplayName</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>double</td>
+<td>The average of all values recorded</td>
+</tr>
+<tr>
+<td>StandardDeviation</td>
+<td>double</td>
+<td></td>
+</tr>
+<tr>
+<td>Count</td>
+<td>int</td>
+<td>How many metric entries were recorded in this iteration</td>
+</tr>
+<tr>
+<td>Min</td>
+<td>double</td>
+<td></td>
+</tr>
+<tr>
+<td>Max</td>
+<td>double</td>
+<td></td>
+</tr>
+<tr>
+<td>IntervalSec</td>
+<td>float</td>
+<td></td>
+</tr>
+<tr>
+<td>CounterType</td>
+<td>string</td>
+<td>Always &ldquo;Mean&rdquo;</td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td>string</td>
+<td>Any associated metadata for this specific counter</td>
+</tr>
+<tr>
+<td>DisplayUnits</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>Series</td>
+<td>string</td>
+<td>Format is: $&quot;IntervalSec={IntervalSec}&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<p>In order to write data, you need to call <code>&lt;counter&gt;.WriteMetric(value)</code>.</p>
+<h3 id="incrementingeventcounter">IncrementingEventCounter</h3>
+<p>An IncrementingEventCounter is typically used to track ever increasing numbers such as the total number of requests. Unlike it's namesake, EventCounter, this class does not provide any statistics about the data. In other words, it is a pure counter, so only the following information is tracked:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>DisplayName</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>DisplayRateTimeScale</td>
+<td>string</td>
+<td>The unit of measure that the metric should be shown in, eg: per-second</td>
+</tr>
+<tr>
+<td>Increment</td>
+<td>double</td>
+<td>The value of the this is: currentValue - previousValue</td>
+</tr>
+<tr>
+<td>IntervalSec</td>
+<td>float</td>
+<td></td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>Series</td>
+<td>string</td>
+<td>Format is: $&quot;IntervalSec={IntervalSec}&rdquo;</td>
+</tr>
+<tr>
+<td>CounterType</td>
+<td>string</td>
+<td>Always &ldquo;Sum&rdquo;</td>
+</tr>
+<tr>
+<td>DisplayUnits</td>
+<td>string</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>In order to write data, you need to call <code>&lt;counter&gt;.Increment(value)</code>.</p>
+<h3 id="pollingcounter">PollingCounter</h3>
+<p>A PollingCounter is very much like a standard EventCounter, but instead of the metric being written to it, a function is invoked which retrieves the value from your source of choice. An PollingCounter instance tracks the following about the metrics that it's recorded:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>DisplayName</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>Mean</td>
+<td>double</td>
+<td>The average of all values recorded</td>
+</tr>
+<tr>
+<td>StandardDeviation</td>
+<td>double</td>
+<td></td>
+</tr>
+<tr>
+<td>Count</td>
+<td>int</td>
+<td>How many metric entries were recorded in this iteration</td>
+</tr>
+<tr>
+<td>Min</td>
+<td>double</td>
+<td></td>
+</tr>
+<tr>
+<td>Max</td>
+<td>double</td>
+<td></td>
+</tr>
+<tr>
+<td>IntervalSec</td>
+<td>float</td>
+<td></td>
+</tr>
+<tr>
+<td>CounterType</td>
+<td>string</td>
+<td>Always &ldquo;Mean&rdquo;</td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td>string</td>
+<td>Any associated metadata for this specific counter</td>
+</tr>
+<tr>
+<td>DisplayUnits</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>Series</td>
+<td>string</td>
+<td>Format is: $&quot;IntervalSec={IntervalSec}&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<h3 id="incrementingeventcounter-1">IncrementingEventCounter</h3>
+<p>A IncrementingPollingCounter is very much like a standard IncrementingPollingCounter, but instead of the metric being written to it, a function is invoked which retrieves the value from your source of choice. An IncrementingPollingCounter instance tracks the following about the metrics that it's recorded:</p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>DisplayName</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>DisplayRateTimeScale</td>
+<td>string</td>
+<td>The unit of measure that the metric should be shown in, eg: per-second</td>
+</tr>
+<tr>
+<td>Increment</td>
+<td>double</td>
+<td>The value of the this is: currentValue - previousValue</td>
+</tr>
+<tr>
+<td>IntervalSec</td>
+<td>float</td>
+<td></td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td>string</td>
+<td></td>
+</tr>
+<tr>
+<td>Series</td>
+<td>string</td>
+<td>Format is: $&quot;IntervalSec={IntervalSec}&rdquo;</td>
+</tr>
+<tr>
+<td>CounterType</td>
+<td>string</td>
+<td>Always &ldquo;Sum&rdquo;</td>
+</tr>
+<tr>
+<td>DisplayUnits</td>
+<td>string</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="under-the-hood">Under the hood</h2>
+<p>Now that we've taken a look at how we construct the EvenSource so that we can create our application level metrics, we should also take a look at what happens under the hood so we can begin to complete the circle. Once you start creating any of the listed DiagnosticCounters in your application - the counter calls a method which ensures that the counter gets added to a <code>CounterGroup</code> associated with the specified EventSource. When a DiagnosticCounter is disposed, then it is removed from the CounterGroup and no longer tracked.</p>
+<p>The <code>CounterGroup</code> is responsible for maintaining a thread that polls the DiagnosticCounters on the specified interval and updates their values. The thread isn't created until such time as an application calls <code>EnableEvents(eventSource, EventLevel.LogAlways, EventKeywords.All, new Dictionary&lt;string, string&gt;{{&quot;EventCounterIntervalSec&quot;, &quot;1&quot;}});</code> on an EventSource. Lastly, when the value of each DiagnosticCounter is updated, an event is raised against the EventSource that was passed to the counter which means that we can listen to this in the same way that we listen to other events on EventSource's - eg: PerfView/EventListener.</p>
+<p>The whole EventSource system is very lightweight and designed for scalability in systems that generate millions of events - so we should not be too concerned about the performance of this. Naturally, the more that you listen to, the more impact this will have. I think it's safe to say, the code that we write in the listeners will likely be the slowest part of this system.</p>
+<h2 id="listening-for-event-counters">Listening for event counters</h2>
+<p>Lastly, in order to complete our circle, we need to be able to listen to the counters that we've created in our applications. There are two common approaches that we can use: the CLI tool <code>dotnet-counters</code> or from within our applications using an <code>EventListener</code>.</p>
+<h3 id="using-dotnet-counters">Using dotnet-counters</h3>
+<p>As part of the diagnostic improvements in .Net Core 3, the .Net team introduced a new diagnostics tool called <code>dotnet-counters</code>. This is a stand-alone tool that can be installed using the following command:</p>
+<pre><code class="language-bash">dotnet tool install dotnet-counters --global
+</code></pre>
+<p>Or updated to the latest version if you already have it installed:</p>
+<pre><code class="language-bash">dotnet tool update dotnet-counters --global
+</code></pre>
+<p>After the tool has been installed, you can see the processes that are eligible for attaching using:</p>
+<pre><code class="language-bash">&gt;dotnet-counters ps
+    10416 dotnet     C:\Program Files\dotnet\dotnet.exe
+    20660 dotnet     C:\Program Files\dotnet\dotnet.exe
+    21172 dotnet     C:\Program Files\dotnet\dotnet.exe
+</code></pre>
+<p>Once you know the process that you want to attach too, you can start monitoring with the following command:</p>
+<pre><code class="language-bash">&gt;dotnet-counters monitor -p 21172
+</code></pre>
+<p>If you are interested in specific EventSources, then you can supply a space separated list of EventSources like:</p>
+<pre><code class="language-bash">&gt;dotnet-counters monitor -p 21172 System.Runtime MyEventSource
+</code></pre>
+<p>By default, when you ask to monitor an EventSource, it will capture and display all the counters for you. If you only wish to track a few counters from each EventSource, then you specify them in square brackets directly after the EventSource name:</p>
+<pre><code class="language-bash">&gt;dotnet-counters monitor -p 21172 System.Runtime[cpu-usage] MyEventSource[test]
+</code></pre>
+<p>All of the monitor commands will output something similar to the following:</p>
+<pre><code class="language-bash">Press p to pause, r to resume, q to quit.
+    Status: Running
+
+[System.Runtime]
+    CPU Usage (%)                                      0
+[MyEventSource]
+    test                                             335
+</code></pre>
+<p>Lastly, should you wish to control the rate that the counters are refreshed, supply the <code>--refresh-interval</code> parameter:</p>
+<pre><code class="language-bash">&gt;dotnet-counters monitor -p 21172 --refresh-interval 5 System.Runtime[cpu-usage] MyEventSource[test]
+</code></pre>
+<h3 id="within-our-applications">Within our applications</h3>
+<p>In order to enable tracing from within a .Net application you need three core parts:</p>
+<ol>
+<li>Class inheriting from EventListener</li>
+<li>Detecting of EventSource's</li>
+<li>Processing of Events</li>
+</ol>
+<h4 id="creating-our-eventlistener">Creating our EventListener</h4>
+<p>For our new EventListener, I will create a simple background service as follows:</p>
+<pre><code class="language-csharp">internal sealed class MetricsCollectionService : EventListener, IHostedService
+{
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken) =&gt; Task.CompletedTask;
+}
+</code></pre>
+<p>This will live for the lifetime of the application and host the task that will detect lazy-ily initiated EventSources, such as the OpenMessage one I showed earlier in this article.</p>
+<h4 id="detecting-eventsources">Detecting EventSources</h4>
+<p>In order to detect the lazy-ily initiated EventSources, we need to periodically call the method <code>EventSource.GetSources()</code> which lists all of the currently available sources. we can do this from a simple task that lives against the service:</p>
+<pre><code class="language-csharp">internal sealed class MetricsCollectionService : EventListener, IHostedService
+{
+    private List&lt;string&gt; RegisteredEventSources = new List&lt;string&gt;(); 
+    private Task _newDataSourceTask;
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        _newDataSourceTask = Task.Run(async () =&gt;
+        {
+            while (true)
+            {
+                GetNewSources();
+                await Task.Delay(1000);
+            }
+        });
+
+        return Task.CompletedTask;
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken) =&gt; Task.CompletedTask;
+
+    protected override void OnEventSourceCreated(EventSource eventSource)
+    {
+        if (!RegisteredEventSources.Contains(eventSource.Name))
+        {
+            RegisteredEventSources.Add(eventSource.Name);
+            EnableEvents(eventSource, EventLevel.LogAlways, EventKeywords.All, new Dictionary&lt;string, string&gt;
+            {
+                {&quot;EventCounterIntervalSec&quot;, &quot;1&quot;}
+            });
+        }
+    }
+    
+    private void GetNewSources()
+    {
+        foreach (var eventSource in EventSource.GetSources())
+            OnEventSourceCreated(eventSource);
+    }
+}
+</code></pre>
+<p>We've got a list of the EventSources that we have already asked to be enabled so that we don't continually ask them to enable themselves. This helps guard against any slightly mis-constructed EventSources, though not strictly necessary.</p>
+<h4 id="processing-events">Processing Events</h4>
+<p>The last bit for us to do is to override the <code>OnEventWritten</code>:</p>
+<pre><code class="language-csharp">protected override void OnEventWritten(EventWrittenEventArgs eventData)
+{
+    if (eventData.EventName != &quot;EventCounters&quot; 
+            || eventData.Payload.Count &lt;= 0 
+            || !(eventData.Payload[0] is IDictionary&lt;string, object&gt; data) 
+            || !data.TryGetValue(&quot;CounterType&quot;, out var counterType) 
+            || !data.TryGetValue(&quot;Name&quot;, out var name))
+        return;
+    
+    var metricType = counterType.ToString();
+    float metricValue = 0;
+
+    if (&quot;Sum&quot;.Equals(metricType) &amp;&amp; data.TryGetValue(&quot;Increment&quot;, out var increment))
+    {
+        metricValue = Convert.ToSingle(increment);
+    }
+    else if (&quot;Mean&quot;.Equals(metricType) &amp;&amp; data.TryGetValue(&quot;Mean&quot;, out var mean))
+    {
+        metricValue = Convert.ToSingle(mean);
+    }
+    
+    // do something with your metric here...
+}
+</code></pre>
+<p>This method gets called for each EventSource that you have asked to receive the data from. It will be up to you to decide your own filtering policy. For each <code>EventWrittenEventArgs</code> that you receive, you need to double check that you have received an EventCounter before proceeding. Next, you need to check the payload that you received is indeed a <code>IDictionary&lt;string, object&gt;</code>, so that you can process the contents in a quick and efficient manner. Although in the implementations, there is a strongly typed class for the payload for each of the built in counters, it is internal so we are unable to consume it here. The last piece of the puzzle is for you to process the metric however you wish, ie: sending to DataDog.</p>
+<p>Putting all of the above code together, we get something like the following:</p>
+<pre><code class="language-csharp">internal sealed class MetricsCollectionService : EventListener, IHostedService
+{
+    private List&lt;string&gt; RegisteredEventSources = new List&lt;string&gt;(); 
+    private Task _newDataSourceTask;
+
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        _newDataSourceTask = Task.Run(async () =&gt;
+        {
+            while (true)
+            {
+                GetNewSources();
+                await Task.Delay(1000);
+            }
+        });
+
+        return Task.CompletedTask;
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken) =&gt; Task.CompletedTask;
+
+    protected override void OnEventSourceCreated(EventSource eventSource)
+    {
+        if (!RegisteredEventSources.Contains(eventSource.Name))
+        {
+            RegisteredEventSources.Add(eventSource.Name);
+            EnableEvents(eventSource, EventLevel.LogAlways, EventKeywords.All, new Dictionary&lt;string, string&gt;
+            {
+                {&quot;EventCounterIntervalSec&quot;, &quot;1&quot;}
+            });
+        }
+    }
+
+    protected override void OnEventWritten(EventWrittenEventArgs eventData)
+    {
+        if (eventData.EventName != &quot;EventCounters&quot; 
+                || eventData.Payload.Count &lt;= 0 
+                || !(eventData.Payload[0] is IDictionary&lt;string, object&gt; data) 
+                || !data.TryGetValue(&quot;CounterType&quot;, out var counterType) 
+                || !data.TryGetValue(&quot;Name&quot;, out var name))
+            return;
+        
+        var metricType = counterType.ToString();
+        float metricValue = 0;
+
+        if (&quot;Sum&quot;.Equals(metricType) &amp;&amp; data.TryGetValue(&quot;Increment&quot;, out var increment))
+        {
+            metricValue = Convert.ToSingle(increment);
+        }
+        else if (&quot;Mean&quot;.Equals(metricType) &amp;&amp; data.TryGetValue(&quot;Mean&quot;, out var mean))
+        {
+            metricValue = Convert.ToSingle(mean);
+        }
+        
+        // do something with your metric here...
+    }
+
+    private void GetNewSources()
+    {
+        foreach (var eventSource in EventSource.GetSources())
+            OnEventSourceCreated(eventSource);
+    }
+}
+</code></pre>
+<p>Hopefully at this point, you have enough information on how to use the built in counters and creating your own metrics. Let me know on <a href="https://twitter.com/im5tu">Twitter</a> if you have any thoughts or comments on the contents of this post.</p>
+<p>Thanks for reading, happy counting! :)</p></section>
+    <footer class="article-footer">
+        <hr />
+Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/diagnostics/">diagnostics</a></li>
+</ul>
+</footer>
+</article>
+    </section>
+    <footer id="pageFooter" class="pageWrap">
+    <p>&copy; 2020 <span itemprop="author">Stuart Blackler</span>. Last Updated: <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2020-01-05T14:00:00">2020-01-05 14:00:00 &#43;0000 UTC</time>. <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>.</p>
+</footer>
+</section>
+<script src="/js/site-54e01995.js" defer></script>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-88036425-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+<script src="/js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+</body>
+</html>

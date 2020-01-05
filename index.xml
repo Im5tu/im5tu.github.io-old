@@ -6,10 +6,19 @@
     <description>Recent content on Stuart Blackler&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 26 Dec 2018 14:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 05 Jan 2020 14:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://im5tu.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Diagnostics in .Net Core 3: Event Counters</title>
+      <link>https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-event-counters/</link>
+      <pubDate>Sun, 05 Jan 2020 14:00:00 +0000</pubDate>
+      
+      <guid>https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-event-counters/</guid>
+      <description>&lt;p&gt;Recently, I&#39;ve been playing with the new &lt;a href=&#34;https://devblogs.microsoft.com/dotnet/introducing-diagnostics-improvements-in-net-core-3-0/&#34;&gt;diagnostic improvements in .Net Core 3&lt;/a&gt;. Traditionally, I&#39;ve always used the great &lt;a href=&#34;https://github.com/AppMetrics/AppMetrics&#34;&gt;AppMetrics&lt;/a&gt; package to capture the metrics from our applications and send scrape them with a &lt;a href=&#34;https://github.com/prometheus/prometheus&#34;&gt;Prometheus&lt;/a&gt; &amp;amp; &lt;a href=&#34;https://github.com/grafana/grafana&#34;&gt;Grafana&lt;/a&gt; setup. When reading about the improvements, I wondered whether or not it would be possible to push metrics to &lt;a href=&#34;https://github.com/prometheus/prometheus&#34;&gt;Prometheus&lt;/a&gt;.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Quick Tip: Accessing a Azure DevOps secret from within a scripted step</title>
@@ -102,8 +111,7 @@ Prerequisites Before we take a look at the struture of the file, you will need t
       <pubDate>Sun, 04 Jun 2017 15:00:55 +0100</pubDate>
       
       <guid>https://im5tu.io/article/2017/06/canonical-host-urls-with-url-rewrite/</guid>
-      <description>In the previous post, I gave a brief intoduction to URL Rewriting and showed you how to get from HTTP to HTTPS. In this article, I will show you how to have a canonical host url.
-What is a canonical host url? It can be incredibly easy to distribute different urls for your website. Lets say that we have www.site.com/post1 and site.com/post1. If you&#39;re a search engine, you think that these are different different pages with the same content.</description>
+      <description>In the previous post, I gave a brief intoduction to URL Rewriting and showed you how to get from HTTP to HTTPS. In this article, I will show you how to have a canonical host url.What is a canonical host url? It can be incredibly easy to distribute different urls for your website. Lets say that we have www.site.com/post1 and site.com/post1. If you&#39;re a search engine, you think that these are different different pages with the same content.</description>
     </item>
     
     <item>

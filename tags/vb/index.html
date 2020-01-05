@@ -20,156 +20,7 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@im5tu" />
 
-<style>html, body {
-  height: 100%;
-  color: #303030;
-  font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-display: auto;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Comfortaa", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-display: auto;
-}
-
-p {
-  margin: 1.5em 0;
-}
-
-blockquote {
-  border-left: 5px solid #454545;
-  background-color: #fafafa;
-  padding: 0.5em 1.5em;
-}
-blockquote, blockquote p {
-  color: #494949;
-}
-blockquote ~ blockquote {
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.pageContainer {
-  text-align: justify;
-}
-
-.pageWrap {
-  margin: 0 auto;
-  max-width: 1400px;
-}
-@media screen and (min-width: 320px) {
-  .pageWrap {
-    width: 97%;
-  }
-}
-@media screen and (min-width: 740px) {
-  .pageWrap {
-    width: 90%;
-  }
-}
-@media screen and (min-width: 980px) {
-  .pageWrap {
-    width: 80%;
-  }
-}
-.pageWrap:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-a {
-  font-family: "Comfortaa", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-display: auto;
-}
-a:link, a:visited {
-  color: #149fd1;
-}
-a:link {
-  text-decoration: none;
-}
-a:hover {
-  color: #2db9eb;
-  text-decoration: underline;
-}
-
-#pageHeader-about {
-  border-bottom: 1px solid #eaeaea;
-}
-
-#pageHeader-about-title a {
-  font-size: 1.2em;
-}
-#pageHeader-about-title a:link, #pageHeader-about-title a:visited {
-  color: #232323;
-}
-#pageHeader-about-title a:first-child {
-  font-size: 1.1em;
-  color: #149fd1;
-  text-transform: none;
-}
-
-.article-list a {
-  color: #0a0a0a;
-}
-.article-list a:hover {
-  color: #2db9eb;
-  text-decoration: underline;
-}
-
-.article-content p code, .article-content li code {
-  color: #149fd1;
-  background-color: rgba(27, 31, 35, 0.05);
-}
-.article-content p code:hover, .article-content li code:hover {
-  opacity: 0.5;
-}
-
-.article img {
-  max-width: 100%;
-}
-
-.copy-code-button {
-  float: right;
-  display: block;
-  padding: 3px 8px;
-  font-size: 0.8em;
-  background-color: #e2e2e2;
-  border: 1px solid #e2e2e2;
-  border-radius: 0 0 10px 10px;
-  -webkit-transition: all 250ms ease;
-  transition: all 250ms ease;
-  opacity: 0;
-}
-.copy-code-button:hover {
-  cursor: pointer;
-  opacity: 0.7;
-  border-style: solid;
-}
-.copy-code-button:focus {
-  background-color: #e2e2e2;
-  outline: 0;
-  border-style: solid;
-}
-.copy-code-button:active {
-  background-color: #e2e2e2;
-  opacity: 0.5;
-  border-style: solid;
-}
-
-pre:hover .copy-code-button {
-  opacity: 1;
-}
-
-.copy-code-button ~ pre {
-  position: relative;
-}
-
-@media print {
-  .copy-code-button {
-    display: none;
-  }
-}</style>
+<style>body,html{height:100%;color:#303030;font-family:"Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}.copy-code-button{float:right;display:block;padding:3px 8px;font-size:.8em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}</style>
 <link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Blog" /></head>
 <body>
@@ -195,7 +46,11 @@ pre:hover .copy-code-button {
         <h2><a href="https://im5tu.io/article/2017/02/openmessage-2017-roadmap/" itemprop="name"><time itemprop="datecreated" pubdate="pubdate" datetime="2017 02 -11T12:15:27">February 2017</time> - OpenMessage 2017 Roadmap</a></h2>
     </header>
     <section class="article-summary" itemprop="about"><p><a href="https://github.com/im5tu/openmessage">OpenMessage</a> originally started out as a replacement for an internal library that was used across teams. At the time, the team I was apart of needed the latest version of dotnet core for the library where as the other team were stuck on RC1. They were also developing features for that version of the framework and a few pre-existing details that we were unhappy with (eg: the request/response implementation). With that in mind, I created a minimal wrapper for what we needed. Looking forward, I plan to dedicate a bit more time to the project and improve it.</p></section>
-    <footer class="article-footer"></footer>
+    <footer class="article-footer">
+Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/openmessage/">OpenMessage</a></li><li><a class="article-tag" href="/tags/csharp/">csharp</a></li><li><a class="article-tag" href="/tags/vb/">vb</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/messaging/">messaging</a></li>
+</ul>
+</footer>
 </article>
         
             <article class="article" itemscope itemtype="http://schema.org/blog">
@@ -203,7 +58,11 @@ pre:hover .copy-code-button {
         <h2><a href="https://im5tu.io/article/2017/02/openmessage-1.1-released/" itemprop="name"><time itemprop="datecreated" pubdate="pubdate" datetime="2017 02 -05T15:31:54">February 2017</time> - OpenMessage 1.1 Released</a></h2>
     </header>
     <section class="article-summary" itemprop="about"><p>Just a quick update to say that the Azure provider for <a href="https://github.com/Im5tu/OpenMessage">OpenMessage</a> has been released. This update fixes an issue with scheduling messages on topics.</p></section>
-    <footer class="article-footer"></footer>
+    <footer class="article-footer">
+Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/openmessage/">OpenMessage</a></li><li><a class="article-tag" href="/tags/csharp/">csharp</a></li><li><a class="article-tag" href="/tags/vb/">vb</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/messaging/">messaging</a></li>
+</ul>
+</footer>
 </article>
         
             <article class="article" itemscope itemtype="http://schema.org/blog">
@@ -211,7 +70,11 @@ pre:hover .copy-code-button {
         <h2><a href="https://im5tu.io/article/2013/03/semaphore-vs-seamphoreslim-micro-benchmark/" itemprop="name"><time itemprop="datecreated" pubdate="pubdate" datetime="2013 03 -11T18:06:28">March 2013</time> - Semaphore vs SeamphoreSlim Micro Benchmark</a></h2>
     </header>
     <section class="article-summary" itemprop="about"><p>In this post, I am going to show a small micro-benchmark to demonstrate the performance difference between the <code>Semaphore</code> and <code>SemaphoreSlim</code> classes in C#. A <code>Semaphore</code> is often used to restrict the number of threads than can access some (physical or logical) resource. In this case, we want the restriction to be as little as possible.</p></section>
-    <footer class="article-footer"></footer>
+    <footer class="article-footer">
+Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/csharp/">csharp</a></li><li><a class="article-tag" href="/tags/vb/">vb</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li>
+</ul>
+</footer>
 </article>
         
             <article class="article" itemscope itemtype="http://schema.org/blog">
@@ -219,7 +82,11 @@ pre:hover .copy-code-button {
         <h2><a href="https://im5tu.io/article/2012/12/flicker-free-forms-and-listview-in-.net/" itemprop="name"><time itemprop="datecreated" pubdate="pubdate" datetime="2012 12 -30T14:51:38">December 2012</time> - Flicker free forms and listview in .Net</a></h2>
     </header>
     <section class="article-summary" itemprop="about"><p>On a project I have been working on recently, I came across a problem where under Windows an Mdi Child form would flicker when it loads. Trying to find information on what was the cause of this was near impossible. I ended up trying a lot of code snippets that I found when googling the problem and this is what I have come up with.</p></section>
-    <footer class="article-footer"></footer>
+    <footer class="article-footer">
+Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/vb/">vb</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li>
+</ul>
+</footer>
 </article>
         
             <article class="article" itemscope itemtype="http://schema.org/blog">
@@ -227,7 +94,11 @@ pre:hover .copy-code-button {
         <h2><a href="https://im5tu.io/article/2012/12/extension-methods-in-dotnet/" itemprop="name"><time itemprop="datecreated" pubdate="pubdate" datetime="2012 12 -01T17:51:38">December 2012</time> - Extension methods in dotnet</a></h2>
     </header>
     <section class="article-summary" itemprop="about"><p>In this article we will take a look at what extension methods are and how to use them in .Net. Personally, they are one of the best things that has been introduced into the .Net framework in terms of readability. I will take you through what extension methods are, how to create them (in c# and vb) then I will show you some of the extension methods that I have created (in c# only, conversion is for you to try).</p></section>
-    <footer class="article-footer"></footer>
+    <footer class="article-footer">
+Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/vb/">vb</a></li><li><a class="article-tag" href="/tags/csharp/">csharp</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li>
+</ul>
+</footer>
 </article>
         
     </section>
