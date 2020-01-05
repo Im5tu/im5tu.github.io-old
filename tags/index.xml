@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>aspnetcore</title>
+      <link>https://im5tu.io/tags/aspnetcore/</link>
+      <pubDate>Sun, 05 Jan 2020 14:00:00 +0000</pubDate>
+      
+      <guid>https://im5tu.io/tags/aspnetcore/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>diagnostics</title>
       <link>https://im5tu.io/tags/diagnostics/</link>
       <pubDate>Sun, 05 Jan 2020 14:00:00 +0000</pubDate>
@@ -53,15 +62,6 @@
       <pubDate>Wed, 26 Dec 2018 14:00:00 +0000</pubDate>
       
       <guid>https://im5tu.io/tags/vsts/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>aspnetcore</title>
-      <link>https://im5tu.io/tags/aspnetcore/</link>
-      <pubDate>Sun, 29 Jul 2018 16:40:00 +0100</pubDate>
-      
-      <guid>https://im5tu.io/tags/aspnetcore/</guid>
       <description></description>
     </item>
     
@@ -147,7 +147,7 @@
     </item>
     
     <item>
-      <title>News</title>
+      <title>news</title>
       <link>https://im5tu.io/tags/news/</link>
       <pubDate>Wed, 01 Mar 2017 19:32:24 +0000</pubDate>
       

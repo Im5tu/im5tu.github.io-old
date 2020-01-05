@@ -8,6 +8,16 @@
   </url>
   
   <url>
+    <loc>https://im5tu.io/tags/aspnetcore/</loc>
+    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/categories/aspnetcore/</loc>
+    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://im5tu.io/categories/</loc>
     <lastmod>2020-01-05T14:00:00+00:00</lastmod>
   </url>
@@ -75,11 +85,6 @@
   <url>
     <loc>https://im5tu.io/article/2018/12/building-a-custom-build-agent-image-with-docker-and-azure-devops-pipelines/</loc>
     <lastmod>2018-12-24T14:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/aspnetcore/</loc>
-    <lastmod>2018-07-29T16:40:00+01:00</lastmod>
   </url>
   
   <url>
@@ -193,12 +198,12 @@
   </url>
   
   <url>
-    <loc>https://im5tu.io/tags/news/</loc>
+    <loc>https://im5tu.io/categories/news/</loc>
     <lastmod>2017-03-01T19:32:24+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://im5tu.io/categories/news/</loc>
+    <loc>https://im5tu.io/tags/news/</loc>
     <lastmod>2017-03-01T19:32:24+00:00</lastmod>
   </url>
   
