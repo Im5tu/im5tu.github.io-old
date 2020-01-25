@@ -4,56 +4,61 @@
   
   <url>
     <loc>https://im5tu.io/article/</loc>
-    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/aspnetcore/</loc>
-    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
+    <lastmod>2020-01-25T13:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://im5tu.io/categories/aspnetcore/</loc>
-    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
+    <lastmod>2020-01-25T13:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/aspnetcore/</loc>
+    <lastmod>2020-01-25T13:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://im5tu.io/categories/</loc>
-    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://im5tu.io/tags/diagnostics/</loc>
-    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
+    <lastmod>2020-01-25T13:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://im5tu.io/categories/diagnostics/</loc>
-    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
+    <lastmod>2020-01-25T13:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-event-counters/</loc>
-    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
+    <loc>https://im5tu.io/tags/diagnostics/</loc>
+    <lastmod>2020-01-25T13:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://im5tu.io/tags/dotnet/</loc>
-    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
+    <loc>https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-using-dotnet-counters-with-docker/</loc>
+    <lastmod>2020-01-25T13:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://im5tu.io/categories/dotnet/</loc>
-    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
+    <lastmod>2020-01-25T13:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/tags/dotnet/</loc>
+    <lastmod>2020-01-25T13:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://im5tu.io/</loc>
-    <lastmod>2020-01-05T14:00:00+00:00</lastmod>
+    <lastmod>2020-01-25T13:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://im5tu.io/tags/</loc>
+    <lastmod>2020-01-25T13:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-event-counters/</loc>
     <lastmod>2020-01-05T14:00:00+00:00</lastmod>
   </url>
   

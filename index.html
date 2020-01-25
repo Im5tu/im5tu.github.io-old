@@ -38,6 +38,16 @@
 <section class="article-list">
     <article class="article" itemscope itemtype="http://schema.org/blog">
     <header class="article-header">
+        <h2><a href="https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-using-dotnet-counters-with-docker/" itemprop="name"><time itemprop="datecreated" pubdate="pubdate" datetime="2020 01 -25T13:00:00">January 2020</time> - Diagnostics in .Net Core 3: Using dotnet-counters with Docker</a></h2>
+    </header>
+    <section class="article-summary" itemprop="about"><p>In my <a href="/article/2020/01/diagnostics-in-.net-core-3-event-counters/">previous post</a>, I described how we can leverage the new EventCounter diagnostics API to add custom event counters and listen for built in counters. In this article, I will walk through how we can leverage the <code>dotnet-counters</code> tool with a running docker image.</p></section>
+    <footer class="article-footer">
+Tags: <ul class="article-tags">
+    <li><a class="article-tag" href="/tags/aspnetcore/">aspnetcore</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/diagnostics/">diagnostics</a></li>
+</ul>
+</footer>
+</article><article class="article" itemscope itemtype="http://schema.org/blog">
+    <header class="article-header">
         <h2><a href="https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-event-counters/" itemprop="name"><time itemprop="datecreated" pubdate="pubdate" datetime="2020 01 -05T14:00:00">January 2020</time> - Diagnostics in .Net Core 3: Event Counters</a></h2>
     </header>
     <section class="article-summary" itemprop="about"><p>Recently, I've been playing with the new <a href="https://devblogs.microsoft.com/dotnet/introducing-diagnostics-improvements-in-net-core-3-0/">diagnostic improvements in .Net Core 3</a>. Traditionally, I've always used the great <a href="https://github.com/AppMetrics/AppMetrics">AppMetrics</a> package to capture the metrics from our applications and send scrape them with a <a href="https://github.com/prometheus/prometheus">Prometheus</a> &amp; <a href="https://github.com/grafana/grafana">Grafana</a> setup. Whilst reading about the improvements, I wondered whether or not it would be possible to push metrics to <a href="https://github.com/prometheus/prometheus">Prometheus</a>.</p></section>
@@ -231,16 +241,6 @@ Tags: <ul class="article-tags">
     <li><a class="article-tag" href="/tags/lifestyle/">lifestyle</a></li><li><a class="article-tag" href="/tags/fitness/">fitness</a></li><li><a class="article-tag" href="/tags/life/">life</a></li>
 </ul>
 </footer>
-</article><article class="article" itemscope itemtype="http://schema.org/blog">
-    <header class="article-header">
-        <h2><a href="https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/" itemprop="name"><time itemprop="datecreated" pubdate="pubdate" datetime="2016 12 -29T20:25:58">December 2016</time> - Hugo Quick Tip: Inlining Css Files</a></h2>
-    </header>
-    <section class="article-summary" itemprop="about"><p>Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It's quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.</p></section>
-    <footer class="article-footer">
-Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/hugo/">hugo</a></li><li><a class="article-tag" href="/tags/blog/">blog</a></li><li><a class="article-tag" href="/tags/quick-tips/">Quick Tips</a></li>
-</ul>
-</footer>
 </article>
     <footer>
         <p><a href="/article/">View All Posts</a></p>
@@ -249,7 +249,7 @@ Tags: <ul class="article-tags">
 
     </section>
     <footer id="pageFooter" class="pageWrap">
-    <p>&copy; 2020 <span itemprop="author">Stuart Blackler</span>. Last Updated: <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2020-01-05T14:00:00">2020-01-05 14:00:00 &#43;0000 UTC</time>. <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>.</p>
+    <p>&copy; 2020 <span itemprop="author">Stuart Blackler</span>. Last Updated: <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2020-01-25T13:00:00">2020-01-25 13:00:00 &#43;0000 UTC</time>. <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>.</p>
 </footer>
 </section>
 <script src="/js/site-54e01995.js" defer></script>
