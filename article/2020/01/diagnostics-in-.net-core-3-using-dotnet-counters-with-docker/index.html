@@ -1,147 +1,29 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Diagnostics in .Net Core 3: Using dotnet-counters with Docker - Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-using-dotnet-counters-with-docker/">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <meta name="description" content="A look into how we can use dotnet-counters with a docker container">
-    
-    
-    <meta property="og:title" content="Diagnostics in .Net Core 3: Using dotnet-counters with Docker - Stuart Blackler&#39;s Blog" />
-<meta property="og:type" content="website" />
-
-<meta property="og:description" content="A look into how we can use dotnet-counters with a docker container">
-
-<meta property="og:url" content="https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-using-dotnet-counters-with-docker/" />
-<meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
-<meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@im5tu" />
-
-<style>body,html{height:100%;color:#303030;font-family:"Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media (prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media (prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style>
-<link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Blog" /></head>
-<body>
-<section class="pageContainer">
-    <header id="pageHeader">
-    <section id="pageHeader-about" class="pageWrap" itemscope itemtype="http://schema.org/person">
-        <section id="pageHeader-about-title">
-            <h1 itemprop="name"><a href="/" title="Stuart Blackler">@im5tu</a> / <a href="https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-using-dotnet-counters-with-docker/">Diagnostics in .Net Core 3: Using dotnet-counters with Docker</a></h1>
-        </section>
-    </section>
-</header>
-    <section class="pageContainer-content pageWrap">
-        <article class="article" itemscope itemtype="http://schema.org/blog">
-    <section class="article-content" itemprop="text"><p>In my <a href="/article/2020/01/diagnostics-in-.net-core-3-event-counters/">previous post</a>, I described how we can leverage the new EventCounter diagnostics API to add custom event counters and listen for built in counters. In this article, I will walk through how we can leverage the <code>dotnet-counters</code> tool with a running docker image.</p>
-<h2 id="creating-our-diagnostics-image">Creating our diagnostics image</h2>
-<p>In order to connect to a docker image, we will create a diagnostics image which will host the same .Net SDK version as our application and will have the <code>dotnet-counters</code> tool pre-installed:</p>
-<pre><code class="language-dockerfile">FROM mcr.microsoft.com/dotnet/core/sdk:3.1
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Diagnostics in .Net Core 3: Using dotnet-counters with Docker - Stuart Blackler's Blog</title><link rel=canonical href=https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-using-dotnet-counters-with-docker/><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><meta name=description content="A look into how we can use dotnet-counters with a docker container"><meta property="og:title" content="Diagnostics in .Net Core 3: Using dotnet-counters with Docker - Stuart Blackler's Blog"><meta property="og:type" content="website"><meta property="og:description" content="A look into how we can use dotnet-counters with a docker container"><meta property="og:url" content="https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-using-dotnet-counters-with-docker/"><meta property="og:image" content="https://im5tu.io/img/profile.jpg"><meta property="og:site_name" content="Stuart Blackler's Blog"><meta name=twitter:card content="summary"><meta name=twitter:site content="@im5tu"><style>body,html{height:100%;color:#303030;font-family:noto sans,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.warning{margin:0 auto;border:1px solid #ff9500;color:#ff9500;background-color:#fff;text-align:center}.series{font-style:italic}.series p{margin-bottom:0}.series ol{margin:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media(prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media(prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style><link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel=stylesheet><link href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css rel=stylesheet><link href=/article/index.xml rel=alternate type=application/rss+xml title="Stuart Blackler's Blog"></head><body><section class=pageContainer><header id=pageHeader><section id=pageHeader-about class=pageWrap itemscope itemtype=http://schema.org/person><section id=pageHeader-about-title><h1 itemprop=name><a href=/ title="Stuart Blackler">@im5tu</a> / <a href=https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-using-dotnet-counters-with-docker/>Diagnostics in .Net Core 3: Using dotnet-counters with Docker</a></h1></section></section></header><section class="pageContainer-content pageWrap"><article class=article itemscope itemtype=http://schema.org/blog><section class=article-content itemprop=text><p>In my <a href=/article/2020/01/diagnostics-in-.net-core-3-event-counters/>previous post</a>, I described how we can leverage the new EventCounter diagnostics API to add custom event counters and listen for built in counters. In this article, I will walk through how we can leverage the <code>dotnet-counters</code> tool with a running docker image.</p><h2 id=creating-our-diagnostics-image>Creating our diagnostics image</h2><p>In order to connect to a docker image, we will create a diagnostics image which will host the same .Net SDK version as our application and will have the <code>dotnet-counters</code> tool pre-installed:</p><pre><code class=language-dockerfile>FROM mcr.microsoft.com/dotnet/core/sdk:3.1
 RUN mkdir /root/.dotnet/tools
 ENV PATH=&quot;/root/.dotnet/tools:${PATH}&quot;
 RUN  dotnet tool install dotnet-counters --global
 WORKDIR /diagnostics
 ENTRYPOINT [ &quot;/bin/bash&quot; ]
-</code></pre>
-<p>A common mistake when creating docker images that contain .Net tools which are installed globally is not remembering to add the tool path, in this case <code>/root/.dotnet/tools/</code> to the PATH so that it can be globally executed. Luckily, the .Net CLI will remind you in the build logs should you forget to do this.</p>
-<p>Note: <em>You can see the other tools that are available <a href="https://github.com/dotnet/diagnostics/tree/master/src/Tools">here</a>.</em></p>
-<p>Now that we have our docker image ready, we can build with the following command:</p>
-<pre><code class="language-bash">docker build -f diagnostics.Dockerfile -t dotnetdiag:3.1 .
-</code></pre>
-<h3 id="setting-up-the-host-image">Setting up the host image</h3>
-<p>For the purposes of this article, we will setup our application using a brand new application within a dockerfile, created by <code>dotnet new</code>:</p>
-<pre><code class="language-dockerfile">FROM mcr.microsoft.com/dotnet/core/sdk:3.1
+</code></pre><p>A common mistake when creating docker images that contain .Net tools which are installed globally is not remembering to add the tool path, in this case <code>/root/.dotnet/tools/</code> to the PATH so that it can be globally executed. Luckily, the .Net CLI will remind you in the build logs should you forget to do this.</p><p>Note: <em>You can see the other tools that are available <a href=https://github.com/dotnet/diagnostics/tree/master/src/Tools>here</a>.</em></p><p>Now that we have our docker image ready, we can build with the following command:</p><pre><code class=language-bash>docker build -f diagnostics.Dockerfile -t dotnetdiag:3.1 .
+</code></pre><h3 id=setting-up-the-host-image>Setting up the host image</h3><p>For the purposes of this article, we will setup our application using a brand new application within a dockerfile, created by <code>dotnet new</code>:</p><pre><code class=language-dockerfile>FROM mcr.microsoft.com/dotnet/core/sdk:3.1
 WORKDIR /app
 EXPOSE 5000
 EXPOSE 5001
 RUN dotnet new webapp -n BlogApp
 WORKDIR /app/BlogApp
 ENTRYPOINT dotnet run -c Release
-</code></pre>
-<p>And we will build our application with the following command line:</p>
-<pre><code class="language-bash">docker build -f app.Dockerfile --name app -t dotnetapp:latest .
-</code></pre>
-<p>Once you have you're application built we are ready to start our docker image with debugging enabled.</p>
-<h2 id="connecting-from-the-diagnostics-image-to-the-host-image">Connecting from the diagnostics image to the host image</h2>
-<p>Normally we would start our applications with a command line similar to this:</p>
-<pre><code class="language-bash">docker run --rm --name app dotnetapp:latest
-</code></pre>
-<p>However, in order to be able to connect to the running application we need to mount a volume to the temporary directory on the application container. We can do this by appending <code>-v dotnetdiag:/tmp</code>, which instructs docker to mount a named volume <code>dotnetdiag</code> to the path <code>/tmp</code>. Docker will create the named volume during startup if it does not exist.</p>
-<p>We mount the volume because as the .Net runtime starts up, it places a load of temporary files into the <code>/tmp</code> directory such as the following:</p>
-<pre><code>root@379211a5012a:/# ls /tmp
+</code></pre><p>And we will build our application with the following command line:</p><pre><code class=language-bash>docker build -f app.Dockerfile --name app -t dotnetapp:latest .
+</code></pre><p>Once you have you're application built we are ready to start our docker image with debugging enabled.</p><h2 id=connecting-from-the-diagnostics-image-to-the-host-image>Connecting from the diagnostics image to the host image</h2><p>Normally we would start our applications with a command line similar to this:</p><pre><code class=language-bash>docker run --rm --name app dotnetapp:latest
+</code></pre><p>However, in order to be able to connect to the running application we need to mount a volume to the temporary directory on the application container. We can do this by appending <code>-v dotnetdiag:/tmp</code>, which instructs docker to mount a named volume <code>dotnetdiag</code> to the path <code>/tmp</code>. Docker will create the named volume during startup if it does not exist.</p><p>We mount the volume because as the .Net runtime starts up, it places a load of temporary files into the <code>/tmp</code> directory such as the following:</p><pre><code>root@379211a5012a:/# ls /tmp
 CoreFxPipe_root.b5he0_wwfcD_lH7g471Brpw4X   VBCSCompiler                                 
 jiksomfd.ri0                                NuGetScratch
 hn2K8eq8bHUcTVSgvuckPlSK9tw9_ORiMDm_Vn4ylfI system-commandline-sentinel-files
-</code></pre>
-<p><em>Note the inclusion of the file beginning with <code>CoreFxPipe_root</code>, which is the EventPipe that we will connect to.</em></p>
-<p>Once the application is running, we are now able to start connecting to our application. Normally we would run the following command line to start the diagnostics image: <code>docker run --rm -it --pid=container:app --net=container:app -v dotnetdiag:/tmp --cap-add ALL --privileged dotnetdiag:3.1</code>. Before we execute this command, we need to modify it by add arguments for:</p>
-<ul>
-<li>Mounting to the same volume as the running application</li>
-<li>Be able to inspect the process list of the running application,</li>
-<li>Be able to share the same networking as the running application,</li>
-<li>Elevate execution for the new container</li>
-</ul>
-<p>Without completing the steps listed above we will be unable to connect to the running application. For mounting the volume we can use the exact same argument as before (<code>-v dotnetdiag:/tmp</code>).</p>
-<p>In order to get the process id, we need to join the same process namespace through the use of the <a href="https://docs.docker.com/engine/reference/run/#pid-settings---pid">&ndash;pid</a> argument. The <code>--pid</code> offers two modes, container or host. For this article, we will connect to a specific container by name, though you can also connect to the container by id as well.</p>
-<p>Like the process argument, we also need to join the same networking space as the running container. So we will use <a href="https://docs.docker.com/engine/reference/run/#network-settings">&ndash;net</a> which can also be run in multiple modes. For this article, we will connect to the application via the container name.</p>
-<p>Lastly, by default, Docker containers restrict a lot of what you can do with running processes, like run docker in docker. So we need to tell docker to run in privileged mode and what capabilities we require to have from our diagnostics container. For this we will use the <code>--cap-add</code> and the <code>--privileged</code> arguments. Click <a href="https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities">here</a> to read more about runtime privilege and docker capabilities.</p>
-<p>After putting it all together, here is the full command line that we will run:</p>
-<pre><code class="language-bash">docker run --rm -it --pid=container:app --net=container:app -v dotnetdiag:/tmp --cap-add ALL --privileged dotnetdiag:3.1
-</code></pre>
-<p>Now you should have an empty command line to run, so if we execute <code>dotnet-counters ps</code> you should see something similar to the following:</p>
-<pre><code class="language-bash">root@9663cbb4e1fe:/diagnostics# dotnet-counters ps
+</code></pre><p><em>Note the inclusion of the file beginning with <code>CoreFxPipe_root</code>, which is the EventPipe that we will connect to.</em></p><p>Once the application is running, we are now able to start connecting to our application. Normally we would run the following command line to start the diagnostics image: <code>docker run --rm -it --pid=container:app --net=container:app -v dotnetdiag:/tmp --cap-add ALL --privileged dotnetdiag:3.1</code>. Before we execute this command, we need to modify it by add arguments for:</p><ul><li>Mounting to the same volume as the running application</li><li>Be able to inspect the process list of the running application,</li><li>Be able to share the same networking as the running application,</li><li>Elevate execution for the new container</li></ul><p>Without completing the steps listed above we will be unable to connect to the running application. For mounting the volume we can use the exact same argument as before (<code>-v dotnetdiag:/tmp</code>).</p><p>In order to get the process id, we need to join the same process namespace through the use of the <a href=https://docs.docker.com/engine/reference/run/#pid-settings---pid>&ndash;pid</a> argument. The <code>--pid</code> offers two modes, container or host. For this article, we will connect to a specific container by name, though you can also connect to the container by id as well.</p><p>Like the process argument, we also need to join the same networking space as the running container. So we will use <a href=https://docs.docker.com/engine/reference/run/#network-settings>&ndash;net</a> which can also be run in multiple modes. For this article, we will connect to the application via the container name.</p><p>Lastly, by default, Docker containers restrict a lot of what you can do with running processes, like run docker in docker. So we need to tell docker to run in privileged mode and what capabilities we require to have from our diagnostics container. For this we will use the <code>--cap-add</code> and the <code>--privileged</code> arguments. Click <a href=https://docs.docker.com/engine/reference/run/#runtime-privilege-and-linux-capabilities>here</a> to read more about runtime privilege and docker capabilities.</p><p>After putting it all together, here is the full command line that we will run:</p><pre><code class=language-bash>docker run --rm -it --pid=container:app --net=container:app -v dotnetdiag:/tmp --cap-add ALL --privileged dotnetdiag:3.1
+</code></pre><p>Now you should have an empty command line to run, so if we execute <code>dotnet-counters ps</code> you should see something similar to the following:</p><pre><code class=language-bash>root@9663cbb4e1fe:/diagnostics# dotnet-counters ps
        103 BlogApp    /app/BlogApp/bin/Release/netcoreapp3.1/BlogApp
          6 dotnet     /usr/share/dotnet/dotnet
         42 dotnet     /usr/share/dotnet/dotnet
         61 dotnet     /usr/share/dotnet/dotnet
        247 dotnet-counters /root/.dotnet/tools/dotnet-counters
-</code></pre>
-<p>Assuming that your application is running under process id <strong>103</strong> then we would execute the following command to view the counters:</p>
-<pre><code class="language-bash">root@9663cbb4e1fe:/diagnostics# dotnet-counters monitor -p 103 System.Runtime Microsoft.AspNetCore.Hosting
-</code></pre>
-<h2 id="recap">Recap</h2>
-<p>In order to diagnose a running docker image from another docker image, you need to:</p>
-<ul>
-<li>Mount the <code>/tmp</code> on the application image prior to starting the application</li>
-<li>Create a diagnostic image with your diagnostics tools</li>
-<li>Run your diagnostics image with the following arguments:
-<ul>
-<li><code>-v</code> for mounting to the same volume as the application image</li>
-<li><code>--pid</code> for joining the same process space</li>
-<li><code>--net</code> for joining the same network</li>
-<li><code>--privileged</code> for requesting additional permissions to cross container boundaries, and</li>
-<li><code>--cap-add ALL</code> for adding the ability to list processes etc.</li>
-</ul>
-</li>
-</ul>
-<p>Happy diagnostics!</p></section>
-    <footer class="article-footer">
-        <hr />
-Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/aspnetcore/">aspnetcore</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/diagnostics/">diagnostics</a></li>
-</ul>
-</footer>
-</article>
-    </section>
-    <footer id="pageFooter" class="pageWrap">
-    <p>&copy; 2020 <span itemprop="author">Stuart Blackler</span>. Last Updated: <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2020-01-25T13:00:00">2020-01-25 13:00:00 &#43;0000 UTC</time>. <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>.</p>
-</footer>
-</section>
-<script src="/js/site-54e01995.js" defer></script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-88036425-1', 'auto');
-  ga('send', 'pageview');
-</script>
-
-
-<script src="/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-</body>
-</html>
+</code></pre><p>Assuming that your application is running under process id <strong>103</strong> then we would execute the following command to view the counters:</p><pre><code class=language-bash>root@9663cbb4e1fe:/diagnostics# dotnet-counters monitor -p 103 System.Runtime Microsoft.AspNetCore.Hosting
+</code></pre><h2 id=recap>Recap</h2><p>In order to diagnose a running docker image from another docker image, you need to:</p><ul><li>Mount the <code>/tmp</code> on the application image prior to starting the application</li><li>Create a diagnostic image with your diagnostics tools</li><li>Run your diagnostics image with the following arguments:<ul><li><code>-v</code> for mounting to the same volume as the application image</li><li><code>--pid</code> for joining the same process space</li><li><code>--net</code> for joining the same network</li><li><code>--privileged</code> for requesting additional permissions to cross container boundaries, and</li><li><code>--cap-add ALL</code> for adding the ability to list processes etc.</li></ul></li></ul><p>Happy diagnostics!</p></section><footer class=article-footer><hr>Tags:<ul class=article-tags><li><a class=article-tag href=/tags/aspnetcore/>aspnetcore</a></li><li><a class=article-tag href=/tags/dotnet/>dotnet</a></li><li><a class=article-tag href=/tags/diagnostics/>diagnostics</a></li></ul></footer></article></section><footer id=pageFooter class=pageWrap><p>&copy; 2020 <span itemprop=author>Stuart Blackler</span>. Last Updated: <time itemprop=datecreated class=article-header-time pubdate=pubdate datetime=2020-01-25T13:00:00>2020-01-25 13:00:00 +0000 UTC</time>. <a id=pageFooter-scroll-link href=#>Scroll To Top</a>.</p></footer></section><script src=/js/site-54e01995.js defer></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-88036425-1','auto');ga('send','pageview');</script><script src=/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad();</script></body></html>

@@ -1,26 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>service fabric on Stuart Blackler&#39;s Blog</title>
-    <link>https://im5tu.io/tags/service-fabric/</link>
-    <description>Recent content in service fabric on Stuart Blackler&#39;s Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Sat, 30 Jun 2018 19:40:00 +0100</lastBuildDate>
-    
-	<atom:link href="https://im5tu.io/tags/service-fabric/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Building Service Fabric Apps With VSTS YML Build Definitions</title>
-      <link>https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/</link>
-      <pubDate>Sat, 30 Jun 2018 19:40:00 +0100</pubDate>
-      
-      <guid>https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/</guid>
-      <description>In my previous article, we setup a standarised build using the new YML build definitions within VSTS, using the .Net CLI tooling. In this article, we will use the same setup as our base, but we will build and publish a service fabric application.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>service fabric on Stuart Blackler's Blog</title><link>https://im5tu.io/tags/service-fabric/</link><description>Recent content in service fabric on Stuart Blackler's Blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 30 Jun 2018 19:40:00 +0100</lastBuildDate><atom:link href="https://im5tu.io/tags/service-fabric/index.xml" rel="self" type="application/rss+xml"/><item><title>Building Service Fabric Apps With VSTS YML Build Definitions</title><link>https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/</link><pubDate>Sat, 30 Jun 2018 19:40:00 +0100</pubDate><guid>https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/</guid><description>In my previous article, we setup a standarised build using the new YML build definitions within VSTS, using the .Net CLI tooling. In this article, we will use the same setup as our base, but we will build and publish a service fabric application.
 Our sample build file has the following steps:
- Clean Sources Install the Dotnet CLI Restore Packages Build Projects Test Projects Publish the Web App Publish Build Artifacts Tag VSTS Build  For our service fabric build, we will need the following steps:</description>
-    </item>
-    
-  </channel>
-</rss>
+Clean Sources Install the Dotnet CLI Restore Packages Build Projects Test Projects Publish the Web App Publish Build Artifacts Tag VSTS Build For our service fabric build, we will need the following steps:</description></item></channel></rss>

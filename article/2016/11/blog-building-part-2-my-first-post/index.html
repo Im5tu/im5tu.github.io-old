@@ -1,71 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Blog Building - Part 2 - My First Post - Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/article/2016/11/blog-building-part-2-my-first-post/">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <meta name="description" content="Setting up a theme and creating our first article using hugo and bones">
-    
-    
-    <meta property="og:title" content="Blog Building - Part 2 - My First Post - Stuart Blackler&#39;s Blog" />
-<meta property="og:type" content="website" />
-
-<meta property="og:description" content="Setting up a theme and creating our first article using hugo and bones">
-
-<meta property="og:url" content="https://im5tu.io/article/2016/11/blog-building-part-2-my-first-post/" />
-<meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
-<meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@im5tu" />
-
-<style>body,html{height:100%;color:#303030;font-family:"Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media (prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media (prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style>
-<link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Blog" /></head>
-<body>
-<section class="pageContainer">
-    <header id="pageHeader">
-    <section id="pageHeader-about" class="pageWrap" itemscope itemtype="http://schema.org/person">
-        <section id="pageHeader-about-title">
-            <h1 itemprop="name"><a href="/" title="Stuart Blackler">@im5tu</a> / <a href="https://im5tu.io/article/2016/11/blog-building-part-2-my-first-post/">Blog Building - Part 2 - My First Post</a></h1>
-        </section>
-    </section>
-</header>
-    <section class="pageContainer-content pageWrap">
-        <article class="article" itemscope itemtype="http://schema.org/blog">
-    <section class="article-content" itemprop="text"><p>In <a href="/article/2016/11/blog-building---part-1---hello-hugo/">the last article</a>, we setup our workflow and all the pieces that you will need to create a new site. Now we need to install a theme and begin publishing. Prior to writing this series, I began evaluating the extensibility of hugo themes and started work on something I call bones - a no thrills template with no styling, just structure. As I improve the template it will become more useful, maybe. It will remain the template behind mysite as I continue to improve it.</p>
-<h2 id="installing-a-theme">Installing a theme</h2>
-<p>To install a theme, you need to know the repositories git url. You can see additional themes at <a href="http://themes.gohugo.io/">http://themes.gohugo.io/</a>. I will be using my <a href="https://github.com/Im5tu/hugo-bones.git">bones theme</a> as the base.</p>
-<p>Once you have the themes git url: 
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Blog Building - Part 2 - My First Post - Stuart Blackler's Blog</title><link rel=canonical href=https://im5tu.io/article/2016/11/blog-building-part-2-my-first-post/><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><meta name=description content="Setting up a theme and creating our first article using hugo and bones"><meta property="og:title" content="Blog Building - Part 2 - My First Post - Stuart Blackler's Blog"><meta property="og:type" content="website"><meta property="og:description" content="Setting up a theme and creating our first article using hugo and bones"><meta property="og:url" content="https://im5tu.io/article/2016/11/blog-building-part-2-my-first-post/"><meta property="og:image" content="https://im5tu.io/img/profile.jpg"><meta property="og:site_name" content="Stuart Blackler's Blog"><meta name=twitter:card content="summary"><meta name=twitter:site content="@im5tu"><style>body,html{height:100%;color:#303030;font-family:noto sans,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.warning{margin:0 auto;border:1px solid #ff9500;color:#ff9500;background-color:#fff;text-align:center}.series{font-style:italic}.series p{margin-bottom:0}.series ol{margin:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media(prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media(prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style><link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel=stylesheet><link href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css rel=stylesheet><link href=/article/index.xml rel=alternate type=application/rss+xml title="Stuart Blackler's Blog"></head><body><section class=pageContainer><header id=pageHeader><section id=pageHeader-about class=pageWrap itemscope itemtype=http://schema.org/person><section id=pageHeader-about-title><h1 itemprop=name><a href=/ title="Stuart Blackler">@im5tu</a> / <a href=https://im5tu.io/article/2016/11/blog-building-part-2-my-first-post/>Blog Building - Part 2 - My First Post</a></h1></section></section></header><section class="pageContainer-content pageWrap"><article class=article itemscope itemtype=http://schema.org/blog><section class=article-content itemprop=text><p>In <a href=/article/2016/11/blog-building---part-1---hello-hugo/>the last article</a>, we setup our workflow and all the pieces that you will need to create a new site. Now we need to install a theme and begin publishing. Prior to writing this series, I began evaluating the extensibility of hugo themes and started work on something I call bones - a no thrills template with no styling, just structure. As I improve the template it will become more useful, maybe. It will remain the template behind mysite as I continue to improve it.</p><h2 id=installing-a-theme>Installing a theme</h2><p>To install a theme, you need to know the repositories git url. You can see additional themes at <a href=http://themes.gohugo.io/>http://themes.gohugo.io/</a>. I will be using my <a href=https://github.com/Im5tu/hugo-bones.git>bones theme</a> as the base.</p><p>Once you have the themes git url:
 - Open the command line to repository that has our generation files in it
 - Change directories to the themes folder
-- Clone the git repo to this location, eg: <code>git clone https://github.com/Im5tu/hugo-bones.git</code></p>
-<p>Once the repository is cloned, we need to tell hugo how to use our new theme. To do this we need to open the <code>config.toml</code> file inside of the root directory and create an entry called theme. When this is done, your config file should look something along the lines of the following:</p>
-<pre><code class="language-c#">baseurl = &quot;http://example.org/&quot;
+- Clone the git repo to this location, eg: <code>git clone https://github.com/Im5tu/hugo-bones.git</code></p><p>Once the repository is cloned, we need to tell hugo how to use our new theme. To do this we need to open the <code>config.toml</code> file inside of the root directory and create an entry called theme. When this is done, your config file should look something along the lines of the following:</p><pre><code class=language-c#>baseurl = &quot;http://example.org/&quot;
 title = &quot;My New Hugo Site&quot;
 languageCode = &quot;en-us&quot;
 theme = &quot;hugo-bones&quot;
-</code></pre>
-<p>Whilst I am here, I am going to change the other properties accordingly:</p>
-<pre><code class="language-c#">baseurl = &quot;https://im5tu.io/&quot;
+</code></pre><p>Whilst I am here, I am going to change the other properties accordingly:</p><pre><code class=language-c#>baseurl = &quot;https://im5tu.io/&quot;
 title = &quot;Stuart Blackler's Tech Blog&quot;
 languageCode = &quot;en-us&quot;
 theme = &quot;hugo-bones&quot;
-</code></pre>
-<p>Don't forget to save the file. It's also probably a good idea to commit your progress as you go.</p>
-<h2 id="creating-our-first-post">Creating our first post</h2>
-<p>Now that we have our theme all setup, we should probably create a hello world post. Assuming that you are using the bones theme like me, we can go back the root of our repository and run this command to generate a new post: <code>hugo new article\hello-world.md</code>. This creates a file under the <code>content\article</code> directory.</p>
-<p>We can preview this site by running the command: <code>hugo server -D</code> and navigating to <code>http://localhost:1313/</code>. All being well you should see the following:</p>
-<p><img src="/img/blog-building-part-2/first-post.JPG" alt="First Post Image"></p>
-<p>One of the great things about hugo is that it has live reload capabilities built in. This means that we can navigate to the page that we want to edit in the browser and everytime we make a change to the file, it will be synced to the screen. Try it! This magic happens because we called <code>hugo server</code> which, in a way, breaks down to mean:
+</code></pre><p>Don't forget to save the file. It's also probably a good idea to commit your progress as you go.</p><h2 id=creating-our-first-post>Creating our first post</h2><p>Now that we have our theme all setup, we should probably create a hello world post. Assuming that you are using the bones theme like me, we can go back the root of our repository and run this command to generate a new post: <code>hugo new article\hello-world.md</code>. This creates a file under the <code>content\article</code> directory.</p><p>We can preview this site by running the command: <code>hugo server -D</code> and navigating to <code>http://localhost:1313/</code>. All being well you should see the following:</p><p><img src=/img/blog-building-part-2/first-post.JPG alt="First Post Image"></p><p>One of the great things about hugo is that it has live reload capabilities built in. This means that we can navigate to the page that we want to edit in the browser and everytime we make a change to the file, it will be synced to the screen. Try it! This magic happens because we called <code>hugo server</code> which, in a way, breaks down to mean:
 - <code>hugo</code>: build my site please
-- <code>server</code>: load a simple http server with my content</p>
-<p>Additionally, I added the flag <code>-D</code> which means that I want to build draft posts. In the template that I created, I wanted to create everything as a draft so that I could work on it in isolation and be safe in the knowledge that I wouldn't accidently post something that wasn't ready.</p>
-<h2 id="additional-configuration">Additional configuration</h2>
-<p>Before I finish up this post and write more, I want to change a few of the configuration options. Personally, I like working with json rather than yaml/toml inside of the markdown files, it feels more natural to me. Other changes that I wish to make include: changing permalink styles, output verbosity and enabling the robots.txt file.</p>
-<p>In order to make these changes, we need to once more open the <code>config.toml</code> file and add the properties as follows:</p>
-<pre><code class="language-c#">baseurl = &quot;https://im5tu.io/&quot;
+- <code>server</code>: load a simple http server with my content</p><p>Additionally, I added the flag <code>-D</code> which means that I want to build draft posts. In the template that I created, I wanted to create everything as a draft so that I could work on it in isolation and be safe in the knowledge that I wouldn't accidently post something that wasn't ready.</p><h2 id=additional-configuration>Additional configuration</h2><p>Before I finish up this post and write more, I want to change a few of the configuration options. Personally, I like working with json rather than yaml/toml inside of the markdown files, it feels more natural to me. Other changes that I wish to make include: changing permalink styles, output verbosity and enabling the robots.txt file.</p><p>In order to make these changes, we need to once more open the <code>config.toml</code> file and add the properties as follows:</p><pre><code class=language-c#>baseurl = &quot;https://im5tu.io/&quot;
 title = &quot;Stuart Blackler's Tech Blog&quot;
 languageCode = &quot;en-us&quot;
 theme = &quot;hugo-bones&quot;
@@ -73,37 +19,4 @@ metaDataFormat = &quot;json&quot;
 enableRobotsTXT = true
 [permalinks]
 	article = &quot;article/:year/:month/:title/&quot;
-</code></pre>
-<h2 id="next-steps">Next steps</h2>
-<p>One of the next things that I will be doing is working with the template to ensure that everything is setup in terms of category/tag pages, rss feeds etc. This, although unstyled, will be enough to begin pushing to the live site.</p>
-<p>After that is complete, I will be setting up gulp to build, clean and minify my javascript and css files. From there I can start working on the visual styling of the site. I will blog the entire process, but this may take some time as I figure out exactly what I want.</p>
-<p>Finally, it's setting up Github and Cloudflare so that everyone can enjoy an SSL enabled site around the world at blazing speeds.</p></section>
-    <footer class="article-footer">
-        <hr />
-Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/hugo/">hugo</a></li><li><a class="article-tag" href="/tags/blogging/">blogging</a></li>
-</ul>
-</footer>
-</article>
-    </section>
-    <footer id="pageFooter" class="pageWrap">
-    <p>&copy; 2020 <span itemprop="author">Stuart Blackler</span>. Last Updated: <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2016-11-17T23:01:38">2016-11-17 23:01:38 &#43;0000 UTC</time>. <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>.</p>
-</footer>
-</section>
-<script src="/js/site-54e01995.js" defer></script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-88036425-1', 'auto');
-  ga('send', 'pageview');
-</script>
-
-
-<script src="/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-</body>
-</html>
+</code></pre><h2 id=next-steps>Next steps</h2><p>One of the next things that I will be doing is working with the template to ensure that everything is setup in terms of category/tag pages, rss feeds etc. This, although unstyled, will be enough to begin pushing to the live site.</p><p>After that is complete, I will be setting up gulp to build, clean and minify my javascript and css files. From there I can start working on the visual styling of the site. I will blog the entire process, but this may take some time as I figure out exactly what I want.</p><p>Finally, it's setting up Github and Cloudflare so that everyone can enjoy an SSL enabled site around the world at blazing speeds.</p></section><footer class=article-footer><hr>Tags:<ul class=article-tags><li><a class=article-tag href=/tags/hugo/>hugo</a></li><li><a class=article-tag href=/tags/blogging/>blogging</a></li></ul></footer></article></section><footer id=pageFooter class=pageWrap><p>&copy; 2020 <span itemprop=author>Stuart Blackler</span>. Last Updated: <time itemprop=datecreated class=article-header-time pubdate=pubdate datetime=2016-11-17T23:01:38>2016-11-17 23:01:38 +0000 UTC</time>. <a id=pageFooter-scroll-link href=#>Scroll To Top</a>.</p></footer></section><script src=/js/site-54e01995.js defer></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-88036425-1','auto');ga('send','pageview');</script><script src=/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad();</script></body></html>

@@ -1,70 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Building Service Fabric Apps With VSTS YML Build Definitions - Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <meta name="description" content="Publish an Service Fabric application using a VSTS YML build definition.">
-    
-    
-    <meta property="og:title" content="Building Service Fabric Apps With VSTS YML Build Definitions - Stuart Blackler&#39;s Blog" />
-<meta property="og:type" content="website" />
-
-<meta property="og:description" content="Publish an Service Fabric application using a VSTS YML build definition.">
-
-<meta property="og:url" content="https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/" />
-<meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
-<meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@im5tu" />
-
-<style>body,html{height:100%;color:#303030;font-family:"Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media (prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media (prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style>
-<link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Blog" /></head>
-<body>
-<section class="pageContainer">
-    <header id="pageHeader">
-    <section id="pageHeader-about" class="pageWrap" itemscope itemtype="http://schema.org/person">
-        <section id="pageHeader-about-title">
-            <h1 itemprop="name"><a href="/" title="Stuart Blackler">@im5tu</a> / <a href="https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/">Building Service Fabric Apps With VSTS YML Build Definitions</a></h1>
-        </section>
-    </section>
-</header>
-    <section class="pageContainer-content pageWrap">
-        <article class="article" itemscope itemtype="http://schema.org/blog">
-    <section class="article-content" itemprop="text"><p>In my <a href="/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/">previous article</a>, we setup a standarised build using the new YML build definitions within VSTS, using the .Net CLI tooling. In this article, we will use the same setup as our base, but we will build and publish a service fabric application.</p>
-<!-- raw HTML omitted -->
-<p>Our <a href="/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/">sample build file</a> has the following steps:</p>
-<ol>
-<li>Clean Sources</li>
-<li>Install the Dotnet CLI</li>
-<li>Restore Packages</li>
-<li>Build Projects</li>
-<li>Test Projects</li>
-<li>Publish the Web App</li>
-<li>Publish Build Artifacts</li>
-<li>Tag VSTS Build</li>
-</ol>
-<p>For our service fabric build, we will need the following steps:</p>
-<ol>
-<li>Clean Sources</li>
-<li>Install the Dotnet CLI</li>
-<li>Restore Packages - csproj</li>
-<li><em><em>Restore Packages - sfproj (</em> New)</em>*</li>
-<li>Build Projects</li>
-<li>Test Projects</li>
-<li><em><em>Publish the Service Fabric App (</em> New)</em>*</li>
-<li><em><em>Update the Service Fabric App Version (</em> New)</em>*</li>
-<li><em><em>Copy Publish Profiles (</em> New)</em>*</li>
-<li>Publish Build Artifacts</li>
-<li>Tag VSTS Build</li>
-</ol>
-<p>For the sake of brevity, I am going to only talk about the new steps in the sequence and the reasoning behind their existance but i'll include a full sample file at the end of the post.</p>
-<h2 id="restore-packages-sfproj">Restore Packages (SFPROJ)</h2>
-<p>At first, this step may seem a little strange. Currently, the service fabric tooling does not support the dotnet CLI properly, though it's getting better. The major hurdle is the restoring of the msbuild package that contains the targets - this does not seem to restore properly with the CLI, so I use an additional step using the old nuget commands:</p>
-<pre><code class="language-yml">- task: NuGetCommand@2
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Building Service Fabric Apps With VSTS YML Build Definitions - Stuart Blackler's Blog</title><link rel=canonical href=https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><meta name=description content="Publish an Service Fabric application using a VSTS YML build definition."><meta property="og:title" content="Building Service Fabric Apps With VSTS YML Build Definitions - Stuart Blackler's Blog"><meta property="og:type" content="website"><meta property="og:description" content="Publish an Service Fabric application using a VSTS YML build definition."><meta property="og:url" content="https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/"><meta property="og:image" content="https://im5tu.io/img/profile.jpg"><meta property="og:site_name" content="Stuart Blackler's Blog"><meta name=twitter:card content="summary"><meta name=twitter:site content="@im5tu"><style>body,html{height:100%;color:#303030;font-family:noto sans,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.warning{margin:0 auto;border:1px solid #ff9500;color:#ff9500;background-color:#fff;text-align:center}.series{font-style:italic}.series p{margin-bottom:0}.series ol{margin:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media(prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media(prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style><link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel=stylesheet><link href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css rel=stylesheet><link href=/article/index.xml rel=alternate type=application/rss+xml title="Stuart Blackler's Blog"></head><body><section class=pageContainer><header id=pageHeader><section id=pageHeader-about class=pageWrap itemscope itemtype=http://schema.org/person><section id=pageHeader-about-title><h1 itemprop=name><a href=/ title="Stuart Blackler">@im5tu</a> / <a href=https://im5tu.io/article/2018/06/building-service-fabric-apps-with-vsts-yml-build-definitions/>Building Service Fabric Apps With VSTS YML Build Definitions</a></h1></section></section></header><section class="pageContainer-content pageWrap"><article class=article itemscope itemtype=http://schema.org/blog><section class=article-content itemprop=text><p>In my <a href=/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/>previous article</a>, we setup a standarised build using the new YML build definitions within VSTS, using the .Net CLI tooling. In this article, we will use the same setup as our base, but we will build and publish a service fabric application.</p><p>Our <a href=/article/2018/06/automated-builds-in-vsts-with-yml-build-definitions/>sample build file</a> has the following steps:</p><ol><li>Clean Sources</li><li>Install the Dotnet CLI</li><li>Restore Packages</li><li>Build Projects</li><li>Test Projects</li><li>Publish the Web App</li><li>Publish Build Artifacts</li><li>Tag VSTS Build</li></ol><p>For our service fabric build, we will need the following steps:</p><ol><li>Clean Sources</li><li>Install the Dotnet CLI</li><li>Restore Packages - csproj</li><li><em><em>Restore Packages - sfproj (</em> New)</em>*</li><li>Build Projects</li><li>Test Projects</li><li><em><em>Publish the Service Fabric App (</em> New)</em>*</li><li><em><em>Update the Service Fabric App Version (</em> New)</em>*</li><li><em><em>Copy Publish Profiles (</em> New)</em>*</li><li>Publish Build Artifacts</li><li>Tag VSTS Build</li></ol><p>For the sake of brevity, I am going to only talk about the new steps in the sequence and the reasoning behind their existance but i'll include a full sample file at the end of the post.</p><h2 id=restore-packages-sfproj>Restore Packages (SFPROJ)</h2><p>At first, this step may seem a little strange. Currently, the service fabric tooling does not support the dotnet CLI properly, though it's getting better. The major hurdle is the restoring of the msbuild package that contains the targets - this does not seem to restore properly with the CLI, so I use an additional step using the old nuget commands:</p><pre><code class=language-yml>- task: NuGetCommand@2
   displayName: Restore Packages (SF Projects)
   inputs:
     restoreSolution: $(packageProjects)
@@ -73,42 +7,27 @@
     nugetConfigPath: nuget.config
     noCache: true
     verbosityRestore: Normal
-</code></pre>
-<p>Here, <code>$(packageProjects)</code> is defined as <code>**/*.sfproj</code> allowing for multiple service fabric applications in a single solution. The only real difference between this step and the <code>dotnet restore</code> step from the previous article is the fact that we restore to the solution level packages folder instead of <code>dotnet restore</code>'s default location. This is because the targets in the sfproj are looking in this directory. Adjust <code>restoreDirectory</code> according to your own folder structure - I place all the sources under an <code>/src</code> folder for reference.</p>
-<h2 id="publishing-the-service-fabric-app">Publishing the Service Fabric App</h2>
-<p>When it comes around to publishing the application(s), I usually create two versions, one in a debug build and one in release. Both are then published to the artifacts. The debug build is useful for downloading by other developers for use on their local machines and the release build is what is used for deployments. If you wish to mirror this, duplicate the step and replace Release with Debug.</p>
-<pre><code class="language-yml">- task: DotNetCoreCLI@2
+</code></pre><p>Here, <code>$(packageProjects)</code> is defined as <code>**/*.sfproj</code> allowing for multiple service fabric applications in a single solution. The only real difference between this step and the <code>dotnet restore</code> step from the previous article is the fact that we restore to the solution level packages folder instead of <code>dotnet restore</code>'s default location. This is because the targets in the sfproj are looking in this directory. Adjust <code>restoreDirectory</code> according to your own folder structure - I place all the sources under an <code>/src</code> folder for reference.</p><h2 id=publishing-the-service-fabric-app>Publishing the Service Fabric App</h2><p>When it comes around to publishing the application(s), I usually create two versions, one in a debug build and one in release. Both are then published to the artifacts. The debug build is useful for downloading by other developers for use on their local machines and the release build is what is used for deployments. If you wish to mirror this, duplicate the step and replace Release with Debug.</p><pre><code class=language-yml>- task: DotNetCoreCLI@2
   displayName: Package Projects (Publish - Release)
   inputs:
     projects: $(packageProjects)
     packDirectory: '$(Build.ArtifactStagingDirectory)\\drop\\release'
     arguments: '-c Release /p:Platform=x64 /p:Version=$(Build.BuildNumber) /t:Package /p:PackageLocation=$(Build.ArtifactStagingDirectory)\drop\release\applicationpackage'
-</code></pre>
-<p><em><strong>Note</strong></em>: <em>Sorry about the formatting, see the full file at the end of the article for the proper formatting.</em></p>
-<p>In this step, we package directly to the artifact staging directory to make publishing to the build artifacts a lot easier later in the process. All of the output is placed inside of the <code>drop</code> folder as a way of differentiating between this artifact and others. Under the <code>drop</code> folder, we split based on the configuration type: Debug/Release. Both the debug and the release folder mirror the same folder structure which is an <code>applicationpackage</code> folder, containing the packaged code and the <code>projectartifacts</code> folder which will contain the publish profiles. So the full folder structure appears like:</p>
-<pre><code class="language-yml">/drop
+</code></pre><p><em><strong>Note</strong></em>: <em>Sorry about the formatting, see the full file at the end of the article for the proper formatting.</em></p><p>In this step, we package directly to the artifact staging directory to make publishing to the build artifacts a lot easier later in the process. All of the output is placed inside of the <code>drop</code> folder as a way of differentiating between this artifact and others. Under the <code>drop</code> folder, we split based on the configuration type: Debug/Release. Both the debug and the release folder mirror the same folder structure which is an <code>applicationpackage</code> folder, containing the packaged code and the <code>projectartifacts</code> folder which will contain the publish profiles. So the full folder structure appears like:</p><pre><code class=language-yml>/drop
     /debug
         /applicationpackage
         /projectartifacts
     /release
         /applicationpackage
         /projectartifacts
-</code></pre>
-<p>The only other element that I wish to point out is that service fabric applications have to be built as the <code>x64</code> platform.</p>
-<h2 id="update-the-service-fabric-app-version">Update the Service Fabric App Version</h2>
-<p>I am currently unaware of the correct msbuild switch to set the version number of the service fabric application, so I use a built in step to change the manifest numbers to match the assembly numbers and ensure a rolling upgrade is possible on the service fabric cluster.</p>
-<pre><code class="language-yml"># Update the service fabric build numbers
+</code></pre><p>The only other element that I wish to point out is that service fabric applications have to be built as the <code>x64</code> platform.</p><h2 id=update-the-service-fabric-app-version>Update the Service Fabric App Version</h2><p>I am currently unaware of the correct msbuild switch to set the version number of the service fabric application, so I use a built in step to change the manifest numbers to match the assembly numbers and ensure a rolling upgrade is possible on the service fabric cluster.</p><pre><code class=language-yml># Update the service fabric build numbers
 - task: ServiceFabricUpdateManifests@2
   displayName: Update Service Fabric Version (Release)
   inputs:
     applicationPackagePath: '$(Build.ArtifactStagingDirectory)\\drop\\release\\applicationpackage'
     versionSuffix: '$(Build.BuildNumber)'
     versionBehavior: Replace
-</code></pre>
-<p>The <code>versionBehavior</code> parameter has two modes: Append/Replace. Since I always use the build number, which is always a semver version, I use the replacement mode. We look inside of the <code>applicationpackage</code> folder to find the manifest file, which is the location we previously published the application to.</p>
-<h2 id="copying-publish-profiles">Copying Publish Profiles</h2>
-<p>In order to publish the service fabric application from the release area in VSTS, we need to copy the publish profiles that are defined with the project (unless you want to re-create them in the release pipeline, everytime!).</p>
-<pre><code class="language-yml">- task: CopyFiles@2
+</code></pre><p>The <code>versionBehavior</code> parameter has two modes: Append/Replace. Since I always use the build number, which is always a semver version, I use the replacement mode. We look inside of the <code>applicationpackage</code> folder to find the manifest file, which is the location we previously published the application to.</p><h2 id=copying-publish-profiles>Copying Publish Profiles</h2><p>In order to publish the service fabric application from the release area in VSTS, we need to copy the publish profiles that are defined with the project (unless you want to re-create them in the release pipeline, everytime!).</p><pre><code class=language-yml>- task: CopyFiles@2
   displayName: Copy XML Files To Artifacts (Release)
   inputs:
     SourceFolder: 'src\'
@@ -117,37 +36,4 @@
      **\*.ServiceFabric\ApplicationParameters\*.xml
     TargetFolder: '$(Build.ArtifactStagingDirectory)\drop\release\projectartifacts\'
     CleanTargetFolder: true
-</code></pre>
-<p>As mentioned previously, I keep the sourcecode under an <code>src</code> folder in the repository. Inside of that folder, we need to search for any xml files in the <code>PublishProfiles</code> and <code>ApplicationParameters</code> folders and place them in the <code>projectartifacts</code> folder as described previously. The only convention here is that my service fabric applications end in <code>.ServiceFabric</code> so you may need to adjust this for your own build scripts.</p>
-<p>If you put all the pieces together, you should have a working service fabric build pipeline, along the lines of the following sample:</p>
-<!-- raw HTML omitted -->
-</section>
-    <footer class="article-footer">
-        <hr />
-Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/vsts/">vsts</a></li><li><a class="article-tag" href="/tags/dotnetcore/">dotnetcore</a></li><li><a class="article-tag" href="/tags/service-fabric/">service fabric</a></li><li><a class="article-tag" href="/tags/devops/">devops</a></li>
-</ul>
-</footer>
-</article>
-    </section>
-    <footer id="pageFooter" class="pageWrap">
-    <p>&copy; 2020 <span itemprop="author">Stuart Blackler</span>. Last Updated: <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2018-06-30T19:40:00">2018-06-30 19:40:00 &#43;0100 BST</time>. <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>.</p>
-</footer>
-</section>
-<script src="/js/site-54e01995.js" defer></script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-88036425-1', 'auto');
-  ga('send', 'pageview');
-</script>
-
-
-<script src="/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-</body>
-</html>
+</code></pre><p>As mentioned previously, I keep the sourcecode under an <code>src</code> folder in the repository. Inside of that folder, we need to search for any xml files in the <code>PublishProfiles</code> and <code>ApplicationParameters</code> folders and place them in the <code>projectartifacts</code> folder as described previously. The only convention here is that my service fabric applications end in <code>.ServiceFabric</code> so you may need to adjust this for your own build scripts.</p><p>If you put all the pieces together, you should have a working service fabric build pipeline, along the lines of the following sample:</p></section><footer class=article-footer><hr>Tags:<ul class=article-tags><li><a class=article-tag href=/tags/vsts/>vsts</a></li><li><a class=article-tag href=/tags/dotnetcore/>dotnetcore</a></li><li><a class=article-tag href=/tags/service-fabric/>service fabric</a></li><li><a class=article-tag href=/tags/devops/>devops</a></li></ul></footer></article></section><footer id=pageFooter class=pageWrap><p>&copy; 2020 <span itemprop=author>Stuart Blackler</span>. Last Updated: <time itemprop=datecreated class=article-header-time pubdate=pubdate datetime=2018-06-30T19:40:00>2018-06-30 19:40:00 +0100 BST</time>. <a id=pageFooter-scroll-link href=#>Scroll To Top</a>.</p></footer></section><script src=/js/site-54e01995.js defer></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-88036425-1','auto');ga('send','pageview');</script><script src=/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad();</script></body></html>

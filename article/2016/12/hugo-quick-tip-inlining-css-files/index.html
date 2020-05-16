@@ -1,99 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hugo Quick Tip: Inlining Css Files - Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <meta name="description" content="A very quick look at how to inline a css file using Hugo static site generator.">
-    
-    
-    <meta property="og:title" content="Hugo Quick Tip: Inlining Css Files - Stuart Blackler&#39;s Blog" />
-<meta property="og:type" content="website" />
-
-<meta property="og:description" content="A very quick look at how to inline a css file using Hugo static site generator.">
-
-<meta property="og:url" content="https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/" />
-<meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
-<meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@im5tu" />
-
-<style>body,html{height:100%;color:#303030;font-family:"Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media (prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media (prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style>
-<link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Blog" /></head>
-<body>
-<section class="pageContainer">
-    <header id="pageHeader">
-    <section id="pageHeader-about" class="pageWrap" itemscope itemtype="http://schema.org/person">
-        <section id="pageHeader-about-title">
-            <h1 itemprop="name"><a href="/" title="Stuart Blackler">@im5tu</a> / <a href="https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/">Hugo Quick Tip: Inlining Css Files</a></h1>
-        </section>
-    </section>
-</header>
-    <section class="pageContainer-content pageWrap">
-        <article class="article" itemscope itemtype="http://schema.org/blog">
-    <section class="article-content" itemprop="text"><p>Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It's quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.</p>
-<h2 id="the-readfile-function">The <code>readFile</code> function</h2>
-<p>In Hugo, the <code>readFile</code> function looks for a file relative to the current project working directory and returns it as a string. If we had a file located at: <code>&lt;root&gt;/static/css/site.css</code>, then we could render the file out like so:</p>
-<pre><code>&lt;style&gt;{ {- renderFile &quot;/static/css/site.css&quot; -} }&lt;/style&gt;
-</code></pre>
-<p><strong>NB:</strong> <em>Remember to close the squiggly brackets so that Hugo renders it correctly.</em></p>
-<p>There is a gotcha with this approach so far. Hugo will try and do its thing with the resultant string and what you will end up with is something along the lines of:</p>
-<pre><code>&lt;script&gt;ZgotmplZ&lt;/script&gt;
-</code></pre>
-<p>as opposed to your intented css contents. Luckily, there is a piped method that we can use to sort this out for us:</p>
-<pre><code>&lt;style&gt;{ {- renderFile &quot;css/site.css&quot; | safeCss -} }&lt;/style&gt;
-</code></pre>
-<h2 id="reading-a-hashed-file">Reading a hashed file</h2>
-<p>As you may recall in <a href="/article/2016/11/blog-building---part-4---frontend/">my previous Hugo post</a>, I setup my css files with cache busting capabilites by appending the hash onto the filename. In order to render this as part of the HTML, we need a few things:</p>
-<ul>
-<li>Find the name of the hashed file</li>
-<li>Build the file path</li>
-<li>Call readFile</li>
-</ul>
-<p>In order to get the hashed file name, we can inspect the site's data sources, looking for the file name (requires post mentioned above):</p>
-<pre><code>{{ $siteCssHash := (index .Site.Data.hash &quot;site.css&quot;)}}
-</code></pre>
-<p>Next, we need to build up the correct file path. Note, this is the file path prior to rendering:</p>
-<pre><code>{{ $siteCssPath := (printf &quot;/static/css/%s&quot; $siteCssHash) }}
-</code></pre>
-<p>Finally, we need to call <code>readFile</code> and ensure that it is marked as a safe css string:</p>
-<pre><code>&lt;style&gt;{{- readFile $siteCssPath | safeCSS -}}&lt;/style&gt;
-</code></pre>
-<p>So putting the three together:</p>
-<pre><code>{{ $siteCssHash := (index .Site.Data.hash &quot;site.css&quot;)}}
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Hugo Quick Tip: Inlining Css Files - Stuart Blackler's Blog</title><link rel=canonical href=https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><meta name=description content="A very quick look at how to inline a css file using Hugo static site generator."><meta property="og:title" content="Hugo Quick Tip: Inlining Css Files - Stuart Blackler's Blog"><meta property="og:type" content="website"><meta property="og:description" content="A very quick look at how to inline a css file using Hugo static site generator."><meta property="og:url" content="https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/"><meta property="og:image" content="https://im5tu.io/img/profile.jpg"><meta property="og:site_name" content="Stuart Blackler's Blog"><meta name=twitter:card content="summary"><meta name=twitter:site content="@im5tu"><style>body,html{height:100%;color:#303030;font-family:noto sans,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.warning{margin:0 auto;border:1px solid #ff9500;color:#ff9500;background-color:#fff;text-align:center}.series{font-style:italic}.series p{margin-bottom:0}.series ol{margin:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media(prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media(prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style><link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel=stylesheet><link href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css rel=stylesheet><link href=/article/index.xml rel=alternate type=application/rss+xml title="Stuart Blackler's Blog"></head><body><section class=pageContainer><header id=pageHeader><section id=pageHeader-about class=pageWrap itemscope itemtype=http://schema.org/person><section id=pageHeader-about-title><h1 itemprop=name><a href=/ title="Stuart Blackler">@im5tu</a> / <a href=https://im5tu.io/article/2016/12/hugo-quick-tip-inlining-css-files/>Hugo Quick Tip: Inlining Css Files</a></h1></section></section></header><section class="pageContainer-content pageWrap"><article class=article itemscope itemtype=http://schema.org/blog><section class=article-content itemprop=text><p>Today I have been doing a little bit of work on my site and one of the things that I wanted to do is inline the css file. It's quite a small file anyway, and once compressed with gzip should make a fairly minimal difference to the size of the page.</p><h2 id=the-readfile-function>The <code>readFile</code> function</h2><p>In Hugo, the <code>readFile</code> function looks for a file relative to the current project working directory and returns it as a string. If we had a file located at: <code>&lt;root>/static/css/site.css</code>, then we could render the file out like so:</p><pre><code>&lt;style&gt;{ {- renderFile &quot;/static/css/site.css&quot; -} }&lt;/style&gt;
+</code></pre><p><strong>NB:</strong> <em>Remember to close the squiggly brackets so that Hugo renders it correctly.</em></p><p>There is a gotcha with this approach so far. Hugo will try and do its thing with the resultant string and what you will end up with is something along the lines of:</p><pre><code>&lt;script&gt;ZgotmplZ&lt;/script&gt;
+</code></pre><p>as opposed to your intented css contents. Luckily, there is a piped method that we can use to sort this out for us:</p><pre><code>&lt;style&gt;{ {- renderFile &quot;css/site.css&quot; | safeCss -} }&lt;/style&gt;
+</code></pre><h2 id=reading-a-hashed-file>Reading a hashed file</h2><p>As you may recall in <a href=/article/2016/11/blog-building---part-4---frontend/>my previous Hugo post</a>, I setup my css files with cache busting capabilites by appending the hash onto the filename. In order to render this as part of the HTML, we need a few things:</p><ul><li>Find the name of the hashed file</li><li>Build the file path</li><li>Call readFile</li></ul><p>In order to get the hashed file name, we can inspect the site's data sources, looking for the file name (requires post mentioned above):</p><pre><code>{{ $siteCssHash := (index .Site.Data.hash &quot;site.css&quot;)}}
+</code></pre><p>Next, we need to build up the correct file path. Note, this is the file path prior to rendering:</p><pre><code>{{ $siteCssPath := (printf &quot;/static/css/%s&quot; $siteCssHash) }}
+</code></pre><p>Finally, we need to call <code>readFile</code> and ensure that it is marked as a safe css string:</p><pre><code>&lt;style&gt;{{- readFile $siteCssPath | safeCSS -}}&lt;/style&gt;
+</code></pre><p>So putting the three together:</p><pre><code>{{ $siteCssHash := (index .Site.Data.hash &quot;site.css&quot;)}}
 {{ $siteCssPath := (printf &quot;/static/css/%s&quot; $siteCssHash) }}
 &lt;style&gt;{{- readFile $siteCssPath | safeCSS -}}&lt;/style&gt;
-</code></pre>
-<p>And that's it. When the page reloads/is rebuilt, your pages should now contain inlined css. You can view this <a href="https://github.com/Im5tu/im5tu-hugo/blob/84ee887616acbe6cfef7e37b0dc9b4779aad31fd/layouts/partials/header/styles.html">exact commit here</a>.</p></section>
-    <footer class="article-footer">
-        <hr />
-Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/hugo/">hugo</a></li><li><a class="article-tag" href="/tags/blog/">blog</a></li><li><a class="article-tag" href="/tags/quick-tips/">Quick Tips</a></li>
-</ul>
-</footer>
-</article>
-    </section>
-    <footer id="pageFooter" class="pageWrap">
-    <p>&copy; 2020 <span itemprop="author">Stuart Blackler</span>. Last Updated: <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2016-12-29T20:25:58">2016-12-29 20:25:58 &#43;0000 UTC</time>. <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>.</p>
-</footer>
-</section>
-<script src="/js/site-54e01995.js" defer></script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-88036425-1', 'auto');
-  ga('send', 'pageview');
-</script>
-
-
-<script src="/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-</body>
-</html>
+</code></pre><p>And that's it. When the page reloads/is rebuilt, your pages should now contain inlined css. You can view this <a href=https://github.com/Im5tu/im5tu-hugo/blob/84ee887616acbe6cfef7e37b0dc9b4779aad31fd/layouts/partials/header/styles.html>exact commit here</a>.</p></section><footer class=article-footer><hr>Tags:<ul class=article-tags><li><a class=article-tag href=/tags/hugo/>hugo</a></li><li><a class=article-tag href=/tags/blog/>blog</a></li><li><a class=article-tag href=/tags/quick-tips/>Quick Tips</a></li></ul></footer></article></section><footer id=pageFooter class=pageWrap><p>&copy; 2020 <span itemprop=author>Stuart Blackler</span>. Last Updated: <time itemprop=datecreated class=article-header-time pubdate=pubdate datetime=2016-12-29T20:25:58>2016-12-29 20:25:58 +0000 UTC</time>. <a id=pageFooter-scroll-link href=#>Scroll To Top</a>.</p></footer></section><script src=/js/site-54e01995.js defer></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-88036425-1','auto');ga('send','pageview');</script><script src=/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad();</script></body></html>

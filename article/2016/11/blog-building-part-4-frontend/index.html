@@ -1,68 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Blog Building - Part 4 - Frontend - Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/article/2016/11/blog-building-part-4-frontend/">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <meta name="description" content="Setting up a frontend pipeline powered by yarn &amp; gulp.">
-    
-    
-    <meta property="og:title" content="Blog Building - Part 4 - Frontend - Stuart Blackler&#39;s Blog" />
-<meta property="og:type" content="website" />
-
-<meta property="og:description" content="Setting up a frontend pipeline powered by yarn &amp; gulp.">
-
-<meta property="og:url" content="https://im5tu.io/article/2016/11/blog-building-part-4-frontend/" />
-<meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
-<meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@im5tu" />
-
-<style>body,html{height:100%;color:#303030;font-family:"Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media (prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media (prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style>
-<link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Blog" /></head>
-<body>
-<section class="pageContainer">
-    <header id="pageHeader">
-    <section id="pageHeader-about" class="pageWrap" itemscope itemtype="http://schema.org/person">
-        <section id="pageHeader-about-title">
-            <h1 itemprop="name"><a href="/" title="Stuart Blackler">@im5tu</a> / <a href="https://im5tu.io/article/2016/11/blog-building-part-4-frontend/">Blog Building - Part 4 - Frontend</a></h1>
-        </section>
-    </section>
-</header>
-    <section class="pageContainer-content pageWrap">
-        <article class="article" itemscope itemtype="http://schema.org/blog">
-    <section class="article-content" itemprop="text"><p>So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.</p>
-<h2 id="yarn">Yarn</h2>
-<p>Yarn is a frontend package manager. It replaces the traditional workflow of npm whilst remaining compatible with the npm registry. This means that we can get all of the speed and security improvements whilst having all the packages that are currently available on the npm registry.</p>
-<h3 id="installing-nodejs">Installing node.js</h3>
-<p>Unfortunately, it still runs on node, so we need to get that setup first. Head to <a href="">the node website</a> and install the correct version for your environment. You can verify node is setup correctly post-installation by running the following command:</p>
-<pre><code class="language-powershell">C:\&gt;node --version
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Blog Building - Part 4 - Frontend - Stuart Blackler's Blog</title><link rel=canonical href=https://im5tu.io/article/2016/11/blog-building-part-4-frontend/><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><meta name=description content="Setting up a frontend pipeline powered by yarn & gulp."><meta property="og:title" content="Blog Building - Part 4 - Frontend - Stuart Blackler's Blog"><meta property="og:type" content="website"><meta property="og:description" content="Setting up a frontend pipeline powered by yarn & gulp."><meta property="og:url" content="https://im5tu.io/article/2016/11/blog-building-part-4-frontend/"><meta property="og:image" content="https://im5tu.io/img/profile.jpg"><meta property="og:site_name" content="Stuart Blackler's Blog"><meta name=twitter:card content="summary"><meta name=twitter:site content="@im5tu"><style>body,html{height:100%;color:#303030;font-family:noto sans,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.warning{margin:0 auto;border:1px solid #ff9500;color:#ff9500;background-color:#fff;text-align:center}.series{font-style:italic}.series p{margin-bottom:0}.series ol{margin:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media(prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media(prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style><link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel=stylesheet><link href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css rel=stylesheet><link href=/article/index.xml rel=alternate type=application/rss+xml title="Stuart Blackler's Blog"></head><body><section class=pageContainer><header id=pageHeader><section id=pageHeader-about class=pageWrap itemscope itemtype=http://schema.org/person><section id=pageHeader-about-title><h1 itemprop=name><a href=/ title="Stuart Blackler">@im5tu</a> / <a href=https://im5tu.io/article/2016/11/blog-building-part-4-frontend/>Blog Building - Part 4 - Frontend</a></h1></section></section></header><section class="pageContainer-content pageWrap"><article class=article itemscope itemtype=http://schema.org/blog><section class=article-content itemprop=text><p>So far we have built a very basic site and got a basic understanding of how to configure and override the theme. Next up we are going to configure our frontend workflow using yarn and gulp.</p><h2 id=yarn>Yarn</h2><p>Yarn is a frontend package manager. It replaces the traditional workflow of npm whilst remaining compatible with the npm registry. This means that we can get all of the speed and security improvements whilst having all the packages that are currently available on the npm registry.</p><h3 id=installing-nodejs>Installing node.js</h3><p>Unfortunately, it still runs on node, so we need to get that setup first. Head to <a href>the node website</a> and install the correct version for your environment. You can verify node is setup correctly post-installation by running the following command:</p><pre><code class=language-powershell>C:\&gt;node --version
 v7.1.0
-</code></pre>
-<h3 id="installing-yarn">Installing yarn</h3>
-<p>Once node is setup, we can install yarn:</p>
-<pre><code class="language-powershell">C:\&gt;npm install yarn -g
-</code></pre>
-<p>This will install yarn so that it is available for all projects, not just our new blog. Once the installation is complete, we can verify yarn is installed by running the following command:</p>
-<pre><code class="language-powershell">C:\&gt;yarn --version
+</code></pre><h3 id=installing-yarn>Installing yarn</h3><p>Once node is setup, we can install yarn:</p><pre><code class=language-powershell>C:\&gt;npm install yarn -g
+</code></pre><p>This will install yarn so that it is available for all projects, not just our new blog. Once the installation is complete, we can verify yarn is installed by running the following command:</p><pre><code class=language-powershell>C:\&gt;yarn --version
 0.17.6
-</code></pre>
-<h2 id="yarning-our-project">Yarn'ing our project</h2>
-<p>Before we begin installing packages inside of our project, I am going to add a <code>.gitignore</code> file as we will generate a lot of files that we don't want inside of our git respository. Here is what I added to start off with:</p>
-<pre><code class="language-powershell">node_modules/
+</code></pre><h2 id=yarning-our-project>Yarn'ing our project</h2><p>Before we begin installing packages inside of our project, I am going to add a <code>.gitignore</code> file as we will generate a lot of files that we don't want inside of our git respository. Here is what I added to start off with:</p><pre><code class=language-powershell>node_modules/
 data/**/hash.*
 static/css/*.css
 static/js/*.js
 public/
-</code></pre>
-<p>Now we can setup our project to use yarn:</p>
-<pre><code>E:\im5tu-hugo&gt;yarn init
-</code></pre>
-<p>This will ask you a series of questions such as:</p>
-<pre><code class="language-powershell">E:\im5tu-hugo&gt;yarn init
+</code></pre><p>Now we can setup our project to use yarn:</p><pre><code>E:\im5tu-hugo&gt;yarn init
+</code></pre><p>This will ask you a series of questions such as:</p><pre><code class=language-powershell>E:\im5tu-hugo&gt;yarn init
 yarn init v0.17.6
 question name (im5tu-hugo): im5tu
 question version (1.0.0): 0.0.1
@@ -73,20 +20,11 @@ question author (Stuart Blackler (@im5tu) &lt;im5tu@users.noreply.github.com&gt;
 question license (MIT):
 success Saved package.json
 Done in 42.93s.
-</code></pre>
-<p>Once this is completed, we will have a <code>package.json</code> file in our root and we can start adding the dependencies that we need. If you don't specify an answer, the default will be taken for you (the default is shown in brackets).</p>
-<h2 id="gulp">gulp</h2>
-<p>At this point, I assume that you are fairly familiar with <code>gulp</code> or at least know what it is. We are going to setup gulp and our initial set of dependencies to do things like minification of files etc. We will add these files as development dependencies:</p>
-<pre><code class="language-powershell">yarn add gulp -D
+</code></pre><p>Once this is completed, we will have a <code>package.json</code> file in our root and we can start adding the dependencies that we need. If you don't specify an answer, the default will be taken for you (the default is shown in brackets).</p><h2 id=gulp>gulp</h2><p>At this point, I assume that you are fairly familiar with <code>gulp</code> or at least know what it is. We are going to setup gulp and our initial set of dependencies to do things like minification of files etc. We will add these files as development dependencies:</p><pre><code class=language-powershell>yarn add gulp -D
 yarn add gulp-sass -D
 yarn add gulp-autoprefixer -D
-</code></pre>
-<p>Now we need to tell gulp what to do by adding a <code>gulpfile.js</code>. Create this in the website root:</p>
-<pre><code class="language-powershell">E:\im5tu-hugo&gt;echo &quot;&quot; &gt; gulpfile.js
-</code></pre>
-<p>As you may remember from my previous post, anything that gets placed inside of static folder will get copied across to the main website. As I have chosen to use a css preprocessor (scss), we only want the output from the preprocessor to be in the static folder. Inside of the <code>.gitignore</code> file, I have already put the main css/js files as these should be generated and not a part of main source code.</p>
-<p>Now we can configure <code>gulp</code> to watch our source directory, process the files and copy the output into the static folder. At the very top of the file we need to require our dependencies, followed by a few configuration variables:</p>
-<pre><code class="language-js">var gulp         = require(&quot;gulp&quot;),
+</code></pre><p>Now we need to tell gulp what to do by adding a <code>gulpfile.js</code>. Create this in the website root:</p><pre><code class=language-powershell>E:\im5tu-hugo&gt;echo &quot;&quot; &gt; gulpfile.js
+</code></pre><p>As you may remember from my previous post, anything that gets placed inside of static folder will get copied across to the main website. As I have chosen to use a css preprocessor (scss), we only want the output from the preprocessor to be in the static folder. Inside of the <code>.gitignore</code> file, I have already put the main css/js files as these should be generated and not a part of main source code.</p><p>Now we can configure <code>gulp</code> to watch our source directory, process the files and copy the output into the static folder. At the very top of the file we need to require our dependencies, followed by a few configuration variables:</p><pre><code class=language-js>var gulp         = require(&quot;gulp&quot;),
     sass         = require(&quot;gulp-sass&quot;),
     autoprefixer = require(&quot;gulp-autoprefixer&quot;),
     srcRootDir   = &quot;src/&quot;,
@@ -97,18 +35,14 @@ yarn add gulp-autoprefixer -D
     srcJs        = srcJsDir + &quot;**/*.js&quot;,
     destCssDir   = destRootDir + &quot;css&quot;,
     destJsDir    = destRootDir + &quot;js&quot;;
-</code></pre>
-<p>I have choosen to have a folder structure like the following:</p>
-<pre><code class="language-powershell">/root
+</code></pre><p>I have choosen to have a folder structure like the following:</p><pre><code class=language-powershell>/root
     /static
         /css
         /js
     /src
         /css
         /js
-</code></pre>
-<p>Next inside of our gulp file, we can configure two tasks. One to process any javascript files that we have and another for any scss files that we have:</p>
-<pre><code class="language-js">gulp.task(&quot;js&quot;, function() {
+</code></pre><p>Next inside of our gulp file, we can configure two tasks. One to process any javascript files that we have and another for any scss files that we have:</p><pre><code class=language-js>gulp.task(&quot;js&quot;, function() {
     gulp
         .src(srcJs)
         .pipe(gulp.dest(destJsDir))
@@ -125,77 +59,45 @@ gulp.task(&quot;css&quot;, function() {
         }))
         .pipe(gulp.dest(destCssDir))
 });
-</code></pre>
-<p>Lastly, we need to setup a watch task so that as files are changed they are copied to the static folder. When we combine this with hugo's watch ability we have a dynamically changing site that reloads with the changes as we hit save. We also want to setup a default task, so that we can just run <code>gulp</code> from inside of the root directory on the command line. The watch/default tasks look like:</p>
-<pre><code class="language-js">gulp.task(&quot;watch&quot;, [&quot;css&quot;, &quot;js&quot;], function() {
+</code></pre><p>Lastly, we need to setup a watch task so that as files are changed they are copied to the static folder. When we combine this with hugo's watch ability we have a dynamically changing site that reloads with the changes as we hit save. We also want to setup a default task, so that we can just run <code>gulp</code> from inside of the root directory on the command line. The watch/default tasks look like:</p><pre><code class=language-js>gulp.task(&quot;watch&quot;, [&quot;css&quot;, &quot;js&quot;], function() {
     gulp.watch([srcCss, srcJs], [&quot;css&quot;, &quot;js&quot;]);
 });
 
 gulp.task(&quot;default&quot;, [&quot;watch&quot;]);
-</code></pre>
-<p>In terms of our gulpfile we are all setup and ready to go. At the time of writing there are problems running gulp directly from the command line. In order to work around this, I needed to add the following to the package.json file in our root directory:</p>
-<pre><code class="language-js">&quot;scripts&quot;: {
+</code></pre><p>In terms of our gulpfile we are all setup and ready to go. At the time of writing there are problems running gulp directly from the command line. In order to work around this, I needed to add the following to the package.json file in our root directory:</p><pre><code class=language-js>&quot;scripts&quot;: {
     &quot;gulp&quot;: &quot;gulp&quot;
 }
-</code></pre>
-<p>And then I can run gulp as follows:</p>
-<pre><code class="language-cmd">yarn gulp
-</code></pre>
-<h2 id="setting-up-our-site-for-cssjs">Setting up our site for css/js</h2>
-<p>Now that we have our frontend pipeline setup and both the watch commands running, we can begin to change our site to include the files that we want. If you are using the bones theme, you need to create the following two files:</p>
-<pre><code class="language-powershell">/root
+</code></pre><p>And then I can run gulp as follows:</p><pre><code class=language-cmd>yarn gulp
+</code></pre><h2 id=setting-up-our-site-for-cssjs>Setting up our site for css/js</h2><p>Now that we have our frontend pipeline setup and both the watch commands running, we can begin to change our site to include the files that we want. If you are using the bones theme, you need to create the following two files:</p><pre><code class=language-powershell>/root
     /layouts
         /partials
             /body
                 scripts.html
             /header
                 styles.html
-</code></pre>
-<p>Inside of the scripts file add:</p>
-<pre><code class="language-html">&lt;script src=&quot;/js/site.js&quot; async&gt;&lt;/script&gt;
-</code></pre>
-<p>Inside of the styles file add:</p>
-<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;/css/site.css&quot; /&gt;
-</code></pre>
-<p>Now you should be able to add the file <code>/root/src/css/site.scss</code> with the following content:</p>
-<pre><code class="language-css">body { background: #ababab }
-</code></pre>
-<p>All being well you should have both files renderd as part of your output.</p>
-<h2 id="cache-busting">Cache busting</h2>
-<h3 id="creating-the-hash">Creating the hash</h3>
-<p>For our cache busting mechanism, we are going to append the hash of the file to the file. As a new file will be created everytime that our file changes, we will need to clear out the destination css folder. To start, we need to add two more packages, using yarn:</p>
-<pre><code class="language-powershell">yarn add gulp-hash -D
+</code></pre><p>Inside of the scripts file add:</p><pre><code class=language-html>&lt;script src=&quot;/js/site.js&quot; async&gt;&lt;/script&gt;
+</code></pre><p>Inside of the styles file add:</p><pre><code class=language-html>&lt;link rel=&quot;stylesheet&quot; href=&quot;/css/site.css&quot; /&gt;
+</code></pre><p>Now you should be able to add the file <code>/root/src/css/site.scss</code> with the following content:</p><pre><code class=language-css>body { background: #ababab }
+</code></pre><p>All being well you should have both files renderd as part of your output.</p><h2 id=cache-busting>Cache busting</h2><h3 id=creating-the-hash>Creating the hash</h3><p>For our cache busting mechanism, we are going to append the hash of the file to the file. As a new file will be created everytime that our file changes, we will need to clear out the destination css folder. To start, we need to add two more packages, using yarn:</p><pre><code class=language-powershell>yarn add gulp-hash -D
 yarn add del -D
-</code></pre>
-<p>And then add them to our gulpfile:</p>
-<pre><code class="language-js">var gulp         = require(&quot;gulp&quot;),
+</code></pre><p>And then add them to our gulpfile:</p><pre><code class=language-js>var gulp         = require(&quot;gulp&quot;),
     sass         = require(&quot;gulp-sass&quot;),
     autoprefixer = require(&quot;gulp-autoprefixer&quot;),
     hash         = require(&quot;gulp-hash&quot;),
     del          = require(&quot;del&quot;),
     ...
-</code></pre>
-<p>Now lets create a task to clean out some directories that we are using:</p>
-<pre><code class="language-js">gulp.task(&quot;clean&quot;, function() {
+</code></pre><p>Now lets create a task to clean out some directories that we are using:</p><pre><code class=language-js>gulp.task(&quot;clean&quot;, function() {
     del([destCssDir, destJsDir, &quot;data&quot;]);
 });
-</code></pre>
-<p>Now we can easily clean the directories that we need to at will. This could come in handy at a later date. Next we can change our task definitions to clean up their respective directories:</p>
-<pre><code class="language-js">gulp.task(&quot;js&quot;, function() {
+</code></pre><p>Now we can easily clean the directories that we need to at will. This could come in handy at a later date. Next we can change our task definitions to clean up their respective directories:</p><pre><code class=language-js>gulp.task(&quot;js&quot;, function() {
     del.sync([destJsDir]);
 ...
 gulp.task(&quot;css&quot;, function() {
     del.sync([destCssDir]);
-</code></pre>
-<p>Finally, we can add the hash of the file prior to writing it to its destination in each task:</p>
-<pre><code class="language-js">...
+</code></pre><p>Finally, we can add the hash of the file prior to writing it to its destination in each task:</p><pre><code class=language-js>...
 .pipe(hash())
 .pipe(gulp.dest(...)); // change ... to the relevant destination eg: destCssDir
-</code></pre>
-<h3 id="using-the-hashed-file">Using the hashed file</h3>
-<p>In hugo, the <code>/root/data</code> directory is used to store any data that we might need. Anything placed in here is accessible through the variable <code>.Site.Data</code>. So using some more gulp magic, we can store the hahes of the files in here and update our template accordingly.</p>
-<p><code>gulp-hash</code> has a built in manifest method that will generate a json file containing the hash for us. We can change our gulp tasks to leverage this functionality and place it inside of the <code>/root/data</code> directory:</p>
-<pre><code class="language-js">// js gulp task
+</code></pre><h3 id=using-the-hashed-file>Using the hashed file</h3><p>In hugo, the <code>/root/data</code> directory is used to store any data that we might need. Anything placed in here is accessible through the variable <code>.Site.Data</code>. So using some more gulp magic, we can store the hahes of the files in here and update our template accordingly.</p><p><code>gulp-hash</code> has a built in manifest method that will generate a json file containing the hash for us. We can change our gulp tasks to leverage this functionality and place it inside of the <code>/root/data</code> directory:</p><pre><code class=language-js>// js gulp task
 ...
 .pipe(gulp.dest(destJsDir))
 .pipe(hash.manifest(&quot;hash.json&quot;))
@@ -206,47 +108,9 @@ gulp.task(&quot;css&quot;, function() {
 .pipe(gulp.dest(destCssDir))
 .pipe(hash.manifest(&quot;hash.json&quot;))
 .pipe(gulp.dest(&quot;data/&quot;));
-</code></pre>
-<p>Restart our gulp task and now you should see the hash files being generated. If we open up the hash files, you should see something along the lines of:</p>
-<pre><code class="language-css">{&quot;site.css&quot;:&quot;site-da39a3ee.css&quot;,&quot;site.js&quot;:&quot;site-da39a3ee.js&quot;}
-</code></pre>
-<p>All that's left to do is to use these hashes inside of our layouts. Luckily, GO has a built in function called <code>index</code> which accepts a map and an index and returns the value of the map with the given index. So in our templates, we simply need to ask for the right files. Let's first change our stylesheet in <code>/layouts/partials/styles.html</code> to:</p>
-<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;/css/{{ index .Site.Data.hash &quot;site.css&quot; }}&quot; /&gt;
-</code></pre>
-<p>Finally, let's change our script template to do the same (<code>/layouts/partials/body/scripts</code>):</p>
-<pre><code class="language-html">&lt;script src=&quot;/js/{{ index .Site.Data.hash &quot;site.js&quot;}}&quot; async&gt;&lt;/script&gt;
-</code></pre>
-<p>Now we have a fully functional pipeline for frontend work. To start up the pipeline, you need to run two commands from different command line windows:</p>
-<pre><code class="language-powershell">yarn gulp
+</code></pre><p>Restart our gulp task and now you should see the hash files being generated. If we open up the hash files, you should see something along the lines of:</p><pre><code class=language-css>{&quot;site.css&quot;:&quot;site-da39a3ee.css&quot;,&quot;site.js&quot;:&quot;site-da39a3ee.js&quot;}
+</code></pre><p>All that's left to do is to use these hashes inside of our layouts. Luckily, GO has a built in function called <code>index</code> which accepts a map and an index and returns the value of the map with the given index. So in our templates, we simply need to ask for the right files. Let's first change our stylesheet in <code>/layouts/partials/styles.html</code> to:</p><pre><code class=language-html>&lt;link rel=&quot;stylesheet&quot; href=&quot;/css/{{ index .Site.Data.hash &quot;site.css&quot; }}&quot; /&gt;
+</code></pre><p>Finally, let's change our script template to do the same (<code>/layouts/partials/body/scripts</code>):</p><pre><code class=language-html>&lt;script src=&quot;/js/{{ index .Site.Data.hash &quot;site.js&quot;}}&quot; async&gt;&lt;/script&gt;
+</code></pre><p>Now we have a fully functional pipeline for frontend work. To start up the pipeline, you need to run two commands from different command line windows:</p><pre><code class=language-powershell>yarn gulp
 hugo server -D
-</code></pre>
-<p>And then you can make changes to your files at will. Happy FED'ing.</p></section>
-    <footer class="article-footer">
-        <hr />
-Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/hugo/">hugo</a></li><li><a class="article-tag" href="/tags/blog/">blog</a></li><li><a class="article-tag" href="/tags/js/">js</a></li><li><a class="article-tag" href="/tags/yarn/">yarn</a></li><li><a class="article-tag" href="/tags/node/">node</a></li>
-</ul>
-</footer>
-</article>
-    </section>
-    <footer id="pageFooter" class="pageWrap">
-    <p>&copy; 2020 <span itemprop="author">Stuart Blackler</span>. Last Updated: <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2016-11-19T08:01:38">2016-11-19 08:01:38 &#43;0000 UTC</time>. <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>.</p>
-</footer>
-</section>
-<script src="/js/site-54e01995.js" defer></script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-88036425-1', 'auto');
-  ga('send', 'pageview');
-</script>
-
-
-<script src="/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-</body>
-</html>
+</code></pre><p>And then you can make changes to your files at will. Happy FED'ing.</p></section><footer class=article-footer><hr>Tags:<ul class=article-tags><li><a class=article-tag href=/tags/hugo/>hugo</a></li><li><a class=article-tag href=/tags/blog/>blog</a></li><li><a class=article-tag href=/tags/js/>js</a></li><li><a class=article-tag href=/tags/yarn/>yarn</a></li><li><a class=article-tag href=/tags/node/>node</a></li></ul></footer></article></section><footer id=pageFooter class=pageWrap><p>&copy; 2020 <span itemprop=author>Stuart Blackler</span>. Last Updated: <time itemprop=datecreated class=article-header-time pubdate=pubdate datetime=2016-11-19T08:01:38>2016-11-19 08:01:38 +0000 UTC</time>. <a id=pageFooter-scroll-link href=#>Scroll To Top</a>.</p></footer></section><script src=/js/site-54e01995.js defer></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-88036425-1','auto');ga('send','pageview');</script><script src=/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad();</script></body></html>

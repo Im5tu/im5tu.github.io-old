@@ -1,63 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Using IDisposible correctly - Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/article/2013/05/using-idisposible-correctly/">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <meta name="description" content="A demonstration of how to use IDisposable correctly.">
-    
-    
-    <meta property="og:title" content="Using IDisposible correctly - Stuart Blackler&#39;s Blog" />
-<meta property="og:type" content="website" />
-
-<meta property="og:description" content="A demonstration of how to use IDisposable correctly.">
-
-<meta property="og:url" content="https://im5tu.io/article/2013/05/using-idisposible-correctly/" />
-<meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
-<meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@im5tu" />
-
-<style>body,html{height:100%;color:#303030;font-family:"Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media (prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media (prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style>
-<link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Blog" /></head>
-<body>
-<section class="pageContainer">
-    <header id="pageHeader">
-    <section id="pageHeader-about" class="pageWrap" itemscope itemtype="http://schema.org/person">
-        <section id="pageHeader-about-title">
-            <h1 itemprop="name"><a href="/" title="Stuart Blackler">@im5tu</a> / <a href="https://im5tu.io/article/2013/05/using-idisposible-correctly/">Using IDisposible correctly</a></h1>
-        </section>
-    </section>
-</header>
-    <section class="pageContainer-content pageWrap">
-        <article class="article" itemscope itemtype="http://schema.org/blog">
-    <section class="article-content" itemprop="text"><p>In this article, I am going to show you how to use the <code>IDisposable</code> interface correctly in your code. When I read others code, it is easy to pick up on subtle bugs. We need to begin to train ourselves to see the bugs and we do this by understanding what we are using. Before we begin, we need to make sure that we understand a core piece of computer science theory: Destructors.</p>
-<h2 id="destructors">Destructors</h2>
-<p>Generally speaking, destructors are the computers way of releasing resources from an application. In environments that contain a virtual machine with a garbage collection facility, the destructor is automatically called. In these environments however, the destructor is also called a <code>Finalizer</code>. Although these environments are <!-- raw HTML omitted -->good<!-- raw HTML omitted --> excellent at managing memory for us, we cannot guarantee when the <code>Finalizer</code> is going to be called.</p>
-<h2 id="enter-dispose">Enter Dispose</h2>
-<p>The purpose of the <code>Dispose</code> is to guarantee when we are going to release resources. This might be at the end of a <code>foreach</code> loop or at the end of a database connection. Either way, we have control of when we can release the resources. There are two types of resources that can be released: Managed and Unmanaged.</p>
-<p>Managed resources are typically objects that are run and controlled by the Common Language Runtime (CLR). Managed code supplies the metadata necessary for the CLR to provide services such as memory management and cross-language integration <a href="http://stackoverflow.com/questions/334326/what-is-managed-unmanaged-code-in-c">(Source)</a>. Unmanaged resources are those outside the CLR such as Win32 API's. These can be called from within managed code allowing some serious memory leaks if we are not careful.</p>
-<p>The .Net libraries have some useful interfaces in them, one of them being the <code>IDisposable</code> interface. This interface has just one method called <code>Dispose</code> (the name seems standard from what I have seen). Here is the implementation of the interface:</p>
-<pre><code class="language-csharp">public interface IDisposable
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Using IDisposible correctly - Stuart Blackler's Blog</title><link rel=canonical href=https://im5tu.io/article/2013/05/using-idisposible-correctly/><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><meta name=description content="A demonstration of how to use IDisposable correctly."><meta property="og:title" content="Using IDisposible correctly - Stuart Blackler's Blog"><meta property="og:type" content="website"><meta property="og:description" content="A demonstration of how to use IDisposable correctly."><meta property="og:url" content="https://im5tu.io/article/2013/05/using-idisposible-correctly/"><meta property="og:image" content="https://im5tu.io/img/profile.jpg"><meta property="og:site_name" content="Stuart Blackler's Blog"><meta name=twitter:card content="summary"><meta name=twitter:site content="@im5tu"><style>body,html{height:100%;color:#303030;font-family:noto sans,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.warning{margin:0 auto;border:1px solid #ff9500;color:#ff9500;background-color:#fff;text-align:center}.series{font-style:italic}.series p{margin-bottom:0}.series ol{margin:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media(prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media(prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style><link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel=stylesheet><link href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css rel=stylesheet><link href=/article/index.xml rel=alternate type=application/rss+xml title="Stuart Blackler's Blog"></head><body><section class=pageContainer><header id=pageHeader><section id=pageHeader-about class=pageWrap itemscope itemtype=http://schema.org/person><section id=pageHeader-about-title><h1 itemprop=name><a href=/ title="Stuart Blackler">@im5tu</a> / <a href=https://im5tu.io/article/2013/05/using-idisposible-correctly/>Using IDisposible correctly</a></h1></section></section></header><section class="pageContainer-content pageWrap"><article class=article itemscope itemtype=http://schema.org/blog><section class=article-content itemprop=text><p>In this article, I am going to show you how to use the <code>IDisposable</code> interface correctly in your code. When I read others code, it is easy to pick up on subtle bugs. We need to begin to train ourselves to see the bugs and we do this by understanding what we are using. Before we begin, we need to make sure that we understand a core piece of computer science theory: Destructors.</p><h2 id=destructors>Destructors</h2><p>Generally speaking, destructors are the computers way of releasing resources from an application. In environments that contain a virtual machine with a garbage collection facility, the destructor is automatically called. In these environments however, the destructor is also called a <code>Finalizer</code>. Although these environments are good excellent at managing memory for us, we cannot guarantee when the <code>Finalizer</code> is going to be called.</p><h2 id=enter-dispose>Enter Dispose</h2><p>The purpose of the <code>Dispose</code> is to guarantee when we are going to release resources. This might be at the end of a <code>foreach</code> loop or at the end of a database connection. Either way, we have control of when we can release the resources. There are two types of resources that can be released: Managed and Unmanaged.</p><p>Managed resources are typically objects that are run and controlled by the Common Language Runtime (CLR). Managed code supplies the metadata necessary for the CLR to provide services such as memory management and cross-language integration <a href=http://stackoverflow.com/questions/334326/what-is-managed-unmanaged-code-in-c>(Source)</a>. Unmanaged resources are those outside the CLR such as Win32 API's. These can be called from within managed code allowing some serious memory leaks if we are not careful.</p><p>The .Net libraries have some useful interfaces in them, one of them being the <code>IDisposable</code> interface. This interface has just one method called <code>Dispose</code> (the name seems standard from what I have seen). Here is the implementation of the interface:</p><pre><code class=language-csharp>public interface IDisposable
 {
     void Dispose()
 }
-</code></pre>
-<p>When we first implement the interface on our class, we are given the following code:</p>
-<pre><code class="language-csharp">public sealed class MyClass : IDisposable
+</code></pre><p>When we first implement the interface on our class, we are given the following code:</p><pre><code class=language-csharp>public sealed class MyClass : IDisposable
 {
     public void Dispose()
     {
         /* Release resources here */
     }
 }
-</code></pre>
-<p>While this implementation is fine if you don't mind waiting for the garbage collector to come and release the resources. What if your class has a large object inside (say ~250mb). Do you really want to wait for the garbage collector? Probably not.</p>
-<p>In order to fix our implementation, we need to do two things. Firstly, we need to implement a <code>Finalizer</code> and then implement an overload to the original <code>Dispose</code> method. The reason why we implement a <code>Finalizer</code> is because we want to safe-guard ourselves if we forget to call the <code>Dispose</code> method. For those that do not know what a <code>Finalizer</code> looks like, here it is:</p>
-<pre><code class="language-csharp">public sealed class MyClass : IDisposable
+</code></pre><p>While this implementation is fine if you don't mind waiting for the garbage collector to come and release the resources. What if your class has a large object inside (say ~250mb). Do you really want to wait for the garbage collector? Probably not.</p><p>In order to fix our implementation, we need to do two things. Firstly, we need to implement a <code>Finalizer</code> and then implement an overload to the original <code>Dispose</code> method. The reason why we implement a <code>Finalizer</code> is because we want to safe-guard ourselves if we forget to call the <code>Dispose</code> method. For those that do not know what a <code>Finalizer</code> looks like, here it is:</p><pre><code class=language-csharp>public sealed class MyClass : IDisposable
 {
     public MyClass()
     {
@@ -74,18 +26,12 @@
         /* Release resources here */
     }
 }
-</code></pre>
-<p>In order to safe-guard ourselves as I just mentioned, our <code>Finalizer</code> needs to call our <code>Dispose</code> method like so:</p>
-<pre><code class="language-csharp">public ~MyClass()
+</code></pre><p>In order to safe-guard ourselves as I just mentioned, our <code>Finalizer</code> needs to call our <code>Dispose</code> method like so:</p><pre><code class=language-csharp>public ~MyClass()
 {
     /* Destructor */
     Dispose();
 }
-</code></pre>
-<p>You may have realised by now that we could, potentially, call the <code>Dispose</code> twice. The user will call it once followed by the CLR calling it for us in case we forget (through the <code>Finalizer</code>). This gives us the requirement for the overload of the <code>Dispose</code> method I mentioned earlier. If <strong>we</strong> call the <code>Dispose</code> method then it is <em>safe</em> for us to release managed resources. However, if the <strong>CLR</strong> calls the <code>Dispose</code> method then we cannot safely release managed resources because we do not know their current state.</p>
-<p><strong>Note:</strong> The CLR runs on a background thread, which we have no control over. Therefore, we cannot know any objects state on that thread.</p>
-<p>Now that we have identified that the <code>Dispose</code> method can be called from two places, we can implement this into our code:</p>
-<pre><code class="language-csharp">public sealed class MyClass : IDisposable
+</code></pre><p>You may have realised by now that we could, potentially, call the <code>Dispose</code> twice. The user will call it once followed by the CLR calling it for us in case we forget (through the <code>Finalizer</code>). This gives us the requirement for the overload of the <code>Dispose</code> method I mentioned earlier. If <strong>we</strong> call the <code>Dispose</code> method then it is <em>safe</em> for us to release managed resources. However, if the <strong>CLR</strong> calls the <code>Dispose</code> method then we cannot safely release managed resources because we do not know their current state.</p><p><strong>Note:</strong> The CLR runs on a background thread, which we have no control over. Therefore, we cannot know any objects state on that thread.</p><p>Now that we have identified that the <code>Dispose</code> method can be called from two places, we can implement this into our code:</p><pre><code class=language-csharp>public sealed class MyClass : IDisposable
 {
     public MyClass()
     {
@@ -114,27 +60,20 @@
         }
     }
 }
-</code></pre>
-<p>Even though we have told the CLR that we are not to release managed resources twice, we will still release unmanaged resources twice. This is not only wasteful, but you could end up with an exception here which is something that <strong>SHOULD NEVER HAPPEN</strong>. Luckily for us, the CLR has a neat way for us to tell it not to call the <code>Finalizer</code> because we have already released all the resources necessary. Here is the one line magic fix:</p>
-<pre><code class="language-csharp">public void Dispose()
+</code></pre><p>Even though we have told the CLR that we are not to release managed resources twice, we will still release unmanaged resources twice. This is not only wasteful, but you could end up with an exception here which is something that <strong>SHOULD NEVER HAPPEN</strong>. Luckily for us, the CLR has a neat way for us to tell it not to call the <code>Finalizer</code> because we have already released all the resources necessary. Here is the one line magic fix:</p><pre><code class=language-csharp>public void Dispose()
 {
     /* The interface implementation */
     Dispose(true); // WE are calling Dispose, so its a safe call
     GC.SuppressFinalize(this); // WE have called dispose, there is no need to call it again Mr. GC.
 }
-</code></pre>
-<h2 id="best-practise">Best Practise</h2>
-<p>Now that we have our code fixed, without any issues or bugs, it's time to know a best practise. When an object implements the <code>IDisposable</code> interface, we have the opportunity to use the <code>using</code> statement. The idea of the <code>using</code> statement is that once you have finished with the object, the CLR will call the <code>Dispose</code> method for you. Note I said <code>Dispose</code> not the <code>Finalizer</code>. The <code>using</code> statement is really easy to use:</p>
-<pre><code class="language-csharp">static void Main(string[] args)
+</code></pre><h2 id=best-practise>Best Practise</h2><p>Now that we have our code fixed, without any issues or bugs, it's time to know a best practise. When an object implements the <code>IDisposable</code> interface, we have the opportunity to use the <code>using</code> statement. The idea of the <code>using</code> statement is that once you have finished with the object, the CLR will call the <code>Dispose</code> method for you. Note I said <code>Dispose</code> not the <code>Finalizer</code>. The <code>using</code> statement is really easy to use:</p><pre><code class=language-csharp>static void Main(string[] args)
 {
     using (var myClass = new MyClass())
     {
         /* Do stuff here */
     }
 }
-</code></pre>
-<p>When the compiler sees this code, it actually expands it to this:</p>
-<pre><code class="language-csharp">static void Main(string[] args)
+</code></pre><p>When the compiler sees this code, it actually expands it to this:</p><pre><code class=language-csharp>static void Main(string[] args)
 {
     var myClass = new MyClass();
     try
@@ -146,34 +85,4 @@
         myClass.Dispose();
     }
 }
-</code></pre>
-<p>So there it is. Hopefully now you can implement <code>IDisposable</code> correctly according to your needs.</p></section>
-    <footer class="article-footer">
-        <hr />
-Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/csharp/">csharp</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li>
-</ul>
-</footer>
-</article>
-    </section>
-    <footer id="pageFooter" class="pageWrap">
-    <p>&copy; 2020 <span itemprop="author">Stuart Blackler</span>. Last Updated: <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2013-05-06T18:09:25">2013-05-06 18:09:25 &#43;0000 UTC</time>. <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>.</p>
-</footer>
-</section>
-<script src="/js/site-54e01995.js" defer></script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-88036425-1', 'auto');
-  ga('send', 'pageview');
-</script>
-
-
-<script src="/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-</body>
-</html>
+</code></pre><p>So there it is. Hopefully now you can implement <code>IDisposable</code> correctly according to your needs.</p></section><footer class=article-footer><hr>Tags:<ul class=article-tags><li><a class=article-tag href=/tags/csharp/>csharp</a></li><li><a class=article-tag href=/tags/dotnet/>dotnet</a></li></ul></footer></article></section><footer id=pageFooter class=pageWrap><p>&copy; 2020 <span itemprop=author>Stuart Blackler</span>. Last Updated: <time itemprop=datecreated class=article-header-time pubdate=pubdate datetime=2013-05-06T18:09:25>2013-05-06 18:09:25 +0000 UTC</time>. <a id=pageFooter-scroll-link href=#>Scroll To Top</a>.</p></footer></section><script src=/js/site-54e01995.js defer></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-88036425-1','auto');ga('send','pageview');</script><script src=/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad();</script></body></html>

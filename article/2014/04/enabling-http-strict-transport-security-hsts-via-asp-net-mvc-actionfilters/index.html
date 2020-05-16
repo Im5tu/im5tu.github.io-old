@@ -1,95 +1,41 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Enabling HTTP Strict Transport Security HSTS via ASP Net MVC ActionFilters - Stuart Blackler&#39;s Blog</title>
-    <link rel="canonical" href="https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/">
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <meta name="description" content="This post describes how to enable HSTS in ASP.Net MVC using an ActionFilter ">
-    
-    
-    <meta property="og:title" content="Enabling HTTP Strict Transport Security HSTS via ASP Net MVC ActionFilters - Stuart Blackler&#39;s Blog" />
-<meta property="og:type" content="website" />
-
-<meta property="og:description" content="This post describes how to enable HSTS in ASP.Net MVC using an ActionFilter ">
-
-<meta property="og:url" content="https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/" />
-<meta property="og:image" content="https://im5tu.io/img/profile.jpg" />
-<meta property="og:site_name" content="Stuart Blackler&#39;s Blog" />
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@im5tu" />
-
-<style>body,html{height:100%;color:#303030;font-family:"Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,"Helvetica Neue",Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media (prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media (prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style>
-<link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css" rel="stylesheet"><link href="/article/index.xml" rel="alternate" type="application/rss+xml" title="Stuart Blackler&#39;s Blog" /></head>
-<body>
-<section class="pageContainer">
-    <header id="pageHeader">
-    <section id="pageHeader-about" class="pageWrap" itemscope itemtype="http://schema.org/person">
-        <section id="pageHeader-about-title">
-            <h1 itemprop="name"><a href="/" title="Stuart Blackler">@im5tu</a> / <a href="https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/">Enabling HTTP Strict Transport Security HSTS via ASP Net MVC ActionFilters</a></h1>
-        </section>
-    </section>
-</header>
-    <section class="pageContainer-content pageWrap">
-        <article class="article" itemscope itemtype="http://schema.org/blog">
-    <section class="article-content" itemprop="text"><p>After reading <a href="http://www.troyhunt.com/">Troy Hunt's</a> free ebook on the <a href="http://www.troyhunt.com/2011/12/free-ebook-owasp-top-10-for-net.html">OWASP Top 10 for .Net Developers</a>, I discovered an additional mechanism to help developers secure their websites. That mechanism is HTTP Strict Transport Security.</p>
-<blockquote>
-<p>HTTP Strict Transport Security (HSTS) is an opt-in security enhancement that is specified by a web application through the use of a special response header. Once a supported browser receives this header that browser will prevent any communications from being sent over HTTP to the specified domain and will instead send all communications over HTTPS. It also prevents HTTPS click through prompts on browsers. The specification has been released and published end of 2012 as <a href="https://tools.ietf.org/html/rfc6797">RFC 6797</a>. <a href="https://www.owasp.org/index.php/HTTP_Strict_Transport_Security">Source</a></p>
-</blockquote>
-<p>There are three main categories of attacks that are addressed in this specification: Passive Network Attacks, Active Network Attacks and Web Site Development &amp; Deployment Bugs. These are present in <a href="https://tools.ietf.org/html/rfc6797">RFC 6797 - Section 2.3.1</a> but are re-produced here.</p>
-<h2 id="passive-network-attacks">Passive Network Attacks</h2>
-<blockquote>
-<p>When a user browses the web on a local wireless network (e.g., an
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>Enabling HTTP Strict Transport Security HSTS via ASP Net MVC ActionFilters - Stuart Blackler's Blog</title><link rel=canonical href=https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/><link rel="shortcut icon" href=/favicon.ico type=image/x-icon><meta name=description content="This post describes how to enable HSTS in ASP.Net MVC using an ActionFilter"><meta property="og:title" content="Enabling HTTP Strict Transport Security HSTS via ASP Net MVC ActionFilters - Stuart Blackler's Blog"><meta property="og:type" content="website"><meta property="og:description" content="This post describes how to enable HSTS in ASP.Net MVC using an ActionFilter"><meta property="og:url" content="https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/"><meta property="og:image" content="https://im5tu.io/img/profile.jpg"><meta property="og:site_name" content="Stuart Blackler's Blog"><meta name=twitter:card content="summary"><meta name=twitter:site content="@im5tu"><style>body,html{height:100%;color:#303030;font-family:noto sans,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto;line-height:1.8em}h1,h2,h3,h4,h5,h6{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}p{margin:1.5em 0}blockquote{border-left:5px solid #454545;background-color:#fafafa;padding:.5em 1.5em}blockquote,blockquote p{color:#494949}blockquote~blockquote{margin-top:0;margin-bottom:0}.warning{margin:0 auto;border:1px solid #ff9500;color:#ff9500;background-color:#fff;text-align:center}.series{font-style:italic}.series p{margin-bottom:0}.series ol{margin:0}.pageContainer{text-align:justify}.pageWrap{margin:0 auto;max-width:1400px}@media screen and (min-width:320px){.pageWrap{width:97%}}@media screen and (min-width:740px){.pageWrap{width:90%}}@media screen and (min-width:980px){.pageWrap{width:80%}}.pageWrap:after{content:"";display:table;clear:both}a{font-family:Comfortaa,helvetica neue,Helvetica,Arial,sans-serif;font-display:auto}a:link,a:visited{color:#149fd1}a:link{text-decoration:none}a:hover{color:#2db9eb;text-decoration:underline}#pageHeader-about{border-bottom:1px solid #eaeaea}#pageHeader-about-title a{font-size:1.2em}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#232323}#pageHeader-about-title a:first-child{font-size:1.1em;color:#149fd1;text-transform:none}.article-list a{color:#0a0a0a}.article-list a:hover{color:#2db9eb;text-decoration:underline}.article-content li code,.article-content p code{color:#149fd1;background-color:rgba(27,31,35,.05)}.article-content li code:hover,.article-content p code:hover{opacity:.5}.article img{max-width:100%}ul.article-tags{display:inline;padding:0}ul.article-tags li{display:inline;padding:0 1em}ul.article-tags li a:link{text-decoration:underline}table{width:100%}table *{padding:0;margin:0}table th{display:-webkit-box;display:flex;width:100%;background:#000;color:#fff;padding:1em}table tr{display:-webkit-box;display:flex;width:100%}table tr:hover{opacity:.7}table tr:first-child{padding:0}table tr:nth-of-type(odd){background:#eee}table td{-webkit-box-flex:1;flex:1 1 20%;text-align:left;padding:1em}pre{line-height:1.4em}code{font-size:1.2em}@media(prefers-color-scheme:dark){body,html{color:#eaeaea;background:#323232}h1,h2,h3,h4,h5,h6{color:#fefefe}a:link,a:visited{color:#149fd1}.article-list h1 a:link,.article-list h1 a:visited,.article-list h2 a:link,.article-list h2 a:visited,.article-list h3 a:link,.article-list h3 a:visited,.article-list h4 a:link,.article-list h4 a:visited,.article-list h5 a:link,.article-list h5 a:visited,.article-list h6 a:link,.article-list h6 a:visited{color:#fefefe}#pageHeader-about-title a:link,#pageHeader-about-title a:visited{color:#dedede}#pageHeader-about-title a:first-child{color:#149fd1}table tr:nth-of-type(odd){background:#767676}pre,pre code{background:#dcdcdc!important;color:#323232}}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border:1px solid #e2e2e2;border-radius:0 0 10px 10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media(prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style><link href="https://fonts.googleapis.com/css?family=Comfortaa|Noto+Sans&display=swap" rel=stylesheet><link href=https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.17.1/build/styles/tomorrow.min.css rel=stylesheet><link href=/article/index.xml rel=alternate type=application/rss+xml title="Stuart Blackler's Blog"></head><body><section class=pageContainer><header id=pageHeader><section id=pageHeader-about class=pageWrap itemscope itemtype=http://schema.org/person><section id=pageHeader-about-title><h1 itemprop=name><a href=/ title="Stuart Blackler">@im5tu</a> / <a href=https://im5tu.io/article/2014/04/enabling-http-strict-transport-security-hsts-via-asp-net-mvc-actionfilters/>Enabling HTTP Strict Transport Security HSTS via ASP Net MVC ActionFilters</a></h1></section></section></header><section class="pageContainer-content pageWrap"><article class=article itemscope itemtype=http://schema.org/blog><section class=article-content itemprop=text><p>After reading <a href=http://www.troyhunt.com/>Troy Hunt's</a> free ebook on the <a href=http://www.troyhunt.com/2011/12/free-ebook-owasp-top-10-for-net.html>OWASP Top 10 for .Net Developers</a>, I discovered an additional mechanism to help developers secure their websites. That mechanism is HTTP Strict Transport Security.</p><blockquote><p>HTTP Strict Transport Security (HSTS) is an opt-in security enhancement that is specified by a web application through the use of a special response header. Once a supported browser receives this header that browser will prevent any communications from being sent over HTTP to the specified domain and will instead send all communications over HTTPS. It also prevents HTTPS click through prompts on browsers. The specification has been released and published end of 2012 as <a href=https://tools.ietf.org/html/rfc6797>RFC 6797</a>. <a href=https://www.owasp.org/index.php/HTTP_Strict_Transport_Security>Source</a></p></blockquote><p>There are three main categories of attacks that are addressed in this specification: Passive Network Attacks, Active Network Attacks and Web Site Development & Deployment Bugs. These are present in <a href=https://tools.ietf.org/html/rfc6797>RFC 6797 - Section 2.3.1</a> but are re-produced here.</p><h2 id=passive-network-attacks>Passive Network Attacks</h2><blockquote><p>When a user browses the web on a local wireless network (e.g., an
 802.11-based wireless local area network) a nearby attacker can
 possibly eavesdrop on the user's unencrypted Internet Protocol-based
 connections, such as HTTP, regardless of whether or not the local
-wireless network itself is secured [BeckTews09].  Freely available
+wireless network itself is secured [BeckTews09]. Freely available
 wireless sniffing toolkits (e.g., [Aircrack-ng]) enable such passive
 eavesdropping attacks, even if the local wireless network is
-operating in a secure fashion.  A passive network attacker using such
+operating in a secure fashion. A passive network attacker using such
 tools can steal session identifiers/cookies and hijack the user's web
 session(s) by obtaining cookies containing authentication credentials
-[ForceHTTPS].  For example, there exist widely available tools, such
+[ForceHTTPS]. For example, there exist widely available tools, such
 as Firesheep (a web browser extension) [Firesheep], that enable their
 wielder to obtain other local users&rsquo; session cookies for various web
-applications.</p>
-</blockquote>
-<blockquote>
-<p>To mitigate such threats, some web sites support, but usually do not
+applications.</p></blockquote><blockquote><p>To mitigate such threats, some web sites support, but usually do not
 force, access using end-to-end secure transport &ndash; e.g., signaled
-through URIs constructed with the &ldquo;https&rdquo; scheme [RFC2818].  This can
+through URIs constructed with the &ldquo;https&rdquo; scheme [RFC2818]. This can
 lead users to believe that accessing such services using secure
 transport protects them from passive network attackers.
 Unfortunately, this is often not the case in real-world deployments,
 as session identifiers are often stored in non-Secure cookies to
 permit interoperability with versions of the service offered over
 insecure transport (&ldquo;Secure cookies&rdquo; are those cookies containing the
-&ldquo;Secure&rdquo; attribute [RFC6265]).  For example, if the session
+&ldquo;Secure&rdquo; attribute [RFC6265]). For example, if the session
 identifier for a web site (an email service, say) is stored in a
 non-Secure cookie, it permits an attacker to hijack the user's
 session if the user's UA makes a single insecure HTTP request to the
-site.</p>
-</blockquote>
-<h2 id="active-network-attacks">Active Network Attacks</h2>
-<blockquote>
-<p>A determined attacker can mount an active attack, either by
+site.</p></blockquote><h2 id=active-network-attacks>Active Network Attacks</h2><blockquote><p>A determined attacker can mount an active attack, either by
 impersonating a user's DNS server or, in a wireless network, by
 spoofing network frames or offering a similarly named evil twin
-access point.  If the user is behind a wireless home router, an
+access point. If the user is behind a wireless home router, an
 attacker can attempt to reconfigure the router using default
-passwords and other vulnerabilities.  Some sites, such as banks, rely
+passwords and other vulnerabilities. Some sites, such as banks, rely
 on end-to-end secure transport to protect themselves and their users
-from such active attackers.  Unfortunately, browsers allow their
+from such active attackers. Unfortunately, browsers allow their
 users to easily opt out of these protections in order to be usable for sites that incorrectly deploy secure transport, for example by
 generating and self-signing their own certificates (without also
 distributing their certification authority (CA) certificate to their
-users&rsquo; browsers).</p>
-</blockquote>
-<h2 id="website-development--deployment-bugs">Website Development &amp; Deployment Bugs</h2>
-<blockquote>
-<p>The security of an otherwise uniformly secure site (i.e., all of its
+users&rsquo; browsers).</p></blockquote><h2 id=website-development--deployment-bugs>Website Development & Deployment Bugs</h2><blockquote><p>The security of an otherwise uniformly secure site (i.e., all of its
 content is materialized via &ldquo;https&rdquo; URIs) can be compromised
 completely by an active attacker exploiting a simple mistake, such as
 the loading of a cascading style sheet or a SWF (Shockwave Flash)
@@ -101,59 +47,11 @@ Even if the site's developers carefully scrutinize their login page
 for &ldquo;mixed content&rdquo;, a single insecure embedding anywhere on the
 overall site compromises the security of their login page because an
 attacker can script (i.e., control) the login page by injecting code
-(e.g., a script) into another, insecurely loaded, site page.</p>
-</blockquote>
-<blockquote>
-<p>NOTE:  &ldquo;Mixed content&rdquo; as used above (see also Section 5.3 in
+(e.g., a script) into another, insecurely loaded, site page.</p></blockquote><blockquote><p>NOTE: &ldquo;Mixed content&rdquo; as used above (see also Section 5.3 in
 [W3C.REC-wsc-ui-20100812]) refers to the notion termed &ldquo;mixed
 security context&rdquo; in this specification and should not be
 confused with the same &ldquo;mixed content&rdquo; term used in the
-context of markup languages such as XML and HTML.</p>
-</blockquote>
-<h2 id="implementation-details">Implementation Details</h2>
-<p>Implementing the HSTS from the web server is simply a case of having the site running over HTTPS and appending a single header onto the response. The header required is:</p>
-<pre><code>Strict-Transport-Security: max-age=300
-</code></pre>
-<p>Alternatively, if you wish the security to cover all sub-domains of your site, then the header is:</p>
-<pre><code>Strict-Transport-Security: max-age=300; includeSubDomains
-</code></pre>
-<p><em>Where 300 is, replace with the duration in seconds.</em></p>
-<h2 id="implementing-hsts-as-an-action-filter">Implementing HSTS as an action filter</h2>
-<p>The implementation that I provide below <strong>SHOULD</strong> be used alongside the <code>RequireHttpsAttribute</code> in order to have the specification fully implemented. The reason is that the header will only be sent over a secure connection, if not already present. Furthermore, the <code>RequireHttpsAttribute</code> already takes care of the redirection to a secure connection, so this is not something that I have to worry about implementing correctly.</p>
-<h2 id="browser-support">Browser support</h2>
-<ul>
-<li>Chromium and Google Chrome since version 4.0.211.0</li>
-<li>Firefox since version 4; with Firefox 17, Mozilla integrates a list of websites supporting HSTS</li>
-<li>Opera since version 12</li>
-<li>Safari as of OS X Mavericks
--Internet Explorer does not support HSTS, but is expected to support it in the next major release after IE 11</li>
-</ul></section>
-    <footer class="article-footer">
-        <hr />
-Tags: <ul class="article-tags">
-    <li><a class="article-tag" href="/tags/csharp/">csharp</a></li><li><a class="article-tag" href="/tags/dotnet/">dotnet</a></li><li><a class="article-tag" href="/tags/mvc/">mvc</a></li>
-</ul>
-</footer>
-</article>
-    </section>
-    <footer id="pageFooter" class="pageWrap">
-    <p>&copy; 2020 <span itemprop="author">Stuart Blackler</span>. Last Updated: <time itemprop="datecreated" class="article-header-time" pubdate="pubdate" datetime="2014-04-21T18:19:47">2014-04-21 18:19:47 &#43;0000 UTC</time>. <a id="pageFooter-scroll-link" href="#">Scroll To Top</a>.</p>
-</footer>
-</section>
-<script src="/js/site-54e01995.js" defer></script>
-
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-88036425-1', 'auto');
-  ga('send', 'pageview');
-</script>
-
-
-<script src="/js/highlight.pack.js"></script>
-<script>hljs.initHighlightingOnLoad();</script>
-
-</body>
-</html>
+context of markup languages such as XML and HTML.</p></blockquote><h2 id=implementation-details>Implementation Details</h2><p>Implementing the HSTS from the web server is simply a case of having the site running over HTTPS and appending a single header onto the response. The header required is:</p><pre><code>Strict-Transport-Security: max-age=300
+</code></pre><p>Alternatively, if you wish the security to cover all sub-domains of your site, then the header is:</p><pre><code>Strict-Transport-Security: max-age=300; includeSubDomains
+</code></pre><p><em>Where 300 is, replace with the duration in seconds.</em></p><h2 id=implementing-hsts-as-an-action-filter>Implementing HSTS as an action filter</h2><p>The implementation that I provide below <strong>SHOULD</strong> be used alongside the <code>RequireHttpsAttribute</code> in order to have the specification fully implemented. The reason is that the header will only be sent over a secure connection, if not already present. Furthermore, the <code>RequireHttpsAttribute</code> already takes care of the redirection to a secure connection, so this is not something that I have to worry about implementing correctly.</p><h2 id=browser-support>Browser support</h2><ul><li>Chromium and Google Chrome since version 4.0.211.0</li><li>Firefox since version 4; with Firefox 17, Mozilla integrates a list of websites supporting HSTS</li><li>Opera since version 12</li><li>Safari as of OS X Mavericks
+-Internet Explorer does not support HSTS, but is expected to support it in the next major release after IE 11</li></ul></section><footer class=article-footer><hr>Tags:<ul class=article-tags><li><a class=article-tag href=/tags/csharp/>csharp</a></li><li><a class=article-tag href=/tags/dotnet/>dotnet</a></li><li><a class=article-tag href=/tags/mvc/>mvc</a></li></ul></footer></article></section><footer id=pageFooter class=pageWrap><p>&copy; 2020 <span itemprop=author>Stuart Blackler</span>. Last Updated: <time itemprop=datecreated class=article-header-time pubdate=pubdate datetime=2014-04-21T18:19:47>2014-04-21 18:19:47 +0000 UTC</time>. <a id=pageFooter-scroll-link href=#>Scroll To Top</a>.</p></footer></section><script src=/js/site-54e01995.js defer></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-88036425-1','auto');ga('send','pageview');</script><script src=/js/highlight.pack.js></script><script>hljs.initHighlightingOnLoad();</script></body></html>
