@@ -89,7 +89,7 @@
     {
     }
 }
-</code></pre><p>This class is intended to make sure that we manage the subscriptions correctly, just like we did with the <code>DiagnosticsHostedService</code>. We also abstractly implement the interfaces&rsquo; <code>TryObserve</code> method, which our <code>OutboundHttpDiagnosticListener</code> implements:</p><pre><code class=language-csharp>internal sealed class OutboundHttpRequestDiagnosticListener : SimpleDiagnosticListener
+</code></pre><p>This class is intended to make sure that we manage the subscriptions correctly, just like we did with the <code>DiagnosticsHostedService</code>. We also abstractly implement the interfaces&rsquo; <code>TryObserve</code> method, which our <code>OutboundHttpDiagnosticListener</code> implements:</p><pre><code class=language-csharp>internal sealed class OutboundHttpRequestDiagnosticListener : DiagnosticListenerBase
 {
     private readonly List&lt;IOutboundHttpObserver&gt; _observers;
     private readonly string _name = &quot;HttpHandlerDiagnosticListener&quot;;
@@ -103,12 +103,15 @@
     {
         if (diagnosticListener is null || !diagnosticListener.Name.Equals(_name, StringComparison.OrdinalIgnoreCase))
             return;
-        
+    
         foreach (var observer in _observers)
             Subscribe(diagnosticListener, observer);
     } 
 }
-</code></pre><p>The intention here is that we only subscribe specific observers when we encounter a DiagnosticListener that's named <code>HttpHandlerDiagnosticListener</code>. This listener has two specific events that we need to listen for:</p><ul><li><code>System.Net.Http.Request</code> - Contains the following properties: Request, LoggingRequestId, TimeStamp</li><li><code>System.Net.Http.Response</code> - Contains the following properties: Response, LoggingRequestId, ResponseTaskStatus, TimeStamp</li></ul><h3 id=simplediagnosticlistenerobserver>SimpleDiagnosticListenerObserver</h3><p>When you deal with <code>DiagnosticListener</code>s, we are dealing with the Observer pattern in C#, which means that we always need to implement the following methods: <code>OnCompleted</code>, <code>OnError</code>, <code>OnNext</code>. For our use case, we don't need the <code>OnCompleted</code> or <code>OnError</code> methods in any of our observers, so we can move this functionality into a base class with some additional helper methods: <code>GetDuration</code> and <code>GetValueAs</code></p><pre><code class=language-csharp>public abstract class SimpleDiagnosticListenerObserver : IObserver&lt;KeyValuePair&lt;string, object&gt;&gt;
+</code></pre><p>The intention here is that we only subscribe specific observers when we encounter a DiagnosticListener that's named <code>HttpHandlerDiagnosticListener</code>. This listener has two specific events that we need to listen for:</p><ul><li><code>System.Net.Http.Request</code> - Contains the following properties: Request, LoggingRequestId, TimeStamp</li><li><code>System.Net.Http.Response</code> - Contains the following properties: Response, LoggingRequestId, ResponseTaskStatus, TimeStamp</li></ul><p>Each of the observers that we create will have a marker interface attached to them called <code>IOutboundHttpObserver</code> so that we can plug them into our IoC container. It's simply defined as:</p><pre><code class=language-csharp>internal interface IOutboundHttpObserver : IObserver&lt;KeyValuePair&lt;string, object&gt;&gt;
+{
+}
+</code></pre><h3 id=simplediagnosticlistenerobserver>SimpleDiagnosticListenerObserver</h3><p>When you deal with <code>DiagnosticListener</code>s, we are dealing with the Observer pattern in C#, which means that we always need to implement the following methods: <code>OnCompleted</code>, <code>OnError</code>, <code>OnNext</code>. For our use case, we don't need the <code>OnCompleted</code> or <code>OnError</code> methods in any of our observers, so we can move this functionality into a base class with some additional helper methods: <code>GetDuration</code> and <code>GetValueAs</code></p><pre><code class=language-csharp>public abstract class SimpleDiagnosticListenerObserver : IObserver&lt;KeyValuePair&lt;string, object&gt;&gt;
 {
     // Gets the conversion factor that's used to go from ticks to a real world time. Inspiration: https://github.com/aspnet/Extensions/blob/34204b6bc41de865f5310f5f237781a57a83976c/src/Shared/src/ValueStopwatch/ValueStopwatch.cs
     protected static readonly double TimestampToTicks = TimeSpan.TicksPerSecond / (double)Stopwatch.Frequency;
