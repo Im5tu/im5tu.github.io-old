@@ -1,0 +1,215 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content="Stuart Blackler"><meta name=description content="In my previous article we took a look at how to monitor outbound HTTP requests using a DiagnosticListener. In this article, we will re-use some of the same components to monitor inbound HTTP requests. We could use middleware to do as most approaches do, but this approach is highly dependent on the middleware that you have and the duration of this, so we will re-use some of the code from last time."><meta name=keywords content=",aspnetcore,dotnet,diagnostics"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://im5tu.io/article/2020/06/diagnostics-in-.net-core-3-listening-to-inbound-http-requests/><title>Diagnostics in .Net Core 3: Listening to inbound HTTP requests :: Stuart Blackler's Blog</title><link href=https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css rel=stylesheet type=text/css><link rel=stylesheet href=/main.dede02da9537a98158079c023e83573e18127834838ef08172acce888341a797.css><meta itemprop=name content="Diagnostics in .Net Core 3: Listening to inbound HTTP requests"><meta itemprop=description content="A look into the EventCounters API in .Net Core 3, and seeing how we can capture inbound HTTP Requests."><meta itemprop=datePublished content="2020-06-19T14:00:00+00:00"><meta itemprop=dateModified content="2020-06-19T14:00:00+00:00"><meta itemprop=wordCount content="1468"><meta itemprop=keywords content="aspnetcore,dotnet,diagnostics,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Diagnostics in .Net Core 3: Listening to inbound HTTP requests"><meta name=twitter:description content="A look into the EventCounters API in .Net Core 3, and seeing how we can capture inbound HTTP Requests."><meta property="og:title" content="Diagnostics in .Net Core 3: Listening to inbound HTTP requests"><meta property="og:description" content="A look into the EventCounters API in .Net Core 3, and seeing how we can capture inbound HTTP Requests."><meta property="og:type" content="article"><meta property="og:url" content="https://im5tu.io/article/2020/06/diagnostics-in-.net-core-3-listening-to-inbound-http-requests/"><meta property="article:published_time" content="2020-06-19T14:00:00+00:00"><meta property="article:modified_time" content="2020-06-19T14:00:00+00:00"><meta property="article:section" content="aspnetcore"><meta property="article:section" content="dotnet"><meta property="article:section" content="diagnostics"><meta property="article:published_time" content="2020-06-19 14:00:00 +0000 UTC"><meta property="og:image" content="https://im5tu.io/img/profile.jpg"><meta property="og:site_name" content="Stuart Blackler's Blog"><link rel=alternate type=application/rss+xml href=/index.xml title="Stuart Blackler's Blog"><style>.post{max-width:1200px}.header__inner{width:100%;max-width:1160px}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border-left:1px solid #e2e2e2;border-bottom:1px solid #e2e2e2;border-radius:0;border-bottom-left-radius:10px;-webkit-transition:all 250ms ease;transition:all 250ms ease;margin:-18px;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}@media print{.copy-code-button{display:none}}@media(prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style></head><body class=dark-theme><div class=container><header class=header><span class=header__inner><a href=https://im5tu.io/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>im5tu.io</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=https://im5tu.io/article/>articles</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span><span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 41C32.4934 41 41 32.4934 41 22 41 11.5066 32.4934 3 22 3 11.5066 3 3 11.5066 3 22s8.5066 19 19 19zM7 22C7 13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>7 minutes</p></div><article><h1 class=post-title><a href=https://im5tu.io/article/2020/06/diagnostics-in-.net-core-3-listening-to-inbound-http-requests/>Diagnostics in .Net Core 3: Listening to inbound HTTP requests</a></h1><div class=post-content><section class="series series-header"><p><i>This article is part of the <a href=#series>Diagnostics in .Net Core 3</a> series. You are reading part 4 of 4.</i></p></section><p>In my <a href=/article/2020/06/diagnostics-in-.net-core-3-listening-to-outbound-http-requests/>previous article</a> we took a look at how to monitor outbound HTTP requests using a <code>DiagnosticListener</code>. In this article, we will re-use some of the same components to monitor inbound HTTP requests. We could use middleware to do as most approaches do, but this approach is highly dependent on the middleware that you have and the duration of this, so we will re-use some of the code from last time.</p><p>A lot of this article relies on the infrastructure that we built out previously, so if something is missing here, it will likely be in that article. We will need to implement the following components:</p><ol><li>A new DiagnosticListener</li><li>A observer that looks at incoming requests</li><li>A observer that looks at the response</li><li>A metric builder that builds our diagnostic counters</li></ol><h2 id=implementing-the-diagnosticlistener>Implementing the DiagnosticListener</h2><p>In order to hook into the infrastructure that we built in the previous article, we need a new implementation of <code>DiagnosticListenerBase</code> that listens on the <code>Microsoft.AspNetCore DiagnosticSource</code>:</p><pre><code class=language-csharp>internal sealed class InboundHttpRequestDiagnosticListener : DiagnosticListenerBase
+{
+    private readonly List&lt;IInboundHttpObserver&gt; _observers;
+    private readonly string _name = &quot;Microsoft.AspNetCore&quot;;
+
+    public InboundHttpRequestDiagnosticListener(IEnumerable&lt;IInboundHttpObserver&gt; observers)
+    {
+        _observers = observers.ToList();
+    }
+
+    public override void TryObserve(DiagnosticListener diagnosticListener)
+    {
+        if (diagnosticListener is null || !diagnosticListener.Name.Equals(_name, StringComparison.OrdinalIgnoreCase))
+            return;
+    
+        foreach (var observer in _observers)
+            Subscribe(diagnosticListener, observer);
+    }
+}
+</code></pre><p>The intention here is that we only subscribe specific observers when we encounter a <code>DiagnosticListener</code> that’s named <code>Microsoft.AspNetCore</code>. This listener has two specific events that we need to listen for:</p><ul><li><code>Microsoft.AspNetCore.Hosting.BeginRequest</code> - Contains the following properties: httpContext, timestamp</li><li><code>Microsoft.AspNetCore.Hosting.EndRequest</code> - Contains the following properties: httpContext, timestamp</li></ul><p>We will bind all of our observers into our IoC container again so that we can take advantage of injecting dependencies easily should we want/need to. The code is near identical to the outbound version otherwise.</p><h2 id=implementing-the-observers>Implementing the observers</h2><p>The approach we are going to take is largely the same as the outbound HTTP requests. The <code>DiagnosticListener</code> that we subscribe to is different, as are the payloads, but we get a near identical set of information that we can use to generate out metrics. As per the previous article, we use a marker interface for all of our inbound observers, which is declared as follows:</p><pre><code class=language-csharp>internal interface IInboundHttpObserver : IObserver&lt;KeyValuePair&lt;string, object&gt;&gt;
+{
+}
+</code></pre><h3 id=implementing-the-request-observer>Implementing the request observer</h3><p>The purpose of the <code>InboundHttpRequestObserver</code> is to extract the timestamp property that’s contained in the <code>Microsoft.AspNetCore.Hosting.BeginRequest</code> event, which indicates the ticks that the request started, and attach this as a property in the <code>HttpContext</code> so that we can access it later on.</p><pre><code class=language-csharp>internal sealed class InboundHttpRequestObserver : SimpleDiagnosticListenerObserver, IInboundHttpObserver
+{
+    public override void OnNext(KeyValuePair&lt;string, object&gt; value)
+    {
+        if (value.Key == &quot;Microsoft.AspNetCore.Hosting.BeginRequest&quot;)
+        {
+            var data = GetValueAs&lt;TypedData&gt;(value);
+            if (data?.httpContext?.Items is {})
+            {
+                data.httpContext.Items[&quot;RequestTimestamp&quot;] = data.timestamp;
+            }
+        }
+    }
+    
+    private class TypedData
+    {
+        public HttpContext? httpContext;
+        public long timestamp;
+    }
+}
+</code></pre><p>Like our outbound implementation, I&rsquo;ve generated a typed class so that we can access the data within the events payload as these are internal classes. I’ve nested a class inside of the observer to help with this, containing only the properties that I need.</p><h3 id=implementing-the-response-observer>Implementing the response observer</h3><p>The purpose of the <code>InboundHttpResponseObserver</code> is to extract the timestamp property that’s contained in the <code>Microsoft.AspNetCore.Hosting.EndRequest</code> event, which indicates the ticks that the request finished, and calculate the duration using the request timestamp that we previously stored in the <code>HttpContext</code> properties.</p><pre><code class=language-csharp>internal sealed class InboundHttpResponseObserver : SimpleDiagnosticListenerObserver, IInboundHttpObserver
+{
+    private readonly IInboundHttpMetricBuilder _metricBuilder;
+
+    public InboundHttpResponseObserver(IInboundHttpMetricBuilder metricBuilder)
+    {
+        _metricBuilder = metricBuilder;
+    }
+    
+    public override void OnNext(KeyValuePair&lt;string, object&gt; value)
+    {
+        if (value.Key == &quot;Microsoft.AspNetCore.Hosting.EndRequest&quot;)
+        {
+            var data = GetValueAs&lt;TypedData&gt;(value);
+            object? requestTimestamp = null;
+            if (data.httpContext?.Items?.TryGetValue(&quot;RequestTimestamp&quot;, out requestTimestamp) == true)
+            {
+                if (requestTimestamp is {} &amp;&amp; long.TryParse(requestTimestamp?.ToString(), out var startTimestamp))
+                {
+                    var response = data.httpContext.Response;
+                    var request = data.httpContext.Request;
+                    // For all HTTP requests we should:
+                    //    - Track the success (&lt;400 status code response) or failure of the API call
+                    //    - Capture the latency of the request
+                    var resultCounter = (int)response.StatusCode &lt; 400 ? _metricBuilder.GetSuccessCounter(request, response) : _metricBuilder.GetErrorCounter(request, response);
+                    resultCounter?.Increment();
+                    _metricBuilder.GetLatencyCounter(request, response)?.WriteMetric(GetDuration(startTimestamp, data.timestamp).TotalMilliseconds);
+                }
+            }
+        }
+    }
+    
+    private class TypedData
+    {
+        public HttpContext? httpContext;
+        public long timestamp;
+    }
+}
+</code></pre><p>As mentioned in a previous section, I&rsquo;ve generated a typed class so that we can access the data within the events payload. I’ve nested a class inside of the observer to help with this, containing only the properties that I need. Now that we have all of the data we need to generate some metrics, we can use the injected <code>IInboundHttpMetricBuilder</code> to create the metrics that we want to track dynamically.</p><h2 id=creating-metrics-from-the-context-of-the-request>Creating metrics from the context of the request</h2><p>In our services, there are a few bits of information that I want to capture about the context of the request:</p><ol><li>Whether the request was successful or not (based on the HTTP Status code)</li><li>The duration of the request, in milliseconds</li></ol><p>With this information, we want to add metadata to the DiagnosticCounters that we generate so that we can use it as dimensions in our monitoring applications like DataDog/Prometheus. We want to track the following properties:</p><ul><li>HTTP method: GET/POST/PUT/PATCH/DELETE etc</li><li>HTTP version: 1.0/1.1/2.0 etc</li><li>HTTP scheme: HTTP/HTTPS</li><li>HTTP request type: outbound (previous article)/inbound (this article)</li><li>HTTP status code: 200/201/202/204/400 etc</li><li>Request Path: /search</li><li>Host: <a href=http://www.google.com>www.google.com</a></li></ul><p>With this information, we should have more than enough to filter out specific flows easily, whilst being able to aggregate the results where needed. Each one of the properties is added to each one of the diagnostic counters that we generate:</p><ul><li>Success Counter</li><li>Error Counter</li><li>Latency Counter</li></ul><p>To allow us to override the implementation later on, we can use the following interface:</p><pre><code class=language-csharp>public interface IInboundHttpMetricBuilder
+{
+    IncrementingEventCounter? GetSuccessCounter(HttpRequest request, HttpResponse response);
+    IncrementingEventCounter? GetErrorCounter(HttpRequest request, HttpResponse response);
+    EventCounter? GetLatencyCounter(HttpRequest request, HttpResponse response);
+}
+</code></pre><p><strong>Note:</strong> <em>For a summary of the different types of event counters, please see <a href=https://im5tu.io/article/2020/01/diagnostics-in-.net-core-3-event-counters/>this article</a>.</em></p><p>In order to generate the same tags that we want, we can start of with the exact same code from the previous article. We can re-use most of the same code from the previous article, renaming anything that says <code>outbound</code> to <code>inbound</code>:</p><pre><code class=language-csharp>internal sealed class DefaultInboundHttpMetricBuilder : IInboundHttpMetricBuilder
+{
+    private readonly ConcurrentDictionary&lt;List&lt;(string key, string value)&gt;, IncrementingEventCounter&gt; _successCounters = new ConcurrentDictionary&lt;List&lt;(string key, string value)&gt;, IncrementingEventCounter&gt;(new ListOfTupleEqualityComparer());
+    private readonly ConcurrentDictionary&lt;List&lt;(string key, string value)&gt;, IncrementingEventCounter&gt; _errorCounters = new ConcurrentDictionary&lt;List&lt;(string key, string value)&gt;, IncrementingEventCounter&gt;(new ListOfTupleEqualityComparer());
+    private readonly ConcurrentDictionary&lt;List&lt;(string key, string value)&gt;, EventCounter&gt; _latencyCounters = new ConcurrentDictionary&lt;List&lt;(string key, string value)&gt;, EventCounter&gt;(new ListOfTupleEqualityComparer());
+    
+    public IncrementingEventCounter GetSuccessCounter(HttpRequest request, HttpResponse response) =&gt; GetCoreHttpRequestCounter(_successCounters, request, response);
+
+    public IncrementingEventCounter GetErrorCounter(HttpRequest request, HttpResponse response) =&gt; GetCoreHttpRequestCounter(_errorCounters, request, response);
+    
+    public EventCounter GetLatencyCounter(HttpRequest request, HttpResponse response)
+    {
+        return _latencyCounters.GetOrAdd(GetCoreTags(request, response), key =&gt;
+        {
+            var counter = new EventCounter(&quot;http-request-latency&quot;, CheckoutEventSource.Instance)
+            {
+                DisplayName = &quot;HTTP Request Latency&quot;,
+                DisplayUnits = &quot;ms&quot;
+            };
+            foreach (var dimension in key)
+                counter.AddMetadata(dimension.key, dimension.value);
+            CheckoutEventSource.Instance.AddDiagnosticCounter(counter);
+            return counter;
+        });        
+    }
+    
+    private IncrementingEventCounter GetCoreHttpRequestCounter(ConcurrentDictionary&lt;List&lt;(string key, string value)&gt;, IncrementingEventCounter&gt; collection, HttpRequest request, HttpResponse response)
+    {
+        return collection.GetOrAdd(GetCoreTags(request, response), key =&gt;
+        {
+            Debug.WriteLine(&quot;CREATED NEW COUNTER: &quot; + string.Join(&quot;,&quot;, key.Select(x =&gt; $&quot;{x.key}:{x.value}&quot;)));
+
+            var counter = new IncrementingEventCounter(&quot;http-request&quot;, CheckoutEventSource.Instance)
+            {
+                DisplayName = &quot;HTTP Request Count&quot;,
+                DisplayUnits = &quot;requests&quot;
+            };
+            foreach (var dimension in key)
+                counter.AddMetadata(dimension.key, dimension.value);
+            CheckoutEventSource.Instance.AddDiagnosticCounter(counter);
+            return counter;
+        });
+    }
+
+    private List&lt;(string key, string value)&gt; GetCoreTags(HttpRequest request, HttpResponse response)
+    {
+        var path = request.Path.Value;
+
+        if (string.IsNullOrWhiteSpace(path))
+            path = &quot;/&quot;;
+
+        if (path.Length &gt; 1)
+        {
+            var initialPartIndex = path.IndexOf('/', 1);
+            if (initialPartIndex &gt; 1)
+                path = path.Substring(0, initialPartIndex);
+            else
+            {
+                var queryIndex = path.IndexOf('?', 1);
+                if (queryIndex &gt;= 0)
+                    path = path.Substring(0, queryIndex);
+            }
+        }
+
+        var tags = new List&lt;(string, string)&gt;
+        {
+            (&quot;http-method&quot;, request.Method),
+            (&quot;http-scheme&quot;, request.Scheme),
+            (&quot;http-request-type&quot;, &quot;inbound&quot;),
+            (&quot;http-status-code&quot;, response.StatusCode.ToString()),
+            (&quot;host&quot;, request.Host.Host), // host without the port value
+            (&quot;request-path&quot;, path)
+        };
+        
+        if (request.Protocol.StartsWith(&quot;HTTP/&quot;))
+            tags.Add((&quot;http-version&quot;, request.Protocol.Substring(5)));
+        
+        return tags;
+    }
+
+
+    private class ListOfTupleEqualityComparer : EqualityComparer&lt;List&lt;(string, string)&gt;&gt;
+    {
+        public override bool Equals(List&lt;(string, string)&gt;? left, List&lt;(string, string)&gt;? right)
+        {
+            if (left is null || right is null)
+                return ReferenceEquals(left, right);
+            
+            if (left.Count != right.Count)
+                return false; 
+            
+            if (left.Count == 0)
+                return true; // Both are 0
+
+            using var iterator2 = right.GetEnumerator();
+            foreach (var element in left)
+            {
+                // second is shorter than first
+                if (!iterator2.MoveNext())
+                {
+                    return false;
+                }
+                if (!(element.Item1.Equals(iterator2.Current.Item1) &amp;&amp; element.Item2.Equals(iterator2.Current.Item2)))
+                {
+                    return false;
+                }
+            }
+            // If we can get to the next element, first was shorter than second.
+            // Otherwise, the sequences are equal.
+            return !iterator2.MoveNext();
+        }
+
+        public override int GetHashCode(List&lt;(string, string)&gt; obj)
+        {
+            var code = 17;
+            foreach (var element in obj)
+                code = HashCode.Combine(code, element.Item1.GetHashCode(), element.Item2.GetHashCode());
+
+            return code;
+        }
+    }
+}
+</code></pre><p>Although I&rsquo;ve copied the full code here for completeness, the only portion that&rsquo;s really changed is the <code>GetCoreTags</code> method. We needed to change this because the request/response classes that are used on the inbound request flow are different to what we used on the outbound flow. The logic, however, is largely unchanged.</p><p>Hopefully, once everything has been bound to your IoC container, you now have all the bits that you would need to build this out in your own applications. Happy request tracking!</p></div></article><hr><div class=post-info><a name=series></a><b>More in the Diagnostics in .Net Core 3 series:</b><ol><li><a href=/article/2020/01/diagnostics-in-.net-core-3-event-counters/>Diagnostics in .Net Core 3: Event Counters</a></li><li><a href=/article/2020/01/diagnostics-in-.net-core-3-using-dotnet-counters-with-docker/>Diagnostics in .Net Core 3: Using dotnet-counters with Docker</a></li><li><a href=/article/2020/06/diagnostics-in-.net-core-3-listening-to-outbound-http-requests/>Diagnostics in .Net Core 3: Listening to outbound HTTP requests</a></li><li>Diagnostics in .Net Core 3: Listening to inbound HTTP requests <i>(This article)</i></li></ol><p><a href=/article>View All Articles</a></p><hr><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg><span class=tag><a href=https://im5tu.io/tags/aspnetcore>aspnetcore</a></span><span class=tag><a href=https://im5tu.io/tags/dotnet>dotnet</a></span><span class=tag><a href=https://im5tu.io/tags/diagnostics>diagnostics</a></span></p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6A2 2 0 004 4v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>1468 Words</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>2020-06-19 15:00 +0100</p></div><div class=pagination><div class=pagination__title><span class=pagination__title-h></span><hr></div><div class=pagination__buttons><span class="button next"><a href=https://im5tu.io/article/2020/06/diagnostics-in-.net-core-3-listening-to-outbound-http-requests/><span class=button__text>Diagnostics in .Net Core 3: Listening to outbound HTTP requests</span>
+<span class=button__icon>→</span></a></span></div></div></main></div><footer class=footer><div class=footer__inner><div class=footer__content><span>&copy; 2020</span>
+<span><a href=https://im5tu.io/>Stuart Blackler</a></span>
+<span><a href=https://im5tu.io/index.xml target=_blank title=rss><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 019 9"/><path d="M4 4a16 16 0 0116 16"/><circle cx="5" cy="19" r="1"/></svg></a></span></div></div><div class=footer__inner><div class=footer__content><span>Powered by <a href=http://gohugo.io>Hugo</a></span>
+<span>Theme made with &#10084; by <a href=https://github.com/rhazdon>Djordje Atlialp</a></span></div></div></footer></div><script type=text/javascript src=/bundle.min.dc716e9092c9820b77f96da294d0120aeeb189b5bcea9752309ebea27fd53bbe6b13cffb2aca8ecf32525647ceb7001f76091de4199ac5a3caa432c070247f5b.js integrity="sha512-3HFukJLJggt3+W2ilNASCu6xibW86pdSMJ6+on/VO75rE8/7KsqOzzJSVkfOtwAfdgkd5BmaxaPKpDLAcCR/Ww=="></script><script src=/js/site-c4a43965.js defer></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-88036425-1','auto');ga('send','pageview');</script><script data-ad-client=ca-pub-8597760177900459 async src=https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script></body></html>
