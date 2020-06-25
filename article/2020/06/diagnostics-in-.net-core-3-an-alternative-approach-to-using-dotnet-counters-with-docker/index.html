@@ -22,7 +22,7 @@ RUN dotnet tool install dotnet-dump --tool-path /tools
 RUN dotnet tool install dotnet-counters --tool-path /tools
 RUN dotnet tool install dotnet-trace --tool-path /tools
 # END OF NEW CODE
-</code></pre><p>Here we leverage the <code>dotnet tool</code>s ability to restore tooling to a specific directory, in this case <code>/tools</code>. Once the tools have been installed, we can copy them into the runtime image:</p><pre><code class=language-dockerfile># Build the smaller runtime image
+</code></pre><p>Here we leverage the dotnet tools ability to restore tooling to a specific directory, in this case <code>/tools</code>. Once the tools have been installed, we can copy them into the runtime image:</p><pre><code class=language-dockerfile># Build the smaller runtime image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-alpine
 WORKDIR /app
 COPY --from=build /out ./
