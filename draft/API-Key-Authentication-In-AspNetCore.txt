@@ -1,0 +1,32 @@
+{
+    "title": "Implementing API Key Authentication in AspNetCore",
+    "description": "A look into one way of implementing API Key authentication in AspNetCore.",
+    "tags": ["aspnetcore", "dotnet", "dotnetcore", "csharp"],
+    "date": "2020-06-01",
+    "categories": ["development"],
+    "draft": true    
+}
+
+Recently, I've taken a look at the way that we've implemented API Key authentication internally, with the view of improving it's performance. In this article, we will break down the core components before starting off with a basic implementation and then improve the performance using `Span<T>`.
+
+<!--more-->
+
+## Authentication and Authorization Mechanisms in AspNetCore
+
+- IAuthorizationHandler 
+- Requirements
+- Policies
+
+## Implementing IAuthorizationHandler
+
+- keys
+- owner
+- adding to IServiceCollection
+
+### Improving performance
+
+BenchmarkDotNet
+
+## Implementing a new policy
+
+- User requirements
