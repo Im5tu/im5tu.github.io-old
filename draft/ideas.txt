@@ -1,0 +1,14 @@
+- Running Microsoft Orleans in AWS
+    - Overview
+        - What are we going to build
+        - Orleans Basics
+            - What is a silo
+            - What is a grain
+            - The Grain Directory        
+    - Discoverability
+        - Silo State
+        - Grain Directory
+    - Persistence in Grains
+        - Non-transactional State
+        - Transactional State
+    - Observability
