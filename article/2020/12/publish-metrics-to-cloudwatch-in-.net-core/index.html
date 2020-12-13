@@ -1,0 +1,281 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content="Stuart Blackler"><meta name=description content="In a previous post I took a look at how we can utilize .NET event counters to record metrics in our applications. However, I never covered the implementation of how I write the metrics to either CloudWatch or DataDog. In this article, I&amp;rsquo;m going to take a look at how to publish metrics to CloudWatch and one way of integrating it with the aforementioned blog series."><meta name=keywords content=",aspnetcore,dotnet,diagnostics,AWS"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://im5tu.io/article/2020/12/publish-metrics-to-cloudwatch-in-.net-core/><title>Publish Metrics to Cloudwatch in .NET Core :: Stuart Blackler's Blog</title><link href=https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css rel=stylesheet type=text/css><link rel=stylesheet href=/main.dede02da9537a98158079c023e83573e18127834838ef08172acce888341a797.css><meta itemprop=name content="Publish Metrics to Cloudwatch in .NET Core"><meta itemprop=description content="As companies grow, moving to a zero-trust architecture is majorly important. This article explores how to build it in AWS."><meta itemprop=datePublished content="2020-12-13T16:21:58+00:00"><meta itemprop=dateModified content="2020-12-13T16:21:58+00:00"><meta itemprop=wordCount content="2122"><meta itemprop=keywords content="aspnetcore,dotnet,diagnostics,AWS,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Publish Metrics to Cloudwatch in .NET Core"><meta name=twitter:description content="As companies grow, moving to a zero-trust architecture is majorly important. This article explores how to build it in AWS."><meta property="og:title" content="Publish Metrics to Cloudwatch in .NET Core"><meta property="og:description" content="As companies grow, moving to a zero-trust architecture is majorly important. This article explores how to build it in AWS."><meta property="og:type" content="article"><meta property="og:url" content="https://im5tu.io/article/2020/12/publish-metrics-to-cloudwatch-in-.net-core/"><meta property="article:published_time" content="2020-12-13T16:21:58+00:00"><meta property="article:modified_time" content="2020-12-13T16:21:58+00:00"><meta property="article:section" content="aspnetcore"><meta property="article:section" content="dotnet"><meta property="article:section" content="diagnostics"><meta property="article:published_time" content="2020-12-13 16:21:58 +0000 UTC"><link rel=alternate type=application/rss+xml href=https://im5tu.io/article/2020/12/publish-metrics-to-cloudwatch-in-.net-core/index.xml title="Stuart Blackler's Blog"><meta property="og:image" content="https://im5tu.io/img/profile.jpg"><meta property="og:site_name" content="Stuart Blackler's Blog"><link rel=alternate type=application/rss+xml href=/index.xml title="Stuart Blackler's Blog"><link rel=preconnect href=https://api.github.com><link rel=preconnect href=https://partner.googleadservices.com><link rel=preconnect href=https://tpc.googlesyndication.com><link rel=preconnect href=https://www.googletagservices.com><link rel=preconnect href=https://googleads.g.doubleclick.net><link rel=preconnect href=https://pagead2.googlesyndication.com><link rel=preload href=/fonts/Inter-UI-Bold.woff2><link rel=preload href=/fonts/Inter-UI-Regular.woff2><style>.post{max-width:1200px}.header__inner{width:100%;max-width:1160px}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border-left:1px solid #e2e2e2;border-bottom:1px solid #e2e2e2;border-radius:0;border-bottom-left-radius:10px;transition:all 250ms ease;margin:-18px;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}table{width:100%;border-collapse:collapse}table th{background-color:#cecece;color:#222}table tr{margin:0;padding:0}table tr:first-child{border-left:1px solid #acacac;border-top:1px solid #acacac;border-right:1px solid #acacac}table tr td:first-child{border-left:1px solid #acacac}table tr td:last-child{border-right:1px solid #acacac}table td,table th{padding:.5em;border-bottom:1px solid #acacac;margin:0}h2 a:link,h2 a:visited,h3 a:link,h3 a:visited,h4 a:link,h4 a:visited,h5 a:link,h5 a:visited{text-decoration:none}h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover{text-decoration:underline}@media print{.copy-code-button{display:none}}@media(prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-88036425-1','auto');ga('send','pageview');</script><script data-ad-client=ca-pub-8597760177900459 async src=https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script></head><body class=dark-theme><div class=container><header class=header><span class=header__inner><a href=https://im5tu.io/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>im5tu.io</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=https://im5tu.io/article/>Articles</a></li><li><a href=https://im5tu.io/index.xml>RSS Feed</a></li><li><a href=https://bit.ly/im5tu-tw>Twitter</a></li><li><a href=https://bit.ly/im5tu-yt>YouTube</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span><span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 41C32.4934 41 41 32.4934 41 22 41 11.5066 32.4934 3 22 3 11.5066 3 3 11.5066 3 22s8.5066 19 19 19zM7 22C7 13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>10 minutes</p></div><article><h1 class=post-title><a href=https://im5tu.io/article/2020/12/publish-metrics-to-cloudwatch-in-.net-core/>Publish Metrics to Cloudwatch in .NET Core</a></h1><div class=post-content><p>In a <a href=/article/2020/01/diagnostics-in-.net-core-3-event-counters/>previous post</a> I took a look at how we can utilize .NET event counters to record metrics in our applications. However, I never covered the implementation of how I write the metrics to either CloudWatch or DataDog. In this article, I&rsquo;m going to take a look at how to publish metrics to CloudWatch and one way of integrating it with the aforementioned blog series.</p><h2 id=what-is-cloudwatch>What is CloudWatch?</h2><p>Amazon CloudWatch is a monitoring and observability service that provides you with data and actionable insights to monitor your applications, respond to system-wide performance changes, optimize resource utilization, and get a unified view of operational health. CloudWatch collects monitoring and operational data in the form of logs, metrics, and events, providing you with a unified view of AWS resources, applications, and services that run on AWS and on-premises servers. You can use CloudWatch to detect anomalous behavior in your environments, set alarms, visualize logs and metrics side by side, take automated actions, troubleshoot issues, and discover insights to keep your applications
+running smoothly. <em>(<a href=https://aws.amazon.com/cloudwatch/>Source</a>)</em></p><h2 id=writing-a-cloudwatch-metric-publisher>Writing a CloudWatch Metric Publisher</h2><p>If you&rsquo;ve been following the previous articles, you would have seen that I omitted the type that I personally use to pass the metric information to the publishers. The common metric update type I&rsquo;ve been using contains the name of the metric, it&rsquo;s value and any tags/dimensions that you which to be attached to the metric. For completeness, and incase you haven&rsquo;t been following the previous articles, here is the <code>MetricUpdate</code> type that we will reference:</p><pre><code class=language-csharp>[DebuggerDisplay(&quot;{ToString(),nq}&quot;)]
+public struct MetricUpdate
+{
+    public IEnumerable&lt;KeyValuePair&lt;string,string&gt;&gt; Tags;
+    public string Name;
+    public float Value;
+
+    public MetricUpdate(string name, float value, IEnumerable&lt;KeyValuePair&lt;string,string&gt;&gt; tags)
+    {
+        Name = name;
+        Value = value;
+        Tags = tags;
+    }
+
+    public override string ToString() =&gt; $&quot;{Name}:{Value} ({string.Join(&quot;,&quot;, Tags.Select(x =&gt; $&quot;{x.Key}={x.Value}&quot;))})&quot;;
+}
+</code></pre><p>Once we have this type configured, we need to install the <code>AWSSDK.CloudWatch</code> NuGet package, which will allow us to communicate with AWS CloudWatch. Our entry point to publishing the metrics will be a simple interface that will enable us to swap out the implementation for testing at a later point:</p><pre><code class=language-csharp>public interface ICloudWatchMetricsPublisher
+{
+    Task PublishMetricsAsync(IEnumerable&lt;MetricUpdate&gt; metrics);
+}
+</code></pre><p>We will also need to have a corresponding implementation for the <code>ICloudWatchMetricsPublisher</code> contract:</p><pre><code class=language-csharp>internal sealed class CloudWatchMetricsPublisher : ICloudWatchMetricsPublisher
+{
+    private readonly ILogger&lt;CloudWatchMetricsPublisher&gt; _logger;
+
+    public CloudWatchMetricsPublisher(ILogger&lt;CloudWatchMetricsPublisher&gt; logger)
+    {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
+    public async Task PublishMetricsAsync(IEnumerable&lt;MetricUpdate&gt; metrics)
+    {
+        using var client = CreateClient();
+        var datums = new List&lt;MetricDatum&gt;(metrics.Select(ConvertToDatum));
+
+        var request = new PutMetricDataRequest
+        {
+            Namespace = &quot;MyCustomNamespace&quot;,
+            MetricData = datums
+        };
+
+        await client.PutMetricDataAsync(request);
+    }
+
+    private AmazonCloudWatchClient CreateClient() =&gt; new AmazonCloudWatchClient();
+
+    // Other methods, defined below
+}
+</code></pre><p>Our main steps in the code above are:</p><ol><li>Create a new instance of the <code>AmazonCloudWatchClient</code> class which allows us to communicate with CloudWatch</li><li>Convert our <code>MetricUpdate</code> type into the AWS specific <code>MetricDatum</code> type</li><li>Create a new instance of <code>PutMetricDataRequest</code> and call <code>PutMetricDataAsync</code> on the AWS Client, which sends the metrics through to CloudWatch, assuming we have the correct permissions</li></ol><p>When we convert our <code>MetricUpdate</code> to a <code>MetricDatum</code>, there are a few points that we need to consider, including:</p><ul><li>The unit type that we want to be represented for the metric in CloudWatch</li><li>The storage resolution that we want to use</li><li>The number of dimensions that we can use for the metric</li></ul><p>I&rsquo;ve wrapped up some of this logic into a <code>ConvertToDatum</code> method to keep the logic contained and the main publishing code clear:</p><pre><code class=language-csharp>private MetricDatum ConvertToDatum(in MetricUpdate metric)
+{
+    return new MetricDatum
+    {
+        TimestampUtc = DateTime.UtcNow,
+        MetricName = metric.Name,
+        Value = metric.Value,
+        Unit = GetUnitMapping(metric),
+        StorageResolution = 1,
+        Dimensions = FormatDimensions(metric.Tags)
+    };
+}
+</code></pre><p>The most important point part about the code snippet above is the <code>StorageResolution</code>. Setting this to 1 specifies this metric as a high-resolution metric, so that CloudWatch stores the metric with sub-minute resolution down to one second. Setting this to 60 specifies this metric as a regular-resolution metric, which CloudWatch stores at 1-minute resolution. For more information about high-resolution metrics, see <a href=https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/publishingMetrics.html#high-resolution-metrics>High-Resolution Metrics</a> in the Amazon CloudWatch User Guide.</p><p>Otherwise, for clarity and future extensibility, I&rsquo;ve separated the unit mapping and the dimensions formatting. Lastly, should you want to change the timestamp, you just need to update the <code>MetricUpdate</code> type to add the TimeStamp. This could be handy for retries or delays in publication, but that&rsquo;s out of scope for this article. Now, lets take a look at the unit mapping code:</p><pre><code class=language-csharp>private StandardUnit GetUnitMapping(in MetricUpdate metric)
+{
+    if (metric.Name.EndsWith(&quot;latency&quot;))
+        return StandardUnit.Milliseconds;
+    if (metric.Name.EndsWith(&quot;count&quot;) || metric.Name.EndsWith(&quot;length&quot;))
+        return StandardUnit.Count;
+    if (metric.Name.EndsWith(&quot;usage&quot;))
+        return StandardUnit.Percent;
+    if (metric.Name.EndsWith(&quot;size&quot;))
+        return StandardUnit.Bytes;
+    if (metric.Name.EndsWith(&quot;rate&quot;))
+        return StandardUnit.CountSecond;
+
+    return StandardUnit.None;
+}
+</code></pre><p>There&rsquo;s nothing really special going on here, we just use the ending of the metric to decide what . In my real production code, this is configurable should we need to explicitly set something, but i&rsquo;ll leave that as an exercise for you dearest reader.</p><pre><code class=language-csharp>private List&lt;Dimension&gt; FormatDimensions(IEnumerable&lt;KeyValuePair&lt;string, string&gt;&gt; dimensions)
+{
+    var result = new List&lt;Dimension&gt;(10);
+
+    foreach (var dimension in dimensions)
+    {
+        result.Add(new Dimension
+        {
+            Name = dimension.Key,
+            Value = dimension.Value
+        });
+
+        // We can only support a maximum of 10 dimensions in cloudwatch
+        if (result.Count == 10)
+        {
+            _logger.LogWarning(&quot;Cloudwatch only supports 10 dimensions per metric. Any additional dimensions have been removed.&quot;);
+            return result;
+        }
+    }
+
+    return result;
+}
+</code></pre><p>Again, there is nothing really special going on with the formatting of the dimensions. It is important to note that only the first 10 elements of the collection will be passed through to CloudWatch. This is a limitation on the CloudWatch side and as such, we log a warning to know when we&rsquo;ve hit that limit, allowing us to act on it in the future should we need to. As far as the publishing is concerned, that&rsquo;s pretty much it.</p><p><em>As you may have noticed from the snippets of code, I have left out a lot of the configuration that would normally be done as I didn&rsquo;t want to bloat the code with unnecessary code, allowing you to get the important bits.</em></p><h2 id=integrating-our-cloudwatch-publisher-with-net-event-counters>Integrating our CloudWatch publisher with .NET Event Counters</h2><p>In a <a href=/article/2020/01/diagnostics-in-.net-core-3-event-counters/>previous post</a> I received a comment asking how I hook up .NET EventCounters with either DataDog or CloudWatch. The short answer is that I use the above code, at least a variation of it, to publish directly to CloudWatch. The longer answer is that I have an extensible mechanism which allows me to publish to one or more sources at once, depending on my needs. To do this, we need multiple parts to complete the puzzle:</p><ol><li>An observable which we can publish the metric updates to</li><li>An observer per publisher (eg: CloudWatch/DataDog)</li><li>The publishing code (like the former part of this article)</li><li>Link the .NET EventCounters collectors to the observable</li></ol><h3 id=creating-the-observable-infrastructure>Creating the observable infrastructure</h3><p>The first part of linking .NET event counters to our new publishers, is to create an implementation of the observable pattern for which .NET has two handy interfaces that we can use:</p><ul><li><code>IObservable&lt;T></code> - which allows us to subscribe to a stream of events that are emitted by an object</li><li><code>IObserver&lt;T></code> - which can be added to the above observable via the <code>Subscribe</code> method. The instance that&rsquo;s subscribed will receive notifications for: each object in the stream, exceptions from the stream and completion of the stream.</li></ul><p>As the <code>IObservable&lt;T></code> interface isn&rsquo;t concerned with how the data is retrieved from the stream, as it could be from a network stream or an in-memory stream for example, we will need a way of publishing the data. To do this, we will add the <code>WriteMetric</code> method to a custom interface so that we can implement the pattern properly:</p><pre><code class=language-csharp>public interface IMetricsObservable : IObservable&lt;MetricUpdate&gt;
+{
+    void WriteMetric(ref MetricUpdate metricUpdate);
+}
+
+internal sealed class MetricsObservable : IMetricsObservable
+{
+    private readonly List&lt;IObserver&lt;MetricUpdate&gt;&gt; _observers;
+
+    public MetricsObservable(IEnumerable&lt;IObserver&lt;MetricUpdate&gt;&gt; observers)
+    {
+        _observers = observers.ToList();
+    }
+
+    public IDisposable Subscribe(IObserver&lt;MetricUpdate&gt; observer)
+    {
+        lock (_observers)
+            _observers.Add(observer);
+
+        return new ActOnDispose(() =&gt;
+        {
+            lock (_observers)
+                _observers.Remove(observer);
+        });
+    }
+
+    public void WriteMetric(ref MetricUpdate metricUpdate)
+    {
+        lock(_observers)
+            foreach (var observer in _observers)
+                observer.OnNext(metricUpdate);
+    }
+
+    public void Dispose()
+    {
+        lock (_observers)
+        {
+            foreach (var observer in _observers)
+                observer.OnCompleted();
+
+            _observers.Clear();
+        }
+    }
+
+    private class ActOnDispose : IDisposable
+    {
+        private readonly Action _act;
+        private bool _disposed = false;
+
+        public ActOnDispose(Action act)
+        {
+            _act = act;
+        }
+
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+            _act();
+        }
+    }
+}
+</code></pre><p>The code above is a basic implementation of the observable pattern, which also takes a series of known consumers from an IoC container should it be configured. We return a custom disposable from the <code>Subscribe</code> method, that when disposed, will remove the <code>IObserver&lt;T></code> instance from the list of known consumers.</p><p>The next part of the puzzle is to create our <code>IObserver&lt;T></code> implementation. We want the processing of this element to be lightning fast as we will hold up the stream if we try do asynchronous processing, especially since the contract of <code>IObserver&lt;T></code> does not support asynchronicity. To work around this, we are going to use <code>System.Threading.Channels</code> to write to a temporary channel and pick this up in a background service that can do the aggregation of the metrics before publishing. I strongly recommend that you read <a href=https://www.stevejgordon.co.uk/an-introduction-to-system-threading-channels>Steve Gordons excellent introduction to System.Threading.Channels</a> for background on this subject:</p><pre><code class=language-csharp>internal sealed class CloudwatchMetricObserver : IObserver&lt;MetricUpdate&gt;
+{
+    private readonly ChannelWriter&lt;MetricUpdate&gt; _channel;
+
+    public CloudwatchMetricObserver(ChannelWriter&lt;MetricUpdate&gt; channel)
+    {
+        _channel = channel;
+    }
+
+    public void OnCompleted() { }
+    
+    public void OnError(Exception error) { }
+
+    public void OnNext(MetricUpdate value)
+    {
+        _channel.TryWrite(value);
+    }
+}
+</code></pre><p>By proxying the metrics through a channel, we have a unique ability to batch the data in our requests through a simple pattern in the background service. The rough flow is:</p><ul><li>Check to see if there is an element in the channel. If an element is present:<ul><li>Add it to a temporary list of metrics</li><li>If we have hit the capacity of our temporary storage, publish the metrics</li></ul></li><li>If no element in the channel:<ul><li>Publish any remaining metrics (eg: if we haven&rsquo;t hit the capacity)</li><li>Wait for the stop signal or an element to appear in the channel, whichever is first</li></ul></li></ul><p>This flow is what I&rsquo;ve implemented below:</p><pre><code class=language-csharp>internal sealed class CloudwatchPublishingService : BackgroundService
+{
+    private readonly ICloudWatchMetricsPublisher _publisher;
+    private readonly ILogger&lt;CloudwatchPublishingService&gt; _logger;
+    private readonly ChannelReader&lt;MetricUpdate&gt; _metricReader;
+    private readonly int _capacity = 20;
+    private List&lt;MetricUpdate&gt;? _metrics;
+
+    public CloudwatchPublishingService(ICloudWatchMetricsPublisher publisher,
+        ILogger&lt;CloudwatchPublishingService&gt; logger,
+        ChannelReader&lt;MetricUpdate&gt; metricReader)
+    {
+        _publisher = publisher;
+        _logger = logger;
+        _metricReader = metricReader;
+    }
+
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    {
+        async Task PublishAsync()
+        {
+            if (_metrics is {} &amp;&amp; _metrics.Count &gt; 0)
+            {
+                await _publisher.PublishMetricsAsync(_metrics);
+
+                // Ensure that we reset the metric container after publishing
+                _metrics = null;
+            }
+        }
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            try
+            {
+                if (_metricReader.TryRead(out var metric))
+                {
+                    // We don't want to make API requests on every metric as this will cost a bucket load and is horribly inefficient
+                    _metrics ??= new List&lt;MetricUpdate&gt;(_capacity);
+                    _metrics.Add(metric);
+
+                    if (_metrics.Count &gt;= _capacity)
+                    {
+                        await PublishAsync();
+                    }
+                }
+                else
+                {
+                    await PublishAsync();
+                    await _metricReader.WaitToReadAsync(cancellationToken);
+                }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, exception.Message);
+            }
+        }
+    }
+}
+</code></pre><p>In the code above, we&rsquo;ve explicitly set the capacity of our temporary storage to 20, as this is the limitation imposed on us by the CloudWatch <code>PutMetricData</code> endpoint. For those familiar with System.Threading.Channels, I have explicitly chosen not to use the <code>IAsyncEnumerable</code> support so that I have more control over the batching, ie: I don&rsquo;t have to wait for a complete batch of 20 metrics before I send the request the data be stored in CloudWatch. This can help with terminal scenarios where you may be able to get additional metrics out before the service dies, and when there are long intervals between metrics being published.</p><p>The last piece of the puzzle is to link the <code>MetricsCollectionService</code> from the <a href=/article/2020/01/diagnostics-in-.net-core-3-event-counters/#processing-events>previous article</a> (some parts removed for brevity) with the <code>IMetricsObservable</code> we&rsquo;ve just created:</p><pre><code class=language-csharp>internal sealed class MetricsCollectionService : EventListener, IHostedService
+{
+    private IMetricsObservable _metricsObservable;
+
+    public MetricsCollectionService(IMetricsObservable metricsObservable)
+    {
+        _metricsObservable = metricsObservable ?? throw new ArgumentNullException(nameof(metricsObservable));
+    }
+
+    protected override void OnEventWritten(EventWrittenEventArgs eventData)
+    {
+        if (eventData.EventName != &quot;EventCounters&quot; 
+                || eventData.Payload.Count &lt;= 0 
+                || !(eventData.Payload[0] is IDictionary&lt;string, object&gt; data) 
+                || !data.TryGetValue(&quot;CounterType&quot;, out var counterType) 
+                || !data.TryGetValue(&quot;Name&quot;, out var name))
+            return;
+        
+        var metricType = counterType.ToString();
+        float metricValue = 0;
+
+        if (&quot;Sum&quot;.Equals(metricType) &amp;&amp; data.TryGetValue(&quot;Increment&quot;, out var increment))
+        {
+            metricValue = Convert.ToSingle(increment);
+        }
+        else if (&quot;Mean&quot;.Equals(metricType) &amp;&amp; data.TryGetValue(&quot;Mean&quot;, out var mean))
+        {
+            metricValue = Convert.ToSingle(mean);
+        }
+        
+        var metric = new MetricUpdate(metricName, metricValue, tags);
+        _metricsObservable.WriteMetric(ref metric);
+    }
+}
+</code></pre><p>Naturally, if you don&rsquo;t need the flexibility of adding multiple destinations, then you can bypass some of the code that I&rsquo;ve shown above and go direct to the publisher instead of through the <code>IMetricsObservable</code> indirection.</p><p>That&rsquo;s it for this article, I hope you&rsquo;ve learned how we can publish metrics to CloudWatch in C# and how we can link this with our <a href=http://localhost:1313/series/diagnostics-in-.net-core-3/>previous work</a> on .NET Event Counters. Happy Metrics Collection!</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg><span class=tag><a href=https://im5tu.io/tags/aspnetcore>aspnetcore</a></span><span class=tag><a href=https://im5tu.io/tags/dotnet>dotnet</a></span><span class=tag><a href=https://im5tu.io/tags/diagnostics>diagnostics</a></span><span class=tag><a href=https://im5tu.io/tags/aws>AWS</a></span></p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6A2 2 0 004 4v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>2122 Words</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>2020-12-13 16:21 +0000</p></div><div class=pagination><div class=pagination__title><span class=pagination__title-h></span><hr></div><div class=pagination__buttons><span class="button next"><a href=https://im5tu.io/article/2020/12/building-a-zero-trust-architecture-in-aws/><span class=button__text>Building a Zero Trust Architecture In AWS</span>
+<span class=button__icon>→</span></a></span></div></div><script src=https://utteranc.es/client.js repo=Im5tu/im5tu-hugo issue-term=url label=Comment theme=photon-dark crossorigin=anonymous async></script></main></div><footer class=footer><div class=footer__inner><div class=footer__content><span>&copy; 2020</span>
+<span><a href=https://im5tu.io/>Stuart Blackler</a></span>
+<span><a href=https://im5tu.io/index.xml target=_blank title=rss><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 019 9"/><path d="M4 4a16 16 0 0116 16"/><circle cx="5" cy="19" r="1"/></svg></a></span></div></div><div class=footer__inner><div class=footer__content><span>Powered by <a href=http://gohugo.io>Hugo</a></span>
+<span>Theme made with &#10084; by <a href=https://github.com/rhazdon>Djordje Atlialp</a></span></div></div></footer></div><script type=text/javascript src=/bundle.min.dc716e9092c9820b77f96da294d0120aeeb189b5bcea9752309ebea27fd53bbe6b13cffb2aca8ecf32525647ceb7001f76091de4199ac5a3caa432c070247f5b.js integrity="sha512-3HFukJLJggt3+W2ilNASCu6xibW86pdSMJ6+on/VO75rE8/7KsqOzzJSVkfOtwAfdgkd5BmaxaPKpDLAcCR/Ww=="></script><script src=/js/site-20c12b24.js defer></script></body></html>
