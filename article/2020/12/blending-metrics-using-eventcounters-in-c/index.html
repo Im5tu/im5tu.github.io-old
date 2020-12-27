@@ -1,0 +1,247 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content="Stuart Blackler"><meta name=description content="In a world where we use auto-scaling a lot, its often not just one metric that we will take into consideration when deciding whether or not to scale our applications. For example, we might have a combination of CPU usage, memory usage and web request latency. Some services like AWS CloudWatch Metrics only allow scaling based off a single value. Luckily, we can blend metrics together to create new ones, which we can then use in our scaling policies. A blended metric is made up of however one or more existing metrics that you choose, called aspects, and can be published as if it were any other metric, eg: publish to DataDog/Cloudwatch."><meta name=keywords content=",aspnetcore,dotnet,diagnostics,AWS"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://im5tu.io/article/2020/12/blending-metrics-using-eventcounters-in-c/><title>Blending Metrics Using EventCounters In C# :: Stuart Blackler's Blog</title><link href=https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.1/css/flag-icon.min.css rel=stylesheet type=text/css><link rel=stylesheet href=/main.dede02da9537a98158079c023e83573e18127834838ef08172acce888341a797.css><meta itemprop=name content="Blending Metrics Using EventCounters In C#"><meta itemprop=description content="As companies grow, moving to a zero-trust architecture is majorly important. This article explores how to build it in AWS."><meta itemprop=datePublished content="2020-12-27T12:53:17+00:00"><meta itemprop=dateModified content="2020-12-27T12:53:17+00:00"><meta itemprop=wordCount content="1772"><meta itemprop=keywords content="aspnetcore,dotnet,diagnostics,AWS,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Blending Metrics Using EventCounters In C#"><meta name=twitter:description content="As companies grow, moving to a zero-trust architecture is majorly important. This article explores how to build it in AWS."><meta property="og:title" content="Blending Metrics Using EventCounters In C#"><meta property="og:description" content="As companies grow, moving to a zero-trust architecture is majorly important. This article explores how to build it in AWS."><meta property="og:type" content="article"><meta property="og:url" content="https://im5tu.io/article/2020/12/blending-metrics-using-eventcounters-in-c/"><meta property="article:published_time" content="2020-12-27T12:53:17+00:00"><meta property="article:modified_time" content="2020-12-27T12:53:17+00:00"><meta property="article:section" content="aspnetcore"><meta property="article:section" content="dotnet"><meta property="article:section" content="diagnostics"><meta property="article:published_time" content="2020-12-27 12:53:17 +0000 UTC"><link rel=alternate type=application/rss+xml href=https://im5tu.io/article/2020/12/blending-metrics-using-eventcounters-in-c/index.xml title="Stuart Blackler's Blog"><meta property="og:image" content="https://im5tu.io/img/profile.jpg"><meta property="og:site_name" content="Stuart Blackler's Blog"><link rel=alternate type=application/rss+xml href=/index.xml title="Stuart Blackler's Blog"><link rel=preconnect href=https://api.github.com><link rel=preconnect href=https://partner.googleadservices.com><link rel=preconnect href=https://tpc.googlesyndication.com><link rel=preconnect href=https://www.googletagservices.com><link rel=preconnect href=https://googleads.g.doubleclick.net><link rel=preconnect href=https://pagead2.googlesyndication.com><link rel=preload href=/fonts/Inter-UI-Bold.woff2><link rel=preload href=/fonts/Inter-UI-Regular.woff2><style>.post{max-width:1200px}.header__inner{width:100%;max-width:1160px}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border-left:1px solid #e2e2e2;border-bottom:1px solid #e2e2e2;border-radius:0;border-bottom-left-radius:10px;transition:all 250ms ease;margin:-18px;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}table{width:100%;border-collapse:collapse}table th{background-color:#cecece;color:#222}table tr{margin:0;padding:0}table tr:first-child{border-left:1px solid #acacac;border-top:1px solid #acacac;border-right:1px solid #acacac}table tr td:first-child{border-left:1px solid #acacac}table tr td:last-child{border-right:1px solid #acacac}table td,table th{padding:.5em;border-bottom:1px solid #acacac;margin:0}h2 a:link,h2 a:visited,h3 a:link,h3 a:visited,h4 a:link,h4 a:visited,h5 a:link,h5 a:visited{text-decoration:none}h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover{text-decoration:underline}@media print{.copy-code-button{display:none}}@media(prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-88036425-1','auto');ga('send','pageview');</script><script data-ad-client=ca-pub-8597760177900459 async src=https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script></head><body class=dark-theme><div class=container><header class=header><span class=header__inner><a href=https://im5tu.io/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>im5tu.io</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=https://im5tu.io/article/>Articles</a></li><li><a href=https://im5tu.io/index.xml>RSS Feed</a></li><li><a href=https://bit.ly/im5tu-tw>Twitter</a></li><li><a href=https://bit.ly/im5tu-yt>YouTube</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span><span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 41C32.4934 41 41 32.4934 41 22 41 11.5066 32.4934 3 22 3 11.5066 3 3 11.5066 3 22s8.5066 19 19 19zM7 22C7 13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>9 minutes</p></div><article><h1 class=post-title><a href=https://im5tu.io/article/2020/12/blending-metrics-using-eventcounters-in-c/>Blending Metrics Using EventCounters In C#</a></h1><div class=post-content><p>In a world where we use auto-scaling a lot, its often not just one metric that we will take into consideration when deciding whether or not to scale our applications. For example, we might have a combination of CPU usage, memory usage and web request latency. Some services like AWS CloudWatch Metrics only allow scaling based off a single value. Luckily, we can blend metrics together to create new ones, which we can then use in our scaling policies. A blended metric is made up of however one or more existing metrics that you choose, called aspects, and can be published as if it were any other metric, eg: publish to DataDog/Cloudwatch.</p><p>Each aspect contains the following:</p><ul><li>Name: This is the name of the metric that you wish to track</li><li>Minimum: This indicates the lower bounds of the metric, which if breached will be kept at this value</li><li>Maximum: This indicates the upper bounds of the metric, which if breached will be kept at this value</li><li>Weighting: This increases the impact of this metric on the overall score, useful for when one metric impacts more than another</li></ul><h2 id=value-calculation>Value Calculation</h2><p>In essence there are four points to the calculation:</p><ol><li>Get the value limited by the minimum and maximum bounds</li><li>Get the value as a fraction of the maximum value</li><li>Apply the weight to the fractional value</li><li>Average all aspect values together to get the final score</li></ol><p>Let&rsquo;s walk through how this works in reality. Assume we have the following configuration:</p><ul><li>Aspect 1: Minimum=0, Maximum=100, Weighting=0, Value=50</li><li>Aspect 2: Minimum=0, Maximum=100, Weighting=1, Value=50</li></ul><p>For step 1, we need to check whether the value supplied is between the specified minimum and maximum. For this example, it is, but if the value was greater than the maximum (eg: 150), the value would be set to 100 (the maximum value allowed). The same logic applies inversely for the minimum value.</p><p>For step 2, we take the value and divide it by the maximum allowed value. This returns us a value between 0 & 1 - in our case, it&rsquo;s <code>0.5</code> for both aspects.</p><p>As we now know that step 2 returns the value <code>0.5</code> in both aspects, we can add the weighting value: <code>value = value * (1 + weighting)</code>. For aspect 1, we would end up with the calculation <code>value = 0.5 x 1 = 0.5</code>. Whereas for aspect 2, we would end up with the calculation <code>value = 0.5 x 2 = 1</code>.</p><p>For the last step, we calculate the average of the values with their weights applied, eg: <code>(0.5 + 1) / 2 = 0.75</code>. <code>0.75</code> is the value that will be reported for the metric.</p><p><em><strong>Note:</strong> An aspect&rsquo;s weighting must be between 0 and 1.</em></p><h2 id=implementation>Implementation</h2><p>The implementation I am about to show builds upon my previous work with <a href=http://localhost:1313/series/diagnostics-in-.net-core-3/>EventCounters</a> and <a href=/article/2020/12/publish-metrics-to-cloudwatch-in-.net-core/>Publishing to CloudWatch</a>, which I would encourage you to read. First, let&rsquo;s take a look at the <code>SimpleMetricObserver</code> class, which is a simple helper class that saves some of the boilerplate for the observable pattern:</p><pre><code class=language-csharp>public abstract class SimpleMetricObserver : IObserver&lt;MetricUpdate&gt;
+{
+    /// &lt;inheritDoc /&gt;
+    public virtual void OnCompleted() { }
+
+    /// &lt;inheritDoc /&gt;
+    public virtual void OnError(Exception error) { }
+    
+    /// &lt;inheritDoc /&gt;
+    public abstract void OnNext(MetricUpdate value);
+}
+</code></pre><p>Next, we can take a look at the implementation of <code>BlendedMetricObserver</code>. This observer is designed to listen to a series of metrics from the published metric stream I created in the <a href=/article/2020/12/publish-metrics-to-cloudwatch-in-.net-core/>CloudWatch article</a>:</p><pre><code class=language-csharp>internal class BlendedMetricObserver : SimpleMetricObserver, IDisposable
+{
+    private readonly string _name;
+    private readonly IOptionsMonitor&lt;BlendedMetricOptions&gt; _blendedMetricOptionsMonitor;
+    private readonly Dictionary&lt;string, BlendedMetricAspect&gt; _aspects = new Dictionary&lt;string, BlendedMetricAspect&gt;();
+    private readonly Dictionary&lt;string, double&gt; _values = new Dictionary&lt;string, double&gt;();
+    private readonly List&lt;IDisposable&gt; _disposables = new List&lt;IDisposable&gt;();
+    private PollingCounter? _counter = null;
+
+    public BlendedMetricObserver(string name, IOptionsMonitor&lt;BlendedMetricOptions&gt; blendedMetricOptionsMonitor)
+    {
+        _name = name ?? throw new ArgumentNullException(nameof(name));
+        _blendedMetricOptionsMonitor = blendedMetricOptionsMonitor ?? throw new ArgumentNullException(nameof(blendedMetricOptionsMonitor));
+        _disposables.Add(_blendedMetricOptionsMonitor.OnChange(options =&gt; UpdateSettings(options)));
+        UpdateSettings(_blendedMetricOptionsMonitor.Get(name));
+    }
+
+    public override void OnNext(MetricUpdate value)
+    {
+        lock (_values)
+        {
+            if (!_aspects.TryGetValue(value.Name, out var aspect))
+                return;
+
+            var filters = aspect.TagFilters.ToList();
+
+            if (filters.Count == 0 || filters.All(x =&gt; value.Tags.Contains(x, TagFilterComparer.Instance)))
+                _values[value.Name] = ConvertToWeightedValue(aspect, value.Value);
+        }
+    }
+
+    // Exposed as protected so that we have at least some way of testing this
+    protected double GetCurrentValue()
+    {
+        lock (_values)
+        {
+            if (_values.Count == 0)
+                return 0;
+
+            // Calculate the average of whether or not we should scale based on the weighted value of each metric
+            // perf: do not use linq for this
+            var total = 0d;
+            foreach (var entry in _values)
+                total += entry.Value;
+
+            return total / _values.Count;
+        }
+    }
+
+    private static double ConvertToWeightedValue(BlendedMetricAspect aspect, double value)
+    {
+        // Get the value or the lower/upper boundary, where applicable
+        value = Math.Min(Math.Max(aspect.Minimum, value), aspect.Maximum);
+
+        // work out the value as a fraction of the maximum value
+        value /= aspect.Maximum;
+
+        // Add the weighting to the value
+        value *= (1 + aspect.Weighting);
+
+        // Return the value bounded by 0 and 1
+        return Math.Min(Math.Max(0, value), 1);
+    }
+
+    private void UpdateSettings(BlendedMetricOptions options)
+    {
+        if (!string.Equals(options.MetricName, _name))
+            return;
+
+        lock (_values)
+        {
+            _aspects.Clear();
+            _values.Clear();
+
+            if (_counter is null)
+            {
+                _counter = new PollingCounter(_name, MyEventSource.Instance, () =&gt; GetCurrentValue());
+
+                foreach ((string key, string value) in options.Tags)
+                    _counter.AddMetadata(key, value);
+            }
+
+            foreach (var aspect in options.Aspects)
+            {
+                if (string.IsNullOrWhiteSpace(aspect.Name))
+                    continue;
+
+                _aspects[aspect.Name] = aspect;
+            }
+        }
+    }
+
+    public void Dispose()
+    {
+        foreach (var disposable in _disposables)
+            disposable.Dispose();
+
+        _disposables.Clear();
+        _values.Clear();
+        _aspects.Clear();
+    }
+
+    private class TagFilterComparer : IEqualityComparer&lt;KeyValuePair&lt;string, string&gt;&gt;
+    {
+        internal static readonly TagFilterComparer Instance = new TagFilterComparer();
+
+        public bool Equals(KeyValuePair&lt;string, string&gt; x, KeyValuePair&lt;string, string&gt; y)
+        {
+            return string.Equals(x.Key, y.Key, StringComparison.Ordinal) &amp;&amp; string.Equals(x.Value, y.Value, StringComparison.Ordinal);
+        }
+
+        public int GetHashCode(KeyValuePair&lt;string, string&gt; obj)
+        {
+            return HashCode.Combine(obj.Key, obj.Value);
+        }
+    }
+}
+</code></pre><p>Let&rsquo;s break down some of the core methods. Firstly, the <code>OnNext</code> method is probably one of the most important ones as it listens to the incoming stream of metric data that is being published from our application, filtering for only the information that makes up our blended metric, before storing its value so that we can use it in the calculation portion. One thing to note in here as well, is that we can filter metrics by specific tags as well in our configuration. This means that we can re-use the same name and vary the metric by tags, much like we did in the <a href=/article/2020/06/diagnostics-in-.net-core-3-listening-to-outbound-http-requests/>Capturing HTTP requests article</a>. This is where the <code>TagFilterComparer</code> comes in handy, helping to determine equality in metric tags.</p><p>The <code>ConvertToWeightedValue</code> method takes the latest stored values of each of the aspects that make up the blended metric and performs the value calculation as described earlier in the article. This method is called periodically, depending on interval set by the <code>EnableEvents</code> call on the EventSource that we are registering the blended metric against. You can see how to do that <a href=/article/2020/01/diagnostics-in-.net-core-3-event-counters/#detecting-eventsources>here</a>.</p><p>Lastly, the <code>UpdateSettings</code> method is responsible for (re)creating the polling counter which will refresh on the specified interval that has been setup on the EventSource (eg: every second). Whilst</p><h3 id=options--validation>Options & Validation</h3><p>As you may have seen above, we have a specific options class that we use to track the different options of the blended metric:</p><pre><code class=language-csharp>/// &lt;summary&gt;Represents a metric that is made up of one or more metrics&lt;/summary&gt;
+public sealed class BlendedMetricOptions
+{
+    /// &lt;summary&gt;The name to send the metric through as&lt;/summary&gt;
+    public string? MetricName { get; set; }
+
+    /// &lt;summary&gt;A collection of metrics that make up the blended metric&lt;/summary&gt;
+    public IEnumerable&lt;BlendedMetricAspect&gt; Aspects { get; set; } = Enumerable.Empty&lt;BlendedMetricAspect&gt;();
+
+    /// &lt;summary&gt;The tags that should be applied to the blended metric&lt;/summary&gt;
+    public IEnumerable&lt;KeyValuePair&lt;string, string&gt;&gt; Tags { get; set; } = Enumerable.Empty&lt;KeyValuePair&lt;string, string&gt;&gt;();
+}
+
+/// &lt;summary&gt;Represents a part that makes up the blended metric&lt;/summary&gt;
+public sealed class BlendedMetricAspect
+{
+    /// &lt;summary&gt;The full name of the metric&lt;/summary&gt;
+    public string? Name { get; set; }
+
+    /// &lt;summary&gt;The lower limit of the metric. If the value is less than this value, it is set to this value.&lt;/summary&gt;
+    public double Minimum { get; set; } = 0;
+
+    /// &lt;summary&gt;The upper limit of the metric. If the value is greater than this value, it is set to this value.&lt;/summary&gt;
+    public double Maximum { get; set; } = 100;
+
+    /// &lt;summary&gt;The weighting that's applied to the metric&lt;/summary&gt;
+    public double Weighting { get; set; } = 0;
+
+    /// &lt;summary&gt;Filters a metric where the specified tags are present&lt;/summary&gt;
+    public IEnumerable&lt;KeyValuePair&lt;string, string&gt;&gt; TagFilters = Enumerable.Empty&lt;KeyValuePair&lt;string, string&gt;&gt;();
+
+    public BlendedMetricAspect()
+    {
+    }
+
+    public BlendedMetricAspect(string name, double minimum = 0, double maximum = 100, double weighting = 0, IEnumerable&lt;KeyValuePair&lt;string, string&gt;&gt;? tagFilters = null)
+    {
+        Name = name;
+        Minimum = minimum;
+        Maximum = maximum;
+        Weighting = weighting;
+        TagFilters = tagFilters ?? Enumerable.Empty&lt;KeyValuePair&lt;string, string&gt;&gt;();
+    }
+
+    /// &lt;summary&gt;Factory function for creating a new instance&lt;/summary&gt;
+    public static BlendedMetricAspect Create(string name, double minimum = 0, double maximum = 100, double weighting = 0, IEnumerable&lt;KeyValuePair&lt;string, string&gt;&gt;? tagFilters = null)
+        =&gt; new BlendedMetricAspect(name, minimum, maximum, weighting, tagFilters);
+}
+</code></pre><p>For completeness, I&rsquo;ve included a simple options validator to ensure that we stick within some of the basic rules that we described earlier. This validation is bound to our IoC container in the next section.</p><pre><code class=language-csharp>internal sealed class BlendedMetricOptionsValidation : IValidateOptions&lt;BlendedMetricOptions&gt;
+{
+    public ValidateOptionsResult Validate(string name, BlendedMetricOptions options)
+    {
+        var failures = Validate(options.Aspects);
+        return failures.Count &gt; 0 ? ValidateOptionsResult.Fail(failures) : ValidateOptionsResult.Success;
+    }
+
+    private static List&lt;string&gt; Validate(IEnumerable&lt;BlendedMetricAspect&gt; aspects)
+    {
+        var failures = new List&lt;string&gt;();
+
+        var aspectLst = aspects.ToList();
+        foreach (var aspect in aspectLst)
+        {
+            if (string.IsNullOrWhiteSpace(aspect.Name))
+                failures.Add($&quot;{nameof(BlendedMetricAspect.Name)} cannot be null, empty or whitespace. Index: {aspectLst.IndexOf(aspect)}&quot;);
+
+            if (aspect.Minimum &gt;= aspect.Maximum)
+                failures.Add($&quot;Aspect: {aspect.Name} - {nameof(BlendedMetricAspect.Minimum)} (Current: {aspect.Minimum}) must be less than {nameof(BlendedMetricAspect.Maximum)} (Current: {aspect.Maximum}).&quot;);
+
+            if (aspect.Weighting &lt; 0 || aspect.Weighting &gt; 1)
+                failures.Add($&quot;Aspect: {aspect.Name} - {nameof(BlendedMetricAspect.Weighting)} must be between 0 &amp; 1. Current: {aspect.Weighting}&quot;);
+        }
+
+        return failures;
+    }
+}
+</code></pre><h3 id=extensions>Extensions</h3><p>The last part of our implementation is to add some helpful extension methods for configuring new blended metrics in our IoC containers. These methods bind the necessary components and allow you to configure one or more blended metrics either from configuration or from passing the information into the method:</p><pre><code class=language-csharp>public static IServiceCollection AddBlendedMetrics(this IServiceCollection services, IConfigurationSection configurationSection)
+{
+    foreach (var section in configurationSection.GetChildren())
+        services.AddBlendedMetric(section.Key, options =&gt;
+        {
+            options.MetricName = section.Key;
+            configurationSection.Bind(options);
+        });
+
+    return services;
+}
+
+public static IServiceCollection AddBlendedMetric(this IServiceCollection services, string name, Action&lt;BlendedMetricOptions&gt; configurationAction)
+{
+    if (string.IsNullOrWhiteSpace(name))
+        throw new ArgumentNullException(nameof(name));
+
+    name = name.ToLowerInvariant().Replace(&quot;_&quot;, &quot;-&quot;).Replace(&quot; &quot;, &quot;-&quot;);
+
+    services.TryAddSingleton&lt;IValidateOptions&lt;BlendedMetricOptions&gt;, BlendedMetricOptionsValidation&gt;();
+    services.AddSingleton&lt;IObserver&lt;MetricUpdate&gt;&gt;(sp =&gt; ActivatorUtilities.CreateInstance&lt;BlendedMetricObserver&gt;(sp, name));
+
+    return services.Configure&lt;BlendedMetricOptions&gt;(name, configurationAction);
+}
+
+public static IServiceCollection AddBlendedMetric(this IServiceCollection services, string name, Func&lt;IEnumerable&lt;BlendedMetricAspect&gt;&gt; aspects, IEnumerable&lt;KeyValuePair&lt;string, string&gt;&gt;? dimensions = null)
+{
+    return services.AddBlendedMetric(name, options =&gt;
+    {
+        options.MetricName = name;
+        options.Aspects = options.Aspects.Concat(aspects()).ToList();
+
+        if (dimensions is {})
+            options.Tags = dimensions.ToList();
+    });
+}
+</code></pre><p>That pretty much wraps up our basic implementation of blended metrics. With the complete implementation, we should have our metrics published to our provider of choice. I hope you can see how useful they can be when combined with things like auto-scaling. Enjoy!</p></div></article><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg><span class=tag><a href=https://im5tu.io/tags/aspnetcore>aspnetcore</a></span><span class=tag><a href=https://im5tu.io/tags/dotnet>dotnet</a></span><span class=tag><a href=https://im5tu.io/tags/diagnostics>diagnostics</a></span><span class=tag><a href=https://im5tu.io/tags/aws>AWS</a></span></p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6A2 2 0 004 4v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>1772 Words</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>2020-12-27 12:53 +0000</p></div><div class=pagination><div class=pagination__title><span class=pagination__title-h></span><hr></div><div class=pagination__buttons><span class="button next"><a href=https://im5tu.io/article/2020/12/publish-metrics-to-cloudwatch-in-.net-core/><span class=button__text>Publish Metrics to Cloudwatch in .NET Core</span>
+<span class=button__icon>→</span></a></span></div></div><script src=https://utteranc.es/client.js repo=Im5tu/im5tu-hugo issue-term=url label=Comment theme=photon-dark crossorigin=anonymous async></script></main></div><footer class=footer><div class=footer__inner><div class=footer__content><span>&copy; 2020</span>
+<span><a href=https://im5tu.io/>Stuart Blackler</a></span>
+<span><a href=https://im5tu.io/index.xml target=_blank title=rss><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 019 9"/><path d="M4 4a16 16 0 0116 16"/><circle cx="5" cy="19" r="1"/></svg></a></span></div></div><div class=footer__inner><div class=footer__content><span>Powered by <a href=http://gohugo.io>Hugo</a></span>
+<span>Theme made with &#10084; by <a href=https://github.com/rhazdon>Djordje Atlialp</a></span></div></div></footer></div><script type=text/javascript src=/bundle.min.dc716e9092c9820b77f96da294d0120aeeb189b5bcea9752309ebea27fd53bbe6b13cffb2aca8ecf32525647ceb7001f76091de4199ac5a3caa432c070247f5b.js integrity="sha512-3HFukJLJggt3+W2ilNASCu6xibW86pdSMJ6+on/VO75rE8/7KsqOzzJSVkfOtwAfdgkd5BmaxaPKpDLAcCR/Ww=="></script><script src=/js/site-20c12b24.js defer></script></body></html>
