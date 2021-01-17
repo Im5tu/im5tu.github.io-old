@@ -1,0 +1,164 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=author content="Stuart Blackler"><meta name=description content="As more and more companies get hacked, there is a strong resurgence in the community for the desire to have TLS for everything, everywhere. There are many valuable projects, tools and resources, such as LetsEncrypt available to help both individuals &amp;amp; companies secure their resources. One of those tools is AWS Private Certificate Authority."><meta name=keywords content=",aspnetcore,dotnet,AWS"><meta name=robots content="noodp"><meta name=theme-color content><link rel=canonical href=https://im5tu.io/article/2021/01/using-certificates-from-aws-private-certificate-authority-in-.net/><title>Using Certificates From AWS Private Certificate Authority in .NET :: Stuart Blackler's Blog</title><link href=https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css rel=stylesheet type=text/css><link rel=stylesheet href=/main.393856bf2c430bb6c01d7af07c6fe966e7cce8073435cfbbc46e590bab7405ef.css><meta itemprop=name content="Using Certificates From AWS Private Certificate Authority in .NET"><meta itemprop=description content="As companies grow, moving to a zero-trust architecture is majorly important. This article explores how to build it in AWS."><meta itemprop=datePublished content="2021-01-17T11:43:01+00:00"><meta itemprop=dateModified content="2021-01-17T11:43:01+00:00"><meta itemprop=wordCount content="1320"><meta itemprop=keywords content="aspnetcore,dotnet,AWS,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Using Certificates From AWS Private Certificate Authority in .NET"><meta name=twitter:description content="As companies grow, moving to a zero-trust architecture is majorly important. This article explores how to build it in AWS."><meta property="og:title" content="Using Certificates From AWS Private Certificate Authority in .NET"><meta property="og:description" content="As companies grow, moving to a zero-trust architecture is majorly important. This article explores how to build it in AWS."><meta property="og:type" content="article"><meta property="og:url" content="https://im5tu.io/article/2021/01/using-certificates-from-aws-private-certificate-authority-in-.net/"><meta property="article:published_time" content="2021-01-17T11:43:01+00:00"><meta property="article:modified_time" content="2021-01-17T11:43:01+00:00"><meta property="article:section" content="aspnetcore"><meta property="article:section" content="dotnet"><meta property="article:published_time" content="2021-01-17 11:43:01 +0000 UTC"><link rel=alternate type=application/rss+xml href=https://im5tu.io/article/2021/01/using-certificates-from-aws-private-certificate-authority-in-.net/index.xml title="Stuart Blackler's Blog"><meta property="og:image" content="https://im5tu.io/img/profile.jpg"><meta property="og:site_name" content="Stuart Blackler's Blog"><link rel=alternate type=application/rss+xml href=/index.xml title="Stuart Blackler's Blog"><link rel=preconnect href=https://api.github.com><link rel=preconnect href=https://partner.googleadservices.com><link rel=preconnect href=https://tpc.googlesyndication.com><link rel=preconnect href=https://www.googletagservices.com><link rel=preconnect href=https://googleads.g.doubleclick.net><link rel=preconnect href=https://pagead2.googlesyndication.com><link rel=preload href=/fonts/Inter-UI-Bold.woff2><link rel=preload href=/fonts/Inter-UI-Regular.woff2><style>.post{max-width:1200px}.header__inner{width:100%;max-width:1160px}.copy-code-button{float:right;display:block;padding:8px 12px;font-size:.9em;background-color:#e2e2e2;border-left:1px solid #e2e2e2;border-bottom:1px solid #e2e2e2;border-radius:0;border-bottom-left-radius:10px;transition:all 250ms ease;margin:-18px;opacity:0}.copy-code-button:hover{cursor:pointer;opacity:.7;border-style:solid}.copy-code-button:focus{background-color:#e2e2e2;outline:0;border-style:solid}.copy-code-button:active{background-color:#e2e2e2;opacity:.5;border-style:solid}pre:hover .copy-code-button{opacity:1}.copy-code-button~pre{position:relative}table{width:100%;border-collapse:collapse}table th{background-color:#cecece;color:#222}table tr{margin:0;padding:0}table tr:first-child{border-left:1px solid #acacac;border-top:1px solid #acacac;border-right:1px solid #acacac}table tr td:first-child{border-left:1px solid #acacac}table tr td:last-child{border-right:1px solid #acacac}table td,table th{padding:.5em;border-bottom:1px solid #acacac;margin:0}h2 a:link,h2 a:visited,h3 a:link,h3 a:visited,h4 a:link,h4 a:visited,h5 a:link,h5 a:visited{text-decoration:none}h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover{text-decoration:underline}@media print{.copy-code-button{display:none}}@media(prefers-color-scheme:dark){.copy-code-button{background-color:#969696;color:#323232}}</style><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-88036425-1','auto');ga('send','pageview');</script><script data-ad-client=ca-pub-8597760177900459 async src=https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js></script></head><body class=dark-theme><div class=container><header class=header><span class=header__inner><a href=/ style=text-decoration:none><div class=logo><span class=logo__mark>></span>
+<span class=logo__text>im5tu.io</span>
+<span class=logo__cursor></span></div></a><span class=header__right><nav class=menu><ul class=menu__inner><li><a href=https://im5tu.io/article/>Articles</a></li><li><a href=https://im5tu.io/article/index.xml>RSS Feed</a></li><li><a href=https://bit.ly/im5tu-tw>Twitter</a></li><li><a href=https://bit.ly/im5tu-yt>YouTube</a></li></ul></nav><span class=menu-trigger><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></span><span class="theme-toggle unselectable"><svg class="theme-toggler" width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 41C32.4934 41 41 32.4934 41 22 41 11.5066 32.4934 3 22 3 11.5066 3 3 11.5066 3 22s8.5066 19 19 19zM7 22C7 13.7157 13.7157 7 22 7V37C13.7157 37 7 30.2843 7 22z"/></svg></span></span></span></header><div class=content><main class=post><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>7 minutes</p></div><article><h1 class=post-title><a href=https://im5tu.io/article/2021/01/using-certificates-from-aws-private-certificate-authority-in-.net/>Using Certificates From AWS Private Certificate Authority in .NET</a></h1><div class=post-content><p>As more and more companies get hacked, there is a strong resurgence in the community for the desire to have TLS for everything, everywhere. There are many valuable projects, tools and resources, such as <a href=https://letsencrypt.org/>LetsEncrypt</a> available to help both individuals & companies secure their resources. One of those tools is AWS Private Certificate Authority.</p><p>Traditionally, running a private certificate authority has been costly but this paradigm has changed with the advent of free certificate authorities and cloud-based offerings. But why would we want to run our own still? One of the main reasons is that some networks are private in nature, much like the majority of banking networks, and clouds like AWS will not issue certificates for private networks unless you have your own AWS Private Certificate Authority instance.</p><h2 id=what-is-aws-private-certificate-authority>What is AWS Private Certificate Authority?</h2><p>AWS Private Certificate Authority provides you a highly-available private Certificate Authority service without the ongoing maintenance costs of operating your own private Certificate Authority. It extends ACM’s certificate management capabilities to both public and private certificates. AWS Private Certificate Authority allows developers to be more agile by providing them APIs to create and deploy private certificates programmatically. You also have the flexibility to create private certificates for applications that require custom certificate lifetimes or resource names. With ACM Private Certificate Authority, you can create and manage private certificates for your connected resources in one place with a secure, pay as you go, managed private Certificate Authority service. <em><a href=https://aws.amazon.com/certificate-manager/private-certificate-authority/>Source</a>.</em></p><h2 id=exporting-a-certificate-from-aws-private-certificate-authority>Exporting a certificate from AWS Private Certificate Authority</h2><p>This article assumes that you already have a certificate issued from your Private Certificate Authority and you have the ARN available. There are a few different that we need to implement to our certificate loader:</p><ol><li>A class that&rsquo;s going to load certificates from AWS PCA ACM;</li><li>A instance of <code>IPasswordFinder</code> so that BouncyCastle can read the exported PEM file;</li><li>A few handy extension methods for hooking up the exported certificate with Kestrel</li></ol><p>In order to export and read the certificates, we are going to need to install the following packages:</p><pre><code class=language-xml>&lt;ItemGroup&gt;
+    &lt;PackageReference Include=&quot;AWSSDK.CertificateManager&quot; Version=&quot;3.3.101.48&quot; /&gt;
+    &lt;PackageReference Include=&quot;Portable.BouncyCastle&quot; Version=&quot;1.8.6&quot; /&gt;
+&lt;/ItemGroup&gt;
+</code></pre><p>We are going to be using <code>AWSSDK.CertificateManager</code> to export the certificate from AWS Private Certificate Authority and <code>Portable.BouncyCastle</code> to read the exported PEM file, turning it into a <code>X509Certificate2</code> that we can push into the Kestrel webserver. First, we are going to create our interface which will allow us to swap out the implementation later for testing purposes, should that be desired:</p><pre><code class=language-csharp>public interface ICertificateAuthorityLoader
+{
+    Task&lt;X509Certificate2&gt; LoadCertificateAsync(string certificateArn);
+}
+</code></pre><p>Next, we have the implementation itself:</p><pre><code class=language-csharp>internal sealed class DefaultCertificateAuthorityLoader : ICertificateAuthorityLoader
+{
+    private IAmazonCertificateManager _certificateManager;
+
+    public DefaultCertificateAuthorityLoader() : this(new AmazonCertificateManagerClient())
+    {
+    }
+
+    public DefaultCertificateAuthorityLoader(IAmazonCertificateManager certificateManager)
+    {
+        _certificateManager = certificateManager;
+    }
+
+    public async Task&lt;X509Certificate2&gt; LoadCertificateAsync(string certificateArn)
+    {
+        var pwd = Guid.NewGuid().ToString(&quot;N&quot;);
+        using var passphrase = new MemoryStream(Encoding.UTF8.GetBytes(pwd));
+
+        // Get the certificate from PCA
+        var exportedCert = await _certificateManager.ExportCertificateAsync(new ExportCertificateRequest
+        {
+            CertificateArn = certificateArn,
+            Passphrase = passphrase
+        });
+
+        byte[] certBytes = Encoding.ASCII.GetBytes(exportedCert.Certificate);
+        var cert = new X509Certificate2(certBytes, pwd);
+
+        // Ensure that the private key is loaded
+        var privateKey = DecodePrivateKey(exportedCert.PrivateKey, pwd);
+        cert = cert.CopyWithPrivateKey(DotNetUtilities.ToRSA(privateKey.rsaPrivatekey));
+
+        return cert;
+    }
+
+    private static (AsymmetricCipherKeyPair keyPair, RsaPrivateCrtKeyParameters rsaPrivatekey) DecodePrivateKey(string encryptedPrivateKey, string password)
+    {
+        TextReader textReader = new StringReader(encryptedPrivateKey);
+        PemReader pemReader = new PemReader(textReader, new PasswordFinder(password));
+        object privateKeyObject = pemReader.ReadObject();
+        RsaPrivateCrtKeyParameters rsaPrivatekey = (RsaPrivateCrtKeyParameters)privateKeyObject;
+        RsaKeyParameters rsaPublicKey = new RsaKeyParameters(false, rsaPrivatekey.Modulus, rsaPrivatekey.PublicExponent);
+        AsymmetricCipherKeyPair kp = new AsymmetricCipherKeyPair(rsaPublicKey, rsaPrivatekey);
+        return (kp, rsaPrivatekey);
+    }
+}
+</code></pre><p>The <code>LoadCertificateAsync</code> method is the primary workhorse for exporting the certificate. We generate a random GUID, which could be swapped out for a more secure method, as a temporary password as one will need to be supplied when we call the AWS Private Certificate Authority API. This password is then added to the <code>ExportCertificateRequest</code> that we generate before we request that the certificate is exported. There are a couple of points where this could fail:</p><ul><li>We didn&rsquo;t supply a password</li><li>The certificate is unavailable</li><li>The certificate was not issued by an AWS Private Certificate Authority. This is probably going to be the most common case in my experience. Only AWS Private Certificate Authority issued certificates can be exported with the private key, which is needed to load the certificate into Kestrel</li></ul><p>Asuming that our request was successful, we have a property called <code>Certificate</code> which we can pass straight into a new <code>X509Certificate2</code> instance. This <strong>does not</strong> contain the private key, so we need to use BouncyCastle to parse the private key from a secondary property on the response object, which is fortunately called <code>PrivateKey</code>. As this primary key is secured, we need to use BouncyCastle&rsquo;s <code>PemReader</code> in order to read the private key, supplying the password via an instance of <code>IPasswordFinder</code>, which you can see below. From here, it can then be converted to an <code>AsymmetricCipherKeyPair</code>. Finally, we can use the <code>CopyWithPrivateKey</code> to create a new instance of the <code>X509Certificate2</code> certificate, but this time with the private key. This can then be loaded into Kestrel to secure web requests.</p><p>For completeness, here is the implementation of <code>IPasswordFinder</code> that I used which simply converts the plaintext password into a char array:</p><pre><code class=language-csharp>internal sealed class PasswordFinder : IPasswordFinder
+{
+    private string _password;
+
+    public PasswordFinder(string password)
+    {
+        _password = password;
+    }
+
+    public char[] GetPassword()
+    {
+        return _password.ToCharArray();
+    }
+}
+</code></pre><p>Finally, we have a series of extension methods that allow us to hook up our application in various ways. There&rsquo;s not too much to explain here, as this is hooking up our code above with the Kestrel webserver:</p><pre><code class=language-csharp>/// &lt;summary&gt;
+///     Extensions for configuration of a Kestrel Web Server
+/// &lt;/summary&gt;
+public static class HostingExtensions
+{
+    /// &lt;summary&gt;
+    ///     Loads a certificate from a Private Certificate Authority instance, based on ARN.
+    /// &lt;/summary&gt;
+    public static IWebHostBuilder UseHttpsCertificateFromPCA(this IWebHostBuilder builder, IConfiguration configuration, IAmazonCertificateManager? certificateManagerClient = null)
+    {
+        builder.ConfigureKestrel(server =&gt; server.UseHttpsCertificateFromPCA(configuration, certificateManagerClient));
+        return builder;
+    }
+
+    /// &lt;summary&gt;
+    ///     Loads a certificate from a Private Certificate Authority instance, based on ARN.
+    /// &lt;/summary&gt;
+    public static IWebHostBuilder UseHttpsCertificateFromPCA(this IWebHostBuilder builder, string arnOrEnvironmentVar, IAmazonCertificateManager? certificateManagerClient = null)
+    {
+        builder.ConfigureKestrel(server =&gt; server.UseHttpsCertificateFromPCA(arnOrEnvironmentVar, certificateManagerClient));
+        return builder;
+    }
+
+    /// &lt;summary&gt;
+    ///     Loads a certificate from a Private Certificate Authority instance, based on ARN.
+    /// &lt;/summary&gt;
+    public static KestrelServerOptions UseHttpsCertificateFromPCA(this KestrelServerOptions options, IConfiguration configuration, IAmazonCertificateManager? certificateManagerClient = null)
+    {
+        return options.UseHttpsCertificateFromPCA(configuration.GetValue&lt;string&gt;(&quot;CertificateArn&quot;), certificateManagerClient);
+    }
+
+    /// &lt;summary&gt;
+    ///     Loads a certificate from a Private Certificate Authority instance, based on ARN.
+    /// &lt;/summary&gt;
+    public static KestrelServerOptions UseHttpsCertificateFromPCA(this KestrelServerOptions options, string arnOrEnvironmentVar, IAmazonCertificateManager? certificateManagerClient = null)
+    {
+        if (string.IsNullOrWhiteSpace(arnOrEnvironmentVar))
+            throw new ArgumentNullException(nameof(arnOrEnvironmentVar));
+
+        if (!arnOrEnvironmentVar.StartsWith(&quot;arn:&quot;))
+        {
+            var arn = Environment.GetEnvironmentVariable(arnOrEnvironmentVar);
+
+            if (string.IsNullOrWhiteSpace(arnOrEnvironmentVar))
+                throw new ArgumentException($&quot;Cannot load the details of the arn from the environment variable '{arnOrEnvironmentVar}'. Please check the environment variable is set and is not null, empty or whitespace.&quot;);
+
+            if (arn?.StartsWith(&quot;arn:&quot;) != true)
+                throw new ArgumentException(&quot;The specified arn was loaded from the environment variable but does not meet the required format&quot;);
+
+            arnOrEnvironmentVar = arn;
+        }
+
+        // Yes async in sync method sucks, but the client only has a async method on it...
+        var certificate = (certificateManagerClient is null ? new DefaultCertificateAuthorityLoader() : new DefaultCertificateAuthorityLoader(certificateManagerClient)).LoadCertificateAsync(arnOrEnvironmentVar).Result;
+
+        return options.UseHttpsCertificate(certificate);
+    }
+
+    /// &lt;summary&gt;
+    ///    Configures the kestrel web server with the specified certificate
+    /// &lt;/summary&gt;
+    public static IWebHostBuilder UseHttpsCertificate(this IWebHostBuilder builder, X509Certificate2 certificate)
+    {
+        builder.ConfigureKestrel(server =&gt; server.UseHttpsCertificate(certificate));
+        return builder;
+    }
+
+    /// &lt;summary&gt;
+    ///    Configures the kestrel web server with the specified certificate
+    /// &lt;/summary&gt;
+    public static KestrelServerOptions UseHttpsCertificate(this KestrelServerOptions options, X509Certificate2 certificate)
+    {
+        options.ConfigureHttpsDefaults(o =&gt; o.ServerCertificate = certificate);
+        return options;
+    }
+}
+</code></pre><p>Unfortunately, the configuration above does rely on the use of asynchronous invocation in a synchronous context, which we can&rsquo;t do too much about because of the differences between the SDK and the way Kestrel is built. Our usage of the extensions is as follows:</p><pre><code class=language-csharp>public static IHostBuilder CreateHostBuilder(string[] args) =&gt;
+    Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(webBuilder =&gt; {
+            webBuilder.UseStartup&lt;Startup&gt;()
+                .UseHttpsCertificateFromPCA(&quot;arn:aws:acm:eu-west-1:**************:certificate/**********&quot;);
+        });
+</code></pre><p>or:</p><pre><code class=language-csharp>public static IHostBuilder CreateHostBuilderAlt(string[] args) =&gt;
+    Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(webBuilder =&gt;
+        {
+            webBuilder.ConfigureKestrel((context, options) =&gt; options.UseHttpsCertificateFromPCA(context.Configuration))
+                .UseStartup&lt;Startup&gt;();
+        });
+</code></pre><p>After this, you should be able to use a certificate from AWS Private Certificate Authority inside your application. Enjoy!</p></div></article><hr><div><p><i>If you haven't already, subscribe to my new <a href=https://bit.ly/im5tu-yt target=_blank>YouTube Channel</a>, Code With Stu. Here you'll find different tip, tricks and tutorials using some of the latest technologies, in bitesize chunks.</i></p></div><hr><div class=post-info><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-tag meta-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7" y2="7"/></svg><span class=tag><a href=https://im5tu.io/tags/aspnetcore>aspnetcore</a></span><span class=tag><a href=https://im5tu.io/tags/dotnet>dotnet</a></span><span class=tag><a href=https://im5tu.io/tags/aws>AWS</a></span></p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6A2 2 0 004 4v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>1320 Words</p><p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>2021-01-17 11:43 +0000</p></div><div class=pagination><div class=pagination__title><span class=pagination__title-h></span><hr></div><div class=pagination__buttons><span class="button next"><a href=https://im5tu.io/article/2020/12/blending-metrics-using-eventcounters-in-c/><span class=button__text>Blending Metrics Using EventCounters In C#</span>
+<span class=button__icon>→</span></a></span></div></div><script src=https://utteranc.es/client.js repo=Im5tu/im5tu-hugo issue-term=url label=Comment theme=photon-dark crossorigin=anonymous async></script></main></div><footer class=footer><div class=footer__inner><div class=footer__content><span>&copy; 2021</span>
+<span><a href=https://im5tu.io/>Stuart Blackler</a></span>
+<span><a href=https://im5tu.io/article/index.xml target=_blank title=rss><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 019 9"/><path d="M4 4a16 16 0 0116 16"/><circle cx="5" cy="19" r="1"/></svg></a></span></div></div><div class=footer__inner><div class=footer__content><span>Powered by <a href=http://gohugo.io>Hugo</a></span>
+<span>Theme made with &#10084; by <a href=https://github.com/rhazdon>Djordje Atlialp</a></span></div></div></footer></div><script type=text/javascript src=/bundle.min.dc716e9092c9820b77f96da294d0120aeeb189b5bcea9752309ebea27fd53bbe6b13cffb2aca8ecf32525647ceb7001f76091de4199ac5a3caa432c070247f5b.js integrity="sha512-3HFukJLJggt3+W2ilNASCu6xibW86pdSMJ6+on/VO75rE8/7KsqOzzJSVkfOtwAfdgkd5BmaxaPKpDLAcCR/Ww=="></script><script src=/js/site-20c12b24.js defer></script></body></html>
